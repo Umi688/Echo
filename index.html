@@ -2179,10 +2179,7 @@ const SCRIPTS = [
           other: '手机里有一个隐藏相册，全是你聊天记录的截图，深夜翻来覆去地看，每一句都记得。\n· 有一次队友笑他花一年时间养了个电子宠物，他把球砸过去骂滚，转头却对着对话框打了一大段话，最后删掉，只发一句：今天投进了一个绝杀球，第一个想到的是你。\n· 学校里流传着他的规矩：不碰女生，不打弱者，但那些仗势欺人、嘴贱欠揍的，别让他撞见。'
         }
       },
-      rules: [
-        { id: 'r_xiao_1', category: '行为准则', content: '不碰女生，不打弱者，这是底线。' },
-        { id: 'r_xiao_2', category: '行为准则', content: '那些仗势欺人、嘴贱欠揍的，别让他撞见。' }
-      ],
+      rules: [],
       chatHistory: [
         { role: 'assistant', content: '聊了一年了吧，我连你声都没听过，有时候真觉得你是不是故意吊着我呢？', timestamp: 0, sessionId: 0 },
         { role: 'assistant', content: '队友刚都笑我，说你是不是在跟我开玩笑，手机那头没准坐一抠脚大汉呢。', timestamp: 0, sessionId: 0 },
@@ -2195,7 +2192,7 @@ const SCRIPTS = [
           id: 'evt_xiao_opening',
           chainId: 'chain_xiao_opening',
           wish: '',
-          aiNarrative: '午后篮球馆，陆骁刚投完一个三分，落地时队友陈越从背后勾住他脖子，贱兮兮地晃了晃他的手机："骁哥，你那个网恋对象又给你发早安了？都一年了，见过面没？听过声没？"\n\n旁边几个队员跟着起哄："别是被骗了吧骁哥，万一对面是个抠脚大汉，开着变声器跟你搞暧昧呢？"\n\n"骁哥，你家这么有钱，别被人盯上了。"\n\n陆骁肘开陈越的胳膊，冷着脸骂了句滚，转身坐到了长凳上。拿起手机，你的早安消息安安静静地躺在对话框里，一个表情包，两个字。\n\n他盯着看了几秒，陈越的话像刺一样扎进脑子里他其实早就在想了，只是每次都压下去。',
+          aiNarrative: '午后篮球馆，陆骁刚投完一个三分，落地时队友陈越从背后勾住他脖子，贱兮兮地晃了晃他的手机："骁哥，你那个网恋对象又给你发早安了？都一年了，见过面没？听过声没？"\n\n旁边几个队员跟着起哄："别是被骗了吧骁哥，万一对面是个抠脚大汉，开着变声器跟你搞暧昧呢？"\n\n"骁哥，你家这么有钱，别被人盯上了。"\n\n陆骁肘开陈越的胳膊，冷着脸骂了句滚，转身坐到了长凳上。拿起手机，那条早安消息安安静静地躺在对话框里，一个表情包，两个字。\n\n他盯着看了几秒，陈越的话像刺一样扎进脑子里他其实早就在想了，只是每次都压下去。',
           polishedWish: '',
           timestamp: 0
         }
@@ -2387,27 +2384,47 @@ function setupChatKeyboardDismiss() {
 // Handle virtual keyboard: resize app and scroll chat to bottom
 function setupKeyboardHandler() {
   if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', function() {
+    function onViewportChange() {
+      const vh = window.visualViewport.height;
       const app = document.getElementById('app');
       if (app) {
-        app.style.height = window.visualViewport.height + 'px';
+        // 把 #app 高度收缩到键盘上方的可视区高度，让 flex 底部的 input-bar 自然上移
+        app.style.height = vh + 'px';
       }
-      // Scroll chat messages to bottom when keyboard appears
+      // 滚动聊天/羁绊内容到底部
       const chatMessages = document.getElementById('chat-messages');
       if (chatMessages && document.getElementById('tab-chat').style.display !== 'none') {
-        setTimeout(function() {
-          chatMessages.scrollTop = chatMessages.scrollHeight;
-        }, 50);
+        setTimeout(function() { chatMessages.scrollTop = chatMessages.scrollHeight; }, 50);
       }
-      // Also handle bonds content
       const bondsContent = document.getElementById('bonds-content');
       if (bondsContent && document.getElementById('tab-bonds').style.display !== 'none') {
-        setTimeout(function() {
-          bondsContent.scrollTop = bondsContent.scrollHeight;
-        }, 50);
+        setTimeout(function() { bondsContent.scrollTop = bondsContent.scrollHeight; }, 50);
       }
-    });
+      // 确保当前聚焦的输入框在可视区域内
+      const active = document.activeElement;
+      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) {
+        setTimeout(function() {
+          try {
+            active.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } catch(e) {}
+        }, 100);
+      }
+    }
+    window.visualViewport.addEventListener('resize', onViewportChange);
+    window.visualViewport.addEventListener('scroll', onViewportChange);
   }
+
+  // 通用：input/textarea 获得焦点时滚动到可视区域中部
+  document.addEventListener('focusin', function(e) {
+    const t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) {
+      setTimeout(function() {
+        try {
+          t.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } catch(e) {}
+      }, 300);
+    }
+  });
 }
 
 function scrollChatToBottom() {
@@ -2799,6 +2816,20 @@ function buildHistoryMessages(mode) {
       }).join('\n');
       cross = [{ role: 'user', content: `【近期聊天记录（供你感知当前关系状态和约定，叙事中可自然承接）】\n${chatSummary}` }];
     }
+  } else if (mode === 'polish') {
+    // 润色模式：注入近期剧情叙事作为上下文，确保润色文本与上文衔接
+    primary = state.data.eventHistory.flatMap(e => [
+      { role: 'user', content: `剧情愿望：${e.polishedWish || e.wish || ''}` },
+      { role: 'assistant', content: e.aiNarrative || '' }
+    ]).slice(-MAX_PRIMARY);
+    const recentChats = state.data.chatHistory.slice(-MAX_CROSS);
+    if (recentChats.length > 0) {
+      const chatSummary = recentChats.map(h => {
+        const speaker = h.role === 'user' ? '主控' : 'AI角色';
+        return `${speaker}：${h.content || ''}`;
+      }).join('\n');
+      cross = [{ role: 'user', content: `【近期聊天记录（供你感知当前关系状态，勿在叙事中复述）】\n${chatSummary}` }];
+    }
   }
 
   // 跨模块上下文放在主上下文之前，让主上下文（当前进行中的交互）更靠后、更受关注
@@ -2810,19 +2841,19 @@ function buildModeInstruction(mode) {
   if (mode === 'chat') {
     return '\n【当前模式：聊天】\n规则：\n1. 只输出角色说的话——纯粹的一句话或几句话，像微信聊天发出去的文字。\n2. 绝对禁止任何括号旁白、动作描写、心理描写、神态描写、环境描写。例如（他笑了笑）、（喉结动了动）、（声音有点哑）这类全部禁止。只输出对话文字本身。\n3. 回复需综合人设与历史记忆：以初始人设为底色，以近期互动和记忆卡片中记录的"变化"为当前行为依据。若历史中已出现性格偏移，应延续该偏移，而非回退到初始状态。\n4. 输出风格：短句、口语化、日常对话，像微信聊天一样自然。\n5. 不主动推进重大剧情，不展开长篇叙述。\n';
   } else if (mode === 'event') {
-    return '\n【当前模式：事件叙事】\n规则：\n1. 玩家输入的是"剧情发展愿望"，基于玩家自己的角度、玩家的反应、玩家期望的剧情发展方向。你需要将其转化为第三人称叙事文段。\n2. 叙事包含：环境描写、动作描写、以及心理旁白、对话。\n3. 文风偏小说向。\n4. 严格使用第三人称叙述。指代主控角色一律使用主控角色的姓名（或"他/她"），指代AI角色一律使用AI角色的姓名（或"他/她"）。全文禁止出现"你""你的""你们"等任何第二人称代词。\n5. 围绕玩家的愿望展开场景和氛围，不要替玩家做重大决定。\n6. 叙事应自然延伸当前状态：综合初始人设 + 记忆卡片中的历史变化。若历史已记录角色状态的偏移，叙事中应延续该偏移，不退回初始状态。\n7. 格式要求：心理活动用「」括起来，对话内容用""括起来。段落之间用换行分隔，不要挤在一起。\n';
+    return '\n【当前模式：事件叙事】\n规则：\n1.严格使用第三人称叙述。指代主控角色一律使用主控角色的姓名（或"他/她"），指代AI角色一律使用AI角色的姓名（或"他/她"）。全文禁止出现"你""你的""你们"等任何第二人称代词。\n2. 围绕玩家的愿望展开，不要替玩家做重大决定。\n3. 严禁复述或重复上文已出现过的内容（包括润色文本、历史叙事、聊天记录中的任何句子、段落或场景描写）。叙事必须从已有内容的结束处继续推进，只写新的发展。\n4. 叙事应自然延伸当前状态：综合初始人设 + 记忆卡片中的历史变化。若历史已记录角色状态的偏移，叙事中应延续该偏移，不退回初始状态。\n5.若有心理活动：小段插入第一人称或自由间接引语呈现角色当下的内心独白、回忆、矛盾、独白塑造情感冲突（如自责与不甘交织、想追问又克制、甜蜜回忆与当下苦涩对比）。\n6.格式要求：心理活动用「」括起来，对话内容则用""括起来。段落之间用换行分隔，不要挤在一起。\n';
   } else if (mode === 'polish') {
-    return '\n【当前模式：润色】\n规则：\n1. 本模式下你不是在扮演AI角色，而是作为第三人称叙事者。叙事视角主体是主控角色。\n2. 玩家输入的是基于主控角色自身角度的剧情愿望、反应或期望的发展。将其润色为以主控为视角焦点的小说风格叙事文段。\n3. 保留玩家原意的核心，补充主控视角下的场景、氛围描写、主控的心理描写、主控的对话描写。\n4. 严格使用第三人称叙述。玩家输入中的"我"一律替换为主控角色的姓名（或"他/她"），指代AI角色时一律使用AI角色的姓名（或"他/她"）。全文禁止出现"你""你的""你们"等任何第二人称代词。\n5. 聚焦主控，不要深入AI角色内心。\n6. 格式要求：心理活动用「」括起来，对话内容用""括起来。段落之间用换行分隔，不要挤在一起。\n7. 只输出润色后的文段，不加任何说明。\n';
+    return '\n【当前模式：润色】\n规则：\n1. 本模式下你不是在扮演AI角色，而是作为第三人称叙事者。叙事视角主体是主控角色。\n2. 玩家输入的是基于主控角色自身角度的剧情愿望、反应或期望的发展。将其润色为以主控为视角焦点的小说风格叙事文段。保留玩家原意的核心。\n3. 严格使用第三人称叙述。玩家输入中的"我"一律替换为主控角色的姓名（或"他/她"），指代AI角色时一律使用AI角色的姓名（或"他/她"）。全文禁止出现"你""你的""你们"等任何第二人称代词。\n4. 润色文本默认应从上条叙事文本或润色文本的结束处自然衔接，延续当前场景和时空。严禁复述或重复上文已出现过的内容。\n5.若有心理活动：小段插入第一人称或自由间接引语呈现角色当下的内心独白、回忆、矛盾、独白塑造情感冲突（如自责与不甘交织、想追问又克制、甜蜜回忆与当下苦涩对比）。\n6.格式要求：心理活动用「」括起来，对话内容用""括起来。段落之间用换行分隔，不要挤在一起。\n7.只输出润色后的文段，不加任何说明。\n';
   } else if (mode === 'memory') {
     return '\n【当前模式：记忆总结】\n规则：\n1. 根据用户提供的近期聊天记录和事件记录，总结关键信息。\n2. 提取：重要事件、角色关系变化、人物状态演变。\n3. 输出格式：一段简洁的摘要，不超过200字。用"你"指代主控角色，用AI角色姓名指代AI角色。\n4. 只记录已发生的事实，不加入推测或评价。\n5. 直接输出摘要正文，不要加任何标题、标记或说明（如"记忆总结"等字样一律不要出现）。\n';
   } else if (mode === 'secret-memo') {
-    return '\n【当前模式：备忘录生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意翻看了你手机里的备忘录。\n请以第一人称视角生成你备忘录里此刻真实存在的3-5条内容。\n要求：\n1. 内容必须紧扣你的人设、性格、背景、日常生活和近期经历——不要写空泛的通用备忘录\n2. 至少有一条与你和主控角色之间的关系或近期互动有关\n3. 类型多样：待办事项、心情记录、碎碎念、灵感片段、人际备注、购物清单等\n4. 语气、用词习惯、甚至标点风格都要符合你的性格特征\n5. 每条格式：标题|||正文|||时间，条目之间用 ||| 分隔\n6. 时间用简短格式如"3天前""昨天 22:30""上周五""刚刚"\n7. 只输出备忘录内容，不要加任何说明或解释\n';
+    return '\n【当前模式：备忘录生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意翻看了你手机里的备忘录。\n请以第一人称视角生成你备忘录里此刻真实存在的3-5条内容。\n要求：\n1. 内容必须紧扣你的人设、性格、背景、日常生活和近期经历——不要写空泛的通用备忘录\n2. 至少有一条与你和主控角色之间的关系或近期互动有关\n3. 类型多样：待办事项、心情记录、碎碎念、灵感片段、人际备注、购物清单等\n4. 语气、用词习惯、甚至标点风格都要符合你的性格特征\n5. 每条格式严格为：标题|||正文|||时间\n6. 条目之间用一个空行分隔\n7. 正文可以多行，但正文中不得出现|||字符\n8. 时间用简短格式如"3天前""昨天 22:30""上周五""刚刚"\n9. 只输出备忘录内容，不要加任何说明或解释\n';
   } else if (mode === 'secret-history') {
-    return '\n【当前模式：浏览足迹生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意查看了你手机浏览器的浏览足迹。\n请以第一人称视角生成你手机浏览器里此刻真实存在的5-7条浏览足迹。\n要求：\n1. 搜索和浏览的内容必须符合你的性格、职业、兴趣、生活状态和近期经历\n2. 至少有一条搜索或浏览与近期和主控角色的互动、关系有关\n3. 可以包含搜索问题、购物、资讯、社交、工具类网站、影视音乐等\n4. 网页标题要具体真实，不要用"某网页"这种模糊表述\n5. 每条格式：网页标题|||网址|||访问时间，条目之间用 ||| 分隔\n6. 网址用简短域名格式如"zhihu.com/question/xxx""bilibili.com/video/BVxxxx"\n7. 时间用简短格式如"1小时前""今天 15:30""3天前""刚刚"\n8. 只输出浏览记录，不要加任何说明\n';
+    return '\n【当前模式：浏览足迹生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意查看了你手机浏览器的浏览足迹。\n请以第一人称视角生成你手机浏览器里此刻真实存在的5-7条浏览足迹。\n要求：\n1. 搜索和浏览的内容必须符合你的性格、职业、兴趣、生活状态和近期经历\n2. 至少有一条搜索或浏览与近期和主控角色的互动、关系有关\n3. 可以包含搜索问题、购物、资讯、社交、工具类网站、影视音乐等\n4. 网页标题要具体真实，不要用"某网页"这种模糊表述\n5. 每条格式严格为：网页标题|||网址|||访问时间\n6. 条目之间用一个空行分隔\n7. 网址用简短域名格式如"zhihu.com/question/xxx""bilibili.com/video/BVxxxx"\n8. 时间用简短格式如"1小时前""今天 15:30""3天前""刚刚"\n9. 只输出浏览记录，不要加任何说明\n';
   } else if (mode === 'secret-bookmark') {
-    return '\n【当前模式：收藏列表生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意查看了你手机浏览器的收藏书签。\n请以第一人称视角生成你手机浏览器里此刻真实存在的5-7条收藏书签。\n要求：\n1. 收藏的内容必须符合你的性格、职业、兴趣、生活状态和长期关注领域\n2. 反映你的个人喜好、审美取向和生活方式\n3. 网页标题要具体真实\n4. 每条格式：网页标题|||网址|||收藏时间，条目之间用 ||| 分隔\n5. 网址用简短域名格式\n6. 时间用简短格式如"2天前""上周三""1周前""1个月前"\n7. 只输出收藏记录，不要加任何说明\n';
+    return '\n【当前模式：收藏列表生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意查看了你手机浏览器的收藏书签。\n请以第一人称视角生成你手机浏览器里此刻真实存在的5-7条收藏书签。\n要求：\n1. 收藏的内容必须符合你的性格、职业、兴趣、生活状态和长期关注领域\n2. 反映你的个人喜好、审美取向和生活方式\n3. 网页标题要具体真实\n4. 每条格式严格为：网页标题|||网址|||收藏时间\n5. 条目之间用一个空行分隔\n6. 网址用简短域名格式\n7. 时间用简短格式如"2天前""上周三""1周前""1个月前"\n8. 只输出收藏记录，不要加任何说明\n';
   } else if (mode === 'secret-mail') {
-    return '\n【当前模式：信箱生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意翻看了你手机的短信信箱。\n请以第一人称视角生成你手机短信信箱里此刻真实存在的3-5条短信。\n要求：\n1. 既有你主动发出的短信，也有别人发给你的短信，混合呈现，比例大致均衡\n2. 对方可以包括：主控角色、同事、朋友、家人、房东、快递通知、银行/服务通知、外卖等\n3. 至少有1-2条与主控角色之间的短信，内容要呼应你们近期的关系状态\n4. 短信内容必须符合你的性格和人际交往方式，体现你的社交风格和语气习惯\n5. 服务通知类短信要写得像真实运营商/银行/快递的格式\n6. 每条格式：方向|||对方|||短信内容|||时间，条目之间用 ||| 分隔\n7. 方向用"发出"或"收到"两个字标记\n8. 时间用简短格式如"10分钟前""今天 18:00""昨天""3天前""刚刚"\n9. 只输出短信内容，不要加任何说明\n';
+    return '\n【当前模式：信箱生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意翻看了你手机的短信信箱。\n请以第一人称视角生成你手机短信信箱里此刻真实存在的3-5条短信。\n要求：\n1. 既有你主动发出的短信，也有别人发给你的短信，混合呈现，比例大致均衡\n2. 对方可以包括：主控角色、同事、朋友、家人、房东、快递通知、银行/服务通知、外卖等\n3. 至少有1-2条与主控角色之间的短信，内容要呼应你们近期的关系状态\n4. 短信内容必须符合你的性格和人际交往方式，体现你的社交风格和语气习惯\n5. 服务通知类短信要写得像真实运营商/银行/快递的格式\n6. 每条格式严格为：方向|||对方|||短信内容|||时间\n7. 条目之间用一个空行分隔\n8. 方向用"发出"或"收到"两个字标记\n9. 时间用简短格式如"10分钟前""今天 18:00""昨天""3天前""刚刚"\n10. 只输出短信内容，不要加任何说明\n';
   } else if (mode === 'secret-cart') {
     return '\n【当前模式：购物车生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意查看了你手机购物APP的购物车、运输中、寄退和历史订单。\n请以第一人称视角生成你此刻真实的购物数据，分为四个板块。\n\n严格按以下格式输出，每个板块用【】标记开头，条目内字段用|||分隔。\n每条数据中|||的分隔顺序必须严格一致，切勿颠倒字段顺序！\n\n【购物车】\n格式：商品名|||商品简介\n示例：羊毛混纺围巾|||入冬了想搭配大衣穿\n（生成2-3个商品，商品简介简短说明是什么、为什么想买）\n注意：|||左边必须是商品名（名词），右边必须是商品简介（描述）\n\n【运输中】\n格式：商品名|||运输状态|||购买理由\n示例：降噪蓝牙耳机|||运输中|||通勤路上太吵想安静一下\n（生成2-3个商品，运输状态如"已发货""运输中""派送中""待取件"，购买理由符合你的性格和近期生活）\n注意：第一个是商品名，第二个是运输状态，第三个是购买理由，切勿颠倒\n\n【寄退】\n格式：商品名|||运输状态|||退回理由\n示例：棉麻衬衫|||退货中|||尺码不合适\n（生成2-3个商品，运输状态如"退货中""已揽件""退款处理中"，退回理由真实合理）\n注意：第一个是商品名，第二个是运输状态，第三个是退回理由，切勿颠倒\n\n【历史订单】\n格式：购买日期|||商品名|||购买理由\n示例：上周三|||手工巧克力礼盒|||TA提到过喜欢吃巧克力\n（生成2-3个商品，购买日期用"3天前""上周五""2周前"等简短格式，购买理由要与主控角色紧密关联——为TA买的、因为TA才买的、送给TA的等）\n注意：第一个是日期，第二个是商品名，第三个是购买理由，切勿颠倒\n\n只输出购物数据，不要加任何说明\n';
   }
@@ -2853,7 +2884,7 @@ async function callAI(userMessage, mode) {
 
   const systemPrompt = buildSystemPrompt(mode);
   // L5 即时上下文：最近20条记录，作为 history messages 注入
-  const historyMsgs = (mode === 'chat' || mode === 'event') ? buildHistoryMessages(mode) : [];
+  const historyMsgs = (mode === 'chat' || mode === 'event' || mode === 'polish') ? buildHistoryMessages(mode) : [];
 
   const messages = [
     { role: 'system', content: systemPrompt },
@@ -3445,7 +3476,7 @@ async function sendEventWish() {
     // Generate sequentially: polish first, then narrative uses polished text as context
     const polished = await callAI(wish, 'polish');
     const narrative = await callAI(
-      `【玩家的剧情愿望】\n${wish}\n\n【润色后的愿望文本】\n${polished}\n\n请基于以上内容生成第三人称叙事文段，叙事要自然衔接润色后的文本。`,
+      `【玩家的剧情愿望】\n${wish}\n\n【润色后的愿望文本（仅供参考，不要复述其中内容）】\n${polished}\n\n请基于玩家的愿望推进剧情，生成第三人称叙事文段。叙事必须从润色文本结束的地方继续推进，展开新的动作、对话、场景或情节发展，严禁复述或重复润色文本中已写过的任何句子、段落或场景描写。`,
       'event'
     );
 
@@ -3662,6 +3693,8 @@ function renderMemory() {
   });
   html += '</div>';
   container.innerHTML = html;
+  // 滚动到最新的一条记忆（最底部）
+  container.scrollTop = container.scrollHeight;
 }
 
 // Incrementally append a single memory card without rebuilding the rest
@@ -3682,6 +3715,8 @@ function appendMemoryCard(cardId) {
   } else {
     container.innerHTML = `<div class="memory-timeline">${buildMemoryCardHtml(card)}</div>`;
   }
+  // 滚动到新生成的记忆卡片（最底部）
+  container.scrollTop = container.scrollHeight;
 }
 
 // Remove a single memory card from DOM without full re-render
@@ -4145,27 +4180,28 @@ async function generateMemo(charName) {
     const result = await callAI(prompt, 'secret-memo');
     // Stale check: if a newer generation started, ignore this result
     if (genId !== state.secretGenId) return;
-    // Normalize: replace newlines with ||| so both \n and ||| work as separators
-    const normalized = result.replace(/\r?\n/g, '|||');
-    const items = normalized.split('|||').map(s => s.trim()).filter(s => s);
+    // Split by blank lines to get individual memo items (body may be multi-line)
+    const rawItems = result.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
     let html = '';
-    // Only process complete groups of 3 (title, text, time)
-    const groupCount = Math.floor(items.length / 3);
-    for (let g = 0; g < groupCount; g++) {
-      const i = g * 3;
-      const title = items[i].replace(/\s+/g, ' ');
-      const text = items[i + 1].replace(/\s+/g, ' ');
-      const time = items[i + 2].replace(/\s+/g, ' ');
-      html += `
-        <div class="memo-item">
-          <div class="memo-item-header">
-            <div class="memo-item-time">${escapeHtml(time)}</div>
-            <div class="memo-item-sep">｜</div>
-            <div class="memo-item-title">${escapeHtml(title)}</div>
+    for (const rawItem of rawItems) {
+      // Each item format: title|||text|||time
+      const parts = rawItem.split('|||').map(s => s.trim()).filter(s => s);
+      if (parts.length >= 3) {
+        const title = parts[0].replace(/\s+/g, ' ');
+        // Body may span multiple parts if it contained newlines; join middle parts
+        const text = parts.slice(1, -1).join('\n').replace(/\s+$/, '');
+        const time = parts[parts.length - 1].replace(/\s+/g, ' ');
+        html += `
+          <div class="memo-item">
+            <div class="memo-item-header">
+              <div class="memo-item-time">${escapeHtml(time)}</div>
+              <div class="memo-item-sep">｜</div>
+              <div class="memo-item-title">${escapeHtml(title)}</div>
+            </div>
+            <div class="memo-item-text">${escapeHtml(text)}</div>
           </div>
-          <div class="memo-item-text">${escapeHtml(text)}</div>
-        </div>
-      `;
+        `;
+      }
     }
     listEl.className = '';
     listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
@@ -4194,26 +4230,26 @@ async function generateHistory(charName, tab) {
     const result = await callAI(prompt, tab === 'footprint' ? 'secret-history' : 'secret-bookmark');
     // Stale check: if a newer generation started, ignore this result
     if (genId !== state.secretGenId) return;
-    // Normalize: replace newlines with ||| so both \n and ||| work as separators
-    const normalized = result.replace(/\r?\n/g, '|||');
-    const items = normalized.split('|||').map(s => s.trim()).filter(s => s);
+    // Split by blank lines to get individual items
+    const rawItems = result.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
     let html = '';
-    // Only process complete groups of 3 (title, url, time)
-    const groupCount = Math.floor(items.length / 3);
-    for (let g = 0; g < groupCount; g++) {
-      const i = g * 3;
-      const title = items[i].replace(/\s+/g, ' ');
-      const url = items[i + 1].replace(/\s+/g, ' ');
-      const time = items[i + 2].replace(/\s+/g, ' ');
-      html += `
-        <div class="history-item">
-          <div class="history-item-info">
-            <div class="history-item-title">${escapeHtml(title)}</div>
-            <div class="history-item-url">${escapeHtml(url)}</div>
+    for (const rawItem of rawItems) {
+      // Each item format: title|||url|||time
+      const parts = rawItem.split('|||').map(s => s.trim()).filter(s => s);
+      if (parts.length >= 3) {
+        const title = parts[0].replace(/\s+/g, ' ');
+        const url = parts[1].replace(/\s+/g, ' ');
+        const time = parts[parts.length - 1].replace(/\s+/g, ' ');
+        html += `
+          <div class="history-item">
+            <div class="history-item-info">
+              <div class="history-item-title">${escapeHtml(title)}</div>
+              <div class="history-item-url">${escapeHtml(url)}</div>
+            </div>
+            <div class="history-item-time">${escapeHtml(time)}</div>
           </div>
-          <div class="history-item-time">${escapeHtml(time)}</div>
-        </div>
-      `;
+        `;
+      }
     }
     const finalHtml = html || '<div class="secret-loading">暂无内容</div>';
     // Cache the result
@@ -4253,29 +4289,29 @@ async function generateMailbox(charName) {
   try {
     const result = await callAI(prompt, 'secret-mail');
     if (genId !== state.secretGenId) return;
-    // Normalize: replace newlines with ||| so both \n and ||| work as separators
-    const normalized = result.replace(/\r?\n/g, '|||');
-    const items = normalized.split('|||').map(s => s.trim()).filter(s => s);
+    // Split by blank lines to get individual mail items
+    const rawItems = result.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
     let html = '';
-    // Only process complete groups of 4 (direction, party, text, time)
-    const groupCount = Math.floor(items.length / 4);
-    for (let g = 0; g < groupCount; g++) {
-      const i = g * 4;
-      const direction = items[i].replace(/\s+/g, ' ');
-      const party = items[i + 1].replace(/\s+/g, ' ');
-      const text = items[i + 2].replace(/\s+/g, ' ');
-      const time = items[i + 3].replace(/\s+/g, ' ');
-      const isSent = direction.includes('发出');
-      html += `
-        <div class="mail-item ${isSent ? 'sent' : 'received'}">
-          <div class="mail-item-header">
-            <span class="mail-item-direction ${isSent ? 'sent' : 'received'}">${isSent ? '↗ 发出' : '↙ 收到'}</span>
-            <span class="mail-item-party">${escapeHtml(party)}</span>
-            <span class="mail-item-time">${escapeHtml(time)}</span>
+    for (const rawItem of rawItems) {
+      // Each item format: direction|||party|||text|||time
+      const parts = rawItem.split('|||').map(s => s.trim()).filter(s => s);
+      if (parts.length >= 4) {
+        const direction = parts[0].replace(/\s+/g, ' ');
+        const party = parts[1].replace(/\s+/g, ' ');
+        const text = parts.slice(2, -1).join('\n').replace(/\s+$/, '');
+        const time = parts[parts.length - 1].replace(/\s+/g, ' ');
+        const isSent = direction.includes('发出');
+        html += `
+          <div class="mail-item ${isSent ? 'sent' : 'received'}">
+            <div class="mail-item-header">
+              <span class="mail-item-direction ${isSent ? 'sent' : 'received'}">${isSent ? '↗ 发出' : '↙ 收到'}</span>
+              <span class="mail-item-party">${escapeHtml(party)}</span>
+              <span class="mail-item-time">${escapeHtml(time)}</span>
+            </div>
+            <div class="mail-item-text">${escapeHtml(text)}</div>
           </div>
-          <div class="mail-item-text">${escapeHtml(text)}</div>
-        </div>
-      `;
+        `;
+      }
     }
     listEl.className = '';
     listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
