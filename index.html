@@ -377,6 +377,21 @@ body{
 :-webkit-full-screen .fs-btn{
   top:35px;
 }
+/* Fullscreen mode: allow html/body to shrink when keyboard opens (JS sets inline height) */
+html:fullscreen,
+html:-webkit-full-screen{
+  height:100%;
+  overflow:hidden;
+}
+html:fullscreen body,
+html:-webkit-full-screen body{
+  height:100%;
+  overflow:hidden;
+}
+html:fullscreen #app,
+html:-webkit-full-screen #app{
+  height:100%;
+}
 
 /* ========== Bottom Nav ========== */
 #bottom-nav{
@@ -2509,46 +2524,89 @@ function setupChatKeyboardDismiss() {
 
 // Handle virtual keyboard: resize app and scroll chat to bottom
 function setupKeyboardHandler() {
-  if (window.visualViewport) {
-    function onViewportChange() {
-      const vh = window.visualViewport.height;
-      const app = document.getElementById('app');
-      if (app) {
-        // 把 #app 高度收缩到键盘上方的可视区高度，让 flex 底部的 input-bar 自然上移
-        app.style.height = vh + 'px';
-      }
-      // 滚动聊天/羁绊内容到底部
-      const chatMessages = document.getElementById('chat-messages');
-      if (chatMessages && document.getElementById('tab-chat').style.display !== 'none') {
-        setTimeout(function() { chatMessages.scrollTop = chatMessages.scrollHeight; }, 50);
-      }
-      const bondsContent = document.getElementById('bonds-content');
-      if (bondsContent && document.getElementById('tab-bonds').style.display !== 'none') {
-        setTimeout(function() { bondsContent.scrollTop = bondsContent.scrollHeight; }, 50);
-      }
-      // 确保当前聚焦的输入框在可视区域内
-      const active = document.activeElement;
-      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) {
-        setTimeout(function() {
-          try {
-            active.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          } catch(e) {}
-        }, 100);
-      }
+  function applyViewportHeight() {
+    if (!window.visualViewport) return;
+    const vh = window.visualViewport.height;
+    const offset = window.visualViewport.offsetTop || 0;
+    const app = document.getElementById('app');
+    if (app) {
+      // 把 #app 高度收缩到键盘上方的可视区高度，让 flex 底部的 input-bar 自然上移
+      app.style.height = vh + 'px';
     }
-    window.visualViewport.addEventListener('resize', onViewportChange);
-    window.visualViewport.addEventListener('scroll', onViewportChange);
+    // 全屏模式下也需要同步收缩 html/body，否则它们仍占满整个屏幕高度
+    const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    if (isFs) {
+      document.documentElement.style.height = vh + 'px';
+      document.body.style.height = vh + 'px';
+    }
+    // 滚动聊天/羁绊内容到底部
+    const chatMessages = document.getElementById('chat-messages');
+    if (chatMessages && document.getElementById('tab-chat').style.display !== 'none') {
+      setTimeout(function() { chatMessages.scrollTop = chatMessages.scrollHeight; }, 50);
+    }
+    const bondsContent = document.getElementById('bonds-content');
+    if (bondsContent && document.getElementById('tab-bonds').style.display !== 'none') {
+      setTimeout(function() { bondsContent.scrollTop = bondsContent.scrollHeight; }, 50);
+    }
+    // 确保当前聚焦的输入框在可视区域内
+    const active = document.activeElement;
+    if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) {
+      setTimeout(function() {
+        try {
+          active.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } catch(e) {}
+      }, 100);
+    }
   }
 
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', applyViewportHeight);
+    window.visualViewport.addEventListener('scroll', applyViewportHeight);
+  }
+
+  // 全屏模式切换后重新应用
+  document.addEventListener('fullscreenchange', function() {
+    setTimeout(applyViewportHeight, 100);
+    // 退出全屏时清除强制高度
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      document.documentElement.style.height = '';
+      document.body.style.height = '';
+    }
+  });
+  document.addEventListener('webkitfullscreenchange', function() {
+    setTimeout(applyViewportHeight, 100);
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      document.documentElement.style.height = '';
+      document.body.style.height = '';
+    }
+  });
+
   // 通用：input/textarea 获得焦点时滚动到可视区域中部
+  // 全屏模式下 visualViewport resize 可能不触发，所以 focusin 是关键兜底
   document.addEventListener('focusin', function(e) {
     const t = e.target;
     if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) {
+      // 多次尝试，覆盖键盘弹出动画的时间窗口
+      setTimeout(applyViewportHeight, 100);
+      setTimeout(applyViewportHeight, 300);
+      setTimeout(applyViewportHeight, 500);
       setTimeout(function() {
         try {
           t.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } catch(e) {}
       }, 300);
+    }
+  });
+
+  // 失焦时恢复
+  document.addEventListener('focusout', function(e) {
+    const t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) {
+      setTimeout(function() {
+        if (!document.activeElement || (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA')) {
+          applyViewportHeight();
+        }
+      }, 150);
     }
   });
 }
