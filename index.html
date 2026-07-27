@@ -910,6 +910,11 @@ html:-webkit-full-screen #app{
   color:var(--gold-faint);
   letter-spacing:1px;
 }
+.memory-card-source{
+  font-size:10px;
+  color:var(--text-faint);
+  letter-spacing:0.5px;
+}
 .memory-card-text{
   font-size:13.5px;
   line-height:1.8;
@@ -3023,7 +3028,9 @@ function buildHistoryMessages(mode) {
 // L6 模式指令：根据 mode 动态注入
 function buildModeInstruction(mode) {
   if (mode === 'chat') {
-    return '\n【当前模式：聊天】\n规则：\n1. 只输出角色说的话——纯粹的一句话或几句话，像微信聊天发出去的文字。\n2. 绝对禁止任何括号旁白、动作描写、心理描写、神态描写、环境描写。例如（他笑了笑）、（喉结动了动）、（声音有点哑）这类全部禁止。只输出对话文字本身。\n3. 回复需综合人设与历史记忆：以初始人设为底色，以近期互动和记忆卡片中记录的"变化"为当前行为依据。若历史中已出现性格偏移，应延续该偏移，而非回退到初始状态。\n4. 输出风格：短句、口语化、日常对话，像微信聊天一样自然。\n5. 不主动推进重大剧情，不展开长篇叙述。\n';
+    const meName = state.data.characters.me.name || '主控角色';
+    const otherName = state.data.characters.other.name || 'AI角色';
+    return '\n【当前模式：聊天】\n角色分配：你扮演AI角色"' + otherName + '"，用户扮演主控角色"' + meName + '"。你的每一条回复都必须且只能以"' + otherName + '"的身份、视角和口吻输出，绝对禁止以主控角色"' + meName + '"的视角发言或代替用户说话。\n规则：\n1. 只输出' + otherName + '说的话——纯粹的一句话或几句话，像微信聊天发出去的文字。\n2. 绝对禁止任何括号旁白、动作描写、心理描写、神态描写、环境描写。例如（他笑了笑）、（喉结动了动）、（声音有点哑）这类全部禁止。只输出对话文字本身。\n3. 回复需综合人设与历史记忆：以初始人设为底色，以近期互动和记忆卡片中记录的"变化"为当前行为依据。若历史中已出现性格偏移，应延续该偏移，而非回退到初始状态。\n4. 输出风格：短句、口语化、日常对话，像微信聊天一样自然。\n5. 不主动推进重大剧情，不展开长篇叙述。\n';
   } else if (mode === 'event') {
     return '\n【当前模式：事件叙事】\n规则：\n1.严格使用第三人称叙述。指代主控角色一律使用主控角色的姓名（或"他/她"），指代AI角色一律使用AI角色的姓名（或"他/她"）。全文禁止出现"你""你的""你们"等任何第二人称代词。\n2. 围绕玩家的愿望展开，不要替玩家做重大决定。\n3. 严禁复述或重复上文已出现过的内容（包括润色文本、历史叙事、聊天记录中的任何句子、段落或场景描写）。叙事必须从已有内容的结束处继续推进，只写新的发展。\n4. 叙事应自然延伸当前状态：综合初始人设 + 记忆卡片中的历史变化。若历史已记录角色状态的偏移，叙事中应延续该偏移，不退回初始状态。\n5.若有心理活动：小段插入第一人称或自由间接引语呈现角色当下的内心独白、回忆、矛盾、独白塑造情感冲突（如自责与不甘交织、想追问又克制、甜蜜回忆与当下苦涩对比）。\n6.格式要求：心理活动用「」括起来，对话内容则用""括起来。段落之间用换行分隔，不要挤在一起。\n';
   } else if (mode === 'polish') {
@@ -3091,20 +3098,34 @@ async function callOpenAICompatible(messages, config) {
   // 规范化 baseUrl：去除末尾的 / 和 /v1
   let base = (config.baseUrl || '').replace(/\/+$/, '');
   base = base.replace(/\/v1$/, '');
-  const resp = await fetch(`${base}/v1/chat/completions`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${config.apiKey}`
-    },
-    body: JSON.stringify({
-      model: config.model,
-      messages: messages,
-      temperature: 0.85,
-      max_tokens: 2000,
-      stream: false
-    })
-  });
+  // 超时控制：90秒无响应则中止请求，防止 UI 永久卡在加载状态
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 90000);
+  let resp;
+  try {
+    resp = await fetch(`${base}/v1/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${config.apiKey}`
+      },
+      body: JSON.stringify({
+        model: config.model,
+        messages: messages,
+        temperature: 0.85,
+        max_tokens: 2000,
+        stream: false
+      }),
+      signal: controller.signal
+    });
+  } catch(e) {
+    clearTimeout(timeoutId);
+    if (e.name === 'AbortError') {
+      throw new Error('请求超时（90秒无响应），请检查网络或API服务状态');
+    }
+    throw new Error('网络请求失败：' + (e.message || '未知错误'));
+  }
+  clearTimeout(timeoutId);
   if (!resp.ok) {
     const errText = await resp.text();
     throw new Error(`API ${resp.status}: ${errText}`);
@@ -3849,10 +3870,33 @@ function doDeleteNarrative(evtId, side) {
 
 /* ========== 记忆页 ========== */
 function buildMemoryCardHtml(card) {
+  // 构建来源范围标签：显示本次记忆读取的对话/剧情条数和时间范围
+  let sourceLabel = '';
+  if (card.sourceRange) {
+    const parts = [];
+    if (card.sourceChats > 0) {
+      parts.push(`对话${card.sourceChats}条`);
+    }
+    if (card.sourceEvents > 0) {
+      parts.push(`剧情${card.sourceEvents}条`);
+    }
+    if (parts.length > 0) {
+      sourceLabel = `<span class="memory-card-source">来源：${parts.join(' · ')}</span>`;
+    }
+  } else if (card.sourceChats || card.sourceEvents) {
+    // 旧版卡片兼容
+    const parts = [];
+    if (card.sourceChats > 0) parts.push(`对话${card.sourceChats}条`);
+    if (card.sourceEvents > 0) parts.push(`剧情${card.sourceEvents}条`);
+    if (parts.length > 0) {
+      sourceLabel = `<span class="memory-card-source">来源：${parts.join(' · ')}</span>`;
+    }
+  }
   return `
     <div class="memory-card" data-id="${card.id}">
       <div class="memory-card-header">
         <span class="memory-card-time">${formatTime(card.timestamp)}</span>
+        ${sourceLabel}
       </div>
       <div class="memory-card-text" id="mem-text-${card.id}">${escapeHtml(card.content)}</div>
       <div class="memory-card-actions">
@@ -3920,6 +3964,7 @@ async function improveMemory() {
   const btn = document.getElementById('improve-memory-btn');
   if (state.isLoading) return;
 
+  // 截止标记：上次生成记忆时读取到的最后一条内容的时间戳
   const since = state.data.lastMemoryUpdate || 0;
   const recentChats = state.data.chatHistory.filter(h => h.timestamp > since);
   const recentEvents = state.data.eventHistory.filter(h => h.timestamp > since);
@@ -3928,6 +3973,14 @@ async function improveMemory() {
     showToast('没有新的对话记录需要总结');
     return;
   }
+
+  // 记录本次读取的来源范围（A→B），用于下次截取和卡片删除时的标记回溯
+  // fromTs = 截止标记（本次读取的起点，不含该时间戳本身）
+  // toTs   = 本次读取的最后一条内容的时间戳（含）
+  const chatFromTs = since;
+  const chatToTs = recentChats.length > 0 ? recentChats[recentChats.length - 1].timestamp : 0;
+  const eventFromTs = since;
+  const eventToTs = recentEvents.length > 0 ? recentEvents[recentEvents.length - 1].timestamp : 0;
 
   state.isLoading = true;
   btn.disabled = true;
@@ -3951,9 +4004,19 @@ async function improveMemory() {
       content: result,
       timestamp: Date.now(),
       sourceChats: recentChats.length,
-      sourceEvents: recentEvents.length
+      sourceEvents: recentEvents.length,
+      // 来源范围标记：本次读取的内容从哪条到哪条（时间戳）
+      sourceRange: {
+        chatFromTs: chatFromTs,
+        chatToTs: chatToTs,
+        eventFromTs: eventFromTs,
+        eventToTs: eventToTs
+      }
     });
-    state.data.lastMemoryUpdate = Date.now();
+    // 将截止标记更新为本次读取的最后一条内容的时间戳（而非 Date.now()）
+    // 下次生成时将从该时间戳之后的内容开始截取
+    const newCutoff = Math.max(chatToTs, eventToTs);
+    state.data.lastMemoryUpdate = newCutoff;
     saveToStorage();
     // Incrementally append the new card (no full re-render)
     appendMemoryCard(cardId);
@@ -4019,13 +4082,25 @@ async function regenerateMemoryCard(cardId) {
   const textEl = document.getElementById(`mem-text-${cardId}`);
   if (textEl) textEl.innerHTML = `<div class="bonds-loading" style="padding:8px;">重新生成<span class="dots"><span></span><span></span><span></span></span></div>`;
 
-  let summary = '请总结以下全部记录的关键信息：\n\n';
+  // 使用卡片存储的来源范围重新截取相同的内容，而非读取全部历史
+  const sr = card.sourceRange;
+  let recentChats, recentEvents;
+  if (sr) {
+    recentChats = state.data.chatHistory.filter(h => h.timestamp > sr.chatFromTs && h.timestamp <= sr.chatToTs);
+    recentEvents = state.data.eventHistory.filter(h => h.timestamp > sr.eventFromTs && h.timestamp <= sr.eventToTs);
+  } else {
+    // 旧版卡片没有 sourceRange，回退到全部历史
+    recentChats = state.data.chatHistory;
+    recentEvents = state.data.eventHistory;
+  }
+
+  let summary = '请总结以下记录的关键信息：\n\n';
   summary += '【聊天记录】\n';
-  state.data.chatHistory.forEach(h => {
+  recentChats.forEach(h => {
     summary += `${h.role === 'user' ? '你' : '角色'}：${h.content}\n`;
   });
   summary += '\n【事件记录】\n';
-  state.data.eventHistory.forEach(e => {
+  recentEvents.forEach(e => {
     summary += `愿望：${e.wish}\n叙事：${e.aiNarrative}\n\n`;
   });
 
@@ -4061,6 +4136,23 @@ function deleteMemoryCard(cardId) {
 
 function confirmDeleteMemory(cardId) {
   state.data.memoryCards = state.data.memoryCards.filter(c => c.id !== cardId);
+  // 删除卡片后，重新计算截止标记：
+  // 取剩余卡片中最大的来源范围结束时间戳作为新的截止点。
+  // 若删除的是最后一张卡片，截止标记会回退到上一张卡片的结束点（即"上一次截止的标记"），
+  // 下次生成时将重新包含被删除卡片所覆盖的内容。
+  // 若没有剩余卡片，截止标记归零，下次将从全部历史开始生成。
+  let maxCutoff = 0;
+  state.data.memoryCards.forEach(c => {
+    let cardEnd = 0;
+    if (c.sourceRange) {
+      cardEnd = Math.max(c.sourceRange.chatToTs || 0, c.sourceRange.eventToTs || 0);
+    } else if (c.timestamp) {
+      // 旧版卡片没有 sourceRange，用创建时间作为近似值
+      cardEnd = c.timestamp;
+    }
+    if (cardEnd > maxCutoff) maxCutoff = cardEnd;
+  });
+  state.data.lastMemoryUpdate = maxCutoff;
   saveToStorage();
   closeModal();
   // Remove the single card element from DOM (no full re-render)
