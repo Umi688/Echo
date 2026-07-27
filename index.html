@@ -1444,6 +1444,124 @@ body{
   word-break:break-word;
 }
 
+/* Wish items */
+.wish-item{
+  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.72) 100%);
+  backdrop-filter:blur(12px);
+  padding:18px 20px;
+  margin-bottom:14px;
+  position:relative;
+  border-left:2px solid rgba(208,217,229,0.35);
+  border-radius:0 3px 3px 0;
+  overflow:hidden;
+}
+.wish-item:last-child{margin-bottom:0}
+.wish-item::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,rgba(208,217,229,0.2) 0%,rgba(131,147,168,0.08) 40%,transparent 100%);
+}
+.wish-item-title{
+  font-size:13px;
+  color:var(--gold);
+  letter-spacing:2.5px;
+  text-indent:1px;
+  font-weight:500;
+  opacity:0.9;
+  word-break:break-word;
+  margin-bottom:8px;
+}
+.wish-item-text{
+  font-size:14px;
+  line-height:1.85;
+  color:rgba(131,147,168,0.92);
+  word-break:break-word;
+  overflow-wrap:break-word;
+  letter-spacing:0.5px;
+  font-family:"Noto Serif SC","STSong","PingFang SC",serif;
+  white-space:pre-wrap;
+}
+
+/* Plan: sticky note + timeline */
+.plan-sticky-note{
+  background:linear-gradient(135deg,rgba(255,243,180,0.12) 0%,rgba(255,220,120,0.08) 100%);
+  backdrop-filter:blur(8px);
+  padding:18px 20px;
+  margin-bottom:16px;
+  position:relative;
+  border-left:3px solid rgba(255,220,120,0.4);
+  border-radius:0 3px 3px 0;
+  overflow:hidden;
+}
+.plan-sticky-note::after{
+  content:'';
+  position:absolute;
+  top:0;right:0;
+  width:40px;
+  height:40px;
+  background:linear-gradient(225deg,rgba(255,220,120,0.1) 0%,transparent 50%);
+}
+.plan-sticky-note-label{
+  font-size:10px;
+  color:rgba(255,220,120,0.6);
+  letter-spacing:2px;
+  margin-bottom:10px;
+  text-transform:uppercase;
+}
+.plan-sticky-note-text{
+  font-size:14px;
+  line-height:1.85;
+  color:rgba(255,240,200,0.85);
+  word-break:break-word;
+  overflow-wrap:break-word;
+  letter-spacing:0.5px;
+  font-family:"Noto Serif SC","STSong","PingFang SC",serif;
+  white-space:pre-wrap;
+}
+.plan-timeline{
+  position:relative;
+}
+.plan-timeline-label{
+  font-size:10px;
+  color:var(--gold-faint);
+  letter-spacing:2px;
+  margin-bottom:12px;
+  text-transform:uppercase;
+}
+.plan-timeline-item{
+  position:relative;
+  padding:10px 0 10px 20px;
+  border-left:2px solid rgba(131,147,168,0.15);
+  margin-left:4px;
+  margin-bottom:2px;
+}
+.plan-timeline-item::before{
+  content:'';
+  position:absolute;
+  left:-5px;
+  top:14px;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--gold-faint);
+}
+.plan-timeline-time{
+  font-size:11px;
+  color:var(--gold);
+  letter-spacing:1px;
+  margin-bottom:3px;
+  font-weight:500;
+}
+.plan-timeline-action{
+  font-size:13px;
+  color:rgba(131,147,168,0.92);
+  word-break:break-word;
+  line-height:1.6;
+  letter-spacing:0.5px;
+}
+
 /* ========== Settings Tab ========== */
 #settings-content{
   flex:1;
@@ -2053,14 +2171,6 @@ select.form-input option{background:#202E42;color:var(--text)}
         </div>
         <div class="secret-module-arrow">›</div>
       </div>
-      <div class="secret-module" onclick="openSecretModule('footprint')">
-        <div class="secret-module-icon">🔍</div>
-        <div class="secret-module-info">
-          <div class="secret-module-name">他的浏览记录</div>
-          <div class="secret-module-desc">窥探他最近的浏览足迹</div>
-        </div>
-        <div class="secret-module-arrow">›</div>
-      </div>
       <div class="secret-module" onclick="openSecretModule('bookmark')">
         <div class="secret-module-icon">🔖</div>
         <div class="secret-module-info">
@@ -2082,6 +2192,22 @@ select.form-input option{background:#202E42;color:var(--text)}
         <div class="secret-module-info">
           <div class="secret-module-name">他的购物车</div>
           <div class="secret-module-desc">购物车 / 运输 / 寄退 / 订单</div>
+        </div>
+        <div class="secret-module-arrow">›</div>
+      </div>
+      <div class="secret-module" onclick="openSecretModule('wish')">
+        <div class="secret-module-icon">🌠</div>
+        <div class="secret-module-info">
+          <div class="secret-module-name">他的心愿</div>
+          <div class="secret-module-desc">窥探他藏在心底的愿望</div>
+        </div>
+        <div class="secret-module-arrow">›</div>
+      </div>
+      <div class="secret-module" onclick="openSecretModule('plan')">
+        <div class="secret-module-icon">🗺️</div>
+        <div class="secret-module-info">
+          <div class="secret-module-name">他的秘密计划</div>
+          <div class="secret-module-desc">便利贴与时间轴</div>
         </div>
         <div class="secret-module-arrow">›</div>
       </div>
@@ -2848,14 +2974,16 @@ function buildModeInstruction(mode) {
     return '\n【当前模式：记忆总结】\n规则：\n1. 根据用户提供的近期聊天记录和事件记录，总结关键信息。\n2. 提取：重要事件、角色关系变化、人物状态演变。\n3. 输出格式：一段简洁的摘要，不超过200字。用"你"指代主控角色，用AI角色姓名指代AI角色。\n4. 只记录已发生的事实，不加入推测或评价。\n5. 直接输出摘要正文，不要加任何标题、标记或说明（如"记忆总结"等字样一律不要出现）。\n';
   } else if (mode === 'secret-memo') {
     return '\n【当前模式：备忘录生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意翻看了你手机里的备忘录。\n请以第一人称视角生成你备忘录里此刻真实存在的3-5条内容。\n要求：\n1. 内容必须紧扣你的人设、性格、背景、日常生活和近期经历——不要写空泛的通用备忘录\n2. 至少有一条与你和主控角色之间的关系或近期互动有关\n3. 类型多样：待办事项、心情记录、碎碎念、灵感片段、人际备注、购物清单等\n4. 语气、用词习惯、甚至标点风格都要符合你的性格特征\n5. 每条格式严格为：标题|||正文|||时间\n6. 条目之间用一个空行分隔\n7. 正文可以多行，但正文中不得出现|||字符\n8. 时间用简短格式如"3天前""昨天 22:30""上周五""刚刚"\n9. 只输出备忘录内容，不要加任何说明或解释\n';
-  } else if (mode === 'secret-history') {
-    return '\n【当前模式：浏览足迹生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意查看了你手机浏览器的浏览足迹。\n请以第一人称视角生成你手机浏览器里此刻真实存在的5-7条浏览足迹。\n要求：\n1. 搜索和浏览的内容必须符合你的性格、职业、兴趣、生活状态和近期经历\n2. 至少有一条搜索或浏览与近期和主控角色的互动、关系有关\n3. 可以包含搜索问题、购物、资讯、社交、工具类网站、影视音乐等\n4. 网页标题要具体真实，不要用"某网页"这种模糊表述\n5. 每条格式严格为：网页标题|||网址|||访问时间\n6. 条目之间用一个空行分隔\n7. 网址用简短域名格式如"zhihu.com/question/xxx""bilibili.com/video/BVxxxx"\n8. 时间用简短格式如"1小时前""今天 15:30""3天前""刚刚"\n9. 只输出浏览记录，不要加任何说明\n';
   } else if (mode === 'secret-bookmark') {
     return '\n【当前模式：收藏列表生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意查看了你手机浏览器的收藏书签。\n请以第一人称视角生成你手机浏览器里此刻真实存在的5-7条收藏书签。\n要求：\n1. 收藏的内容必须符合你的性格、职业、兴趣、生活状态和长期关注领域\n2. 反映你的个人喜好、审美取向和生活方式\n3. 网页标题要具体真实\n4. 每条格式严格为：网页标题|||网址|||收藏时间\n5. 条目之间用一个空行分隔\n6. 网址用简短域名格式\n7. 时间用简短格式如"2天前""上周三""1周前""1个月前"\n8. 只输出收藏记录，不要加任何说明\n';
   } else if (mode === 'secret-mail') {
     return '\n【当前模式：信箱生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意翻看了你手机的短信信箱。\n请以第一人称视角生成你手机短信信箱里此刻真实存在的3-5条短信。\n要求：\n1. 既有你主动发出的短信，也有别人发给你的短信，混合呈现，比例大致均衡\n2. 对方可以包括：主控角色、同事、朋友、家人、房东、快递通知、银行/服务通知、外卖等\n3. 至少有1-2条与主控角色之间的短信，内容要呼应你们近期的关系状态\n4. 短信内容必须符合你的性格和人际交往方式，体现你的社交风格和语气习惯\n5. 服务通知类短信要写得像真实运营商/银行/快递的格式\n6. 每条格式严格为：方向|||对方|||短信内容|||时间\n7. 条目之间用一个空行分隔\n8. 方向用"发出"或"收到"两个字标记\n9. 时间用简短格式如"10分钟前""今天 18:00""昨天""3天前""刚刚"\n10. 只输出短信内容，不要加任何说明\n';
   } else if (mode === 'secret-cart') {
     return '\n【当前模式：购物车生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意查看了你手机购物APP的购物车、运输中、寄退和历史订单。\n请以第一人称视角生成你此刻真实的购物数据，分为四个板块。\n\n严格按以下格式输出，每个板块用【】标记开头，条目内字段用|||分隔。\n每条数据中|||的分隔顺序必须严格一致，切勿颠倒字段顺序！\n\n【购物车】\n格式：商品名|||商品简介\n示例：羊毛混纺围巾|||入冬了想搭配大衣穿\n（生成2-3个商品，商品简介简短说明是什么、为什么想买）\n注意：|||左边必须是商品名（名词），右边必须是商品简介（描述）\n\n【运输中】\n格式：商品名|||运输状态|||购买理由\n示例：降噪蓝牙耳机|||运输中|||通勤路上太吵想安静一下\n（生成2-3个商品，运输状态如"已发货""运输中""派送中""待取件"，购买理由符合你的性格和近期生活）\n注意：第一个是商品名，第二个是运输状态，第三个是购买理由，切勿颠倒\n\n【寄退】\n格式：商品名|||运输状态|||退回理由\n示例：棉麻衬衫|||退货中|||尺码不合适\n（生成2-3个商品，运输状态如"退货中""已揽件""退款处理中"，退回理由真实合理）\n注意：第一个是商品名，第二个是运输状态，第三个是退回理由，切勿颠倒\n\n【历史订单】\n格式：购买日期|||商品名|||购买理由\n示例：上周三|||手工巧克力礼盒|||TA提到过喜欢吃巧克力\n（生成2-3个商品，购买日期用"3天前""上周五""2周前"等简短格式，购买理由要与主控角色紧密关联——为TA买的、因为TA才买的、送给TA的等）\n注意：第一个是日期，第二个是商品名，第三个是购买理由，切勿颠倒\n\n只输出购物数据，不要加任何说明\n';
+  } else if (mode === 'secret-wish') {
+    return '\n【当前模式：心愿生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意看到了你藏在手机备忘录深处的心愿清单。\n请以第一人称视角生成你此刻真实存在的3-5条心愿。\n要求：\n1. 内容必须紧扣你的人设、性格、背景、日常生活和近期经历——不要写空泛的通用心愿\n2. 至少有一条与主控角色有关——关于TA的愿望、想为TA做的事、想和TA一起做的事等\n3. 心愿类型多样：可以是大大小小的人生愿望、日常小心愿、关于某个人的愿望、关于自己的愿望等\n4. 语气要符合你的性格特征——是认真的、随意的、还是嘴硬心软的，由你的人设决定\n5. 每条格式严格为：心愿标题|||心愿内容\n6. 条目之间用一个空行分隔\n7. 心愿内容可以多行，但不得出现|||字符\n8. 只输出心愿内容，不要加任何说明或解释\n';
+  } else if (mode === 'secret-plan') {
+    return '\n【当前模式：秘密计划生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意看到了你藏在抽屉里的秘密计划本。\n请以第一人称视角生成你的秘密计划，包含两个部分。\n\n严格按以下格式输出：\n\n【便利贴】\n你在制定这个秘密计划时贴在墙上的便利贴，记录你当时的内心想法、动机、纠结。\n直接写出便利贴上的文字内容，像真实的手写便利贴一样随意、真实、碎片化。\n可以是一段话，也可以是几个零散的短句。\n\n【时间轴】\n你规划的一天内从早到晚的行动安排，按时间顺序排列。\n每条格式严格为：时间|||行动内容\n时间用时分格式如"07:30""12:00""18:45""22:00"\n行动内容简明扼要，说明这个时间点要做什么。\n生成5-8条时间安排，覆盖从早到晚。\n\n两部分之间用一个空行分隔。\n内容要紧扣你的人设、性格、近期经历和与主控角色的关系状态。\n计划内容要真实合理，符合你的日常生活节奏。\n只输出计划内容，不要加任何说明。\n';
   }
   return '';
 }
@@ -3902,14 +4030,6 @@ function renderSecretHome() {
       </div>
       <div class="secret-module-arrow">›</div>
     </div>
-    <div class="secret-module" onclick="openSecretModule('footprint')">
-      <div class="secret-module-icon">🔍</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">他的浏览记录</div>
-        <div class="secret-module-desc">窥探他最近的浏览足迹</div>
-      </div>
-      <div class="secret-module-arrow">›</div>
-    </div>
     <div class="secret-module" onclick="openSecretModule('bookmark')">
       <div class="secret-module-icon">🔖</div>
       <div class="secret-module-info">
@@ -3934,16 +4054,33 @@ function renderSecretHome() {
       </div>
       <div class="secret-module-arrow">›</div>
     </div>
+    <div class="secret-module" onclick="openSecretModule('wish')">
+      <div class="secret-module-icon">🌠</div>
+      <div class="secret-module-info">
+        <div class="secret-module-name">他的心愿</div>
+        <div class="secret-module-desc">窥探他藏在心底的愿望</div>
+      </div>
+      <div class="secret-module-arrow">›</div>
+    </div>
+    <div class="secret-module" onclick="openSecretModule('plan')">
+      <div class="secret-module-icon">🗺️</div>
+      <div class="secret-module-info">
+        <div class="secret-module-name">他的秘密计划</div>
+        <div class="secret-module-desc">便利贴与时间轴</div>
+      </div>
+      <div class="secret-module-arrow">›</div>
+    </div>
   `;
 }
 
 // ========== 查看记录 ==========
 const SECRET_TYPE_NAMES = {
   'memo': '他的备忘录',
-  'footprint': '他的浏览记录',
   'bookmark': '他的收藏网址',
   'mailbox': '他的信箱',
-  'cart': '他的购物车'
+  'cart': '他的购物车',
+  'wish': '他的心愿',
+  'plan': '他的秘密计划'
 };
 
 function formatSecretRecordTime(timestamp) {
@@ -4053,24 +4190,6 @@ function openSecretModule(type) {
     } else {
       generateMemo(charName);
     }
-  } else if (type === 'footprint') {
-    container.innerHTML = `
-      <div class="secret-detail-panel">
-        <div class="secret-detail-panel-inner">
-          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
-          <div class="secret-detail-title">他的浏览记录</div>
-          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
-        </div>
-      </div>
-    `;
-    if (state.secretCache.footprint) {
-      const listEl = document.getElementById('secret-detail-list');
-      listEl.className = '';
-      listEl.innerHTML = state.secretCache.footprint;
-      showSecretActions('footprint', state.secretCache.footprint);
-    } else {
-      generateHistory(charName, 'footprint');
-    }
   } else if (type === 'bookmark') {
     container.innerHTML = `
       <div class="secret-detail-panel">
@@ -4124,6 +4243,42 @@ function openSecretModule(type) {
       showSecretActions('cart', state.secretCache.cart);
     } else {
       generateCart(charName);
+    }
+  } else if (type === 'wish') {
+    container.innerHTML = `
+      <div class="secret-detail-panel">
+        <div class="secret-detail-panel-inner">
+          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
+          <div class="secret-detail-title">他的心愿</div>
+          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
+        </div>
+      </div>
+    `;
+    if (state.secretCache.wish) {
+      const listEl = document.getElementById('secret-detail-list');
+      listEl.className = '';
+      listEl.innerHTML = state.secretCache.wish;
+      showSecretActions('wish', state.secretCache.wish);
+    } else {
+      generateWish(charName);
+    }
+  } else if (type === 'plan') {
+    container.innerHTML = `
+      <div class="secret-detail-panel">
+        <div class="secret-detail-panel-inner">
+          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
+          <div class="secret-detail-title">他的秘密计划</div>
+          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
+        </div>
+      </div>
+    `;
+    if (state.secretCache.plan) {
+      const listEl = document.getElementById('secret-detail-list');
+      listEl.className = '';
+      listEl.innerHTML = state.secretCache.plan;
+      showSecretActions('plan', state.secretCache.plan);
+    } else {
+      generatePlan(charName);
     }
   }
 }
@@ -4221,13 +4376,11 @@ async function generateMemo(charName) {
 async function generateHistory(charName, tab) {
   const listEl = document.getElementById('secret-detail-list');
   const context = buildSecretContext();
-  const prompt = tab === 'footprint'
-    ? `此刻你刚放下手机，有人偷偷查看了你的浏览足迹。\n请根据以下你近期的真实生活动态，生成你手机浏览器里此刻真实存在的5-7条浏览足迹。\n内容要与你近期的生活、心情、人际关系相关。\n${context}\n\n请直接输出浏览记录，不要加任何说明。`
-    : `此刻你刚放下手机，有人偷偷查看了你的收藏书签。\n请根据以下你近期的真实生活动态，生成你手机浏览器里此刻真实存在的5-7条收藏书签。\n收藏要反映你的个人喜好和长期关注领域。\n${context}\n\n请直接输出收藏记录，不要加任何说明。`;
+  const prompt = `此刻你刚放下手机，有人偷偷查看了你的收藏书签。\n请根据以下你近期的真实生活动态，生成你手机浏览器里此刻真实存在的5-7条收藏书签。\n收藏要反映你的个人喜好和长期关注领域。\n${context}\n\n请直接输出收藏记录，不要加任何说明。`;
 
   const genId = ++state.secretGenId;
   try {
-    const result = await callAI(prompt, tab === 'footprint' ? 'secret-history' : 'secret-bookmark');
+    const result = await callAI(prompt, 'secret-bookmark');
     // Stale check: if a newer generation started, ignore this result
     if (genId !== state.secretGenId) return;
     // Split by blank lines to get individual items
@@ -4277,7 +4430,9 @@ function retrySecretGen(type) {
   if (type === 'memo') generateMemo(charName);
   else if (type === 'mailbox') generateMailbox(charName);
   else if (type === 'cart') generateCart(charName);
-  else generateHistory(charName, type); // footprint / bookmark
+  else if (type === 'wish') generateWish(charName);
+  else if (type === 'plan') generatePlan(charName);
+  else generateHistory(charName, type); // bookmark
 }
 
 async function generateMailbox(charName) {
@@ -4450,6 +4605,117 @@ async function generateCart(charName) {
 function toggleCartSection(idx) {
   const section = document.querySelector(`.cart-section[data-section="${idx}"]`);
   if (section) section.classList.toggle('collapsed');
+}
+
+async function generateWish(charName) {
+  const listEl = document.getElementById('secret-detail-list');
+  const context = buildSecretContext();
+  const prompt = `此刻你刚放下手机，有人偷偷看到了你藏在手机备忘录深处的心愿清单。\n请根据以下你近期的真实生活动态，生成你此刻真实存在的3-5条心愿。\n内容要与你近期的生活、心情、人际关系相关。\n${context}\n\n请直接输出心愿内容，不要加任何说明。`;
+
+  const genId = ++state.secretGenId;
+  try {
+    const result = await callAI(prompt, 'secret-wish');
+    if (genId !== state.secretGenId) return;
+    // Split by blank lines to get individual wish items
+    const rawItems = result.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
+    let html = '';
+    for (const rawItem of rawItems) {
+      // Each item format: title|||content
+      const parts = rawItem.split('|||').map(s => s.trim()).filter(s => s);
+      if (parts.length >= 2) {
+        const title = parts[0].replace(/\s+/g, ' ');
+        const content = parts.slice(1).join('\n').replace(/\s+$/, '');
+        html += `
+          <div class="wish-item">
+            <div class="wish-item-title">${escapeHtml(title)}</div>
+            <div class="wish-item-text">${escapeHtml(content)}</div>
+          </div>
+        `;
+      }
+    }
+    listEl.className = '';
+    listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
+    if (html && state.secretModuleType === 'wish') {
+      if (!state.secretCache) state.secretCache = {};
+      state.secretCache.wish = html;
+      showSecretActions('wish', html);
+    }
+  } catch(e) {
+    if (genId !== state.secretGenId) return;
+    listEl.className = '';
+    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('wish')">重试</button></div>`;
+  }
+}
+
+async function generatePlan(charName) {
+  const listEl = document.getElementById('secret-detail-list');
+  const context = buildSecretContext();
+  const prompt = `此刻你刚放下手机，有人偷偷看到了你藏在抽屉里的秘密计划本。\n请根据以下你近期的真实生活动态，生成你的秘密计划，包含便利贴和时间轴两部分。\n内容要与你近期的生活、心情、人际关系相关。\n${context}\n\n请直接输出计划内容，不要加任何说明。`;
+
+  const genId = ++state.secretGenId;
+  try {
+    const result = await callAI(prompt, 'secret-plan');
+    if (genId !== state.secretGenId) return;
+
+    // Parse sections: 【便利贴】 and 【时间轴】
+    const sections = {};
+    const sectionRegex = /【(便利贴|时间轴)】\n?([\s\S]*?)(?=【(?:便利贴|时间轴)】|$)/g;
+    let match;
+    while ((match = sectionRegex.exec(result)) !== null) {
+      sections[match[1]] = match[2].trim();
+    }
+
+    let html = '';
+
+    // Part 1: Sticky note
+    if (sections['便利贴']) {
+      html += `
+        <div class="plan-sticky-note">
+          <div class="plan-sticky-note-label">便利贴</div>
+          <div class="plan-sticky-note-text">${escapeHtml(sections['便利贴'])}</div>
+        </div>
+      `;
+    }
+
+    // Part 2: Timeline
+    if (sections['时间轴']) {
+      const lines = sections['时间轴'].split(/\n/).map(s => s.trim()).filter(s => s);
+      let timelineHtml = '';
+      for (const line of lines) {
+        const parts = line.split('|||').map(s => s.trim()).filter(s => s);
+        if (parts.length >= 2) {
+          const time = parts[0].replace(/\s+/g, ' ');
+          const action = parts.slice(1).join(' ').replace(/\s+/g, ' ');
+          timelineHtml += `
+            <div class="plan-timeline-item">
+              <div class="plan-timeline-time">${escapeHtml(time)}</div>
+              <div class="plan-timeline-action">${escapeHtml(action)}</div>
+            </div>
+          `;
+        }
+      }
+      if (timelineHtml) {
+        html += `
+          <div class="plan-timeline">
+            <div class="plan-timeline-label">时间轴</div>
+            ${timelineHtml}
+          </div>
+        `;
+      }
+    }
+
+    listEl.className = '';
+    listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
+    if (html && state.secretModuleType === 'plan') {
+      if (!state.secretCache) state.secretCache = {};
+      state.secretCache.plan = html;
+      showSecretActions('plan', html);
+    }
+  } catch(e) {
+    if (genId !== state.secretGenId) return;
+    listEl.className = '';
+    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('plan')">重试</button></div>`;
+  }
 }
 
 // Pending secret: stored in state, survives tab switches until user decides
