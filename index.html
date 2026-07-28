@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="light" data-trae-theme="dark" style="--bg-image: url('https://umi688.github.io/Echo/images/BackGroundZdx.jpg');"><head>
+<html lang="zh-CN" style="--bg-image: url('https://umi688.github.io/Echo/images/BackGroundZdx.jpg');" data-theme="light" data-trae-theme="dark"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Echo</title>
@@ -2119,7 +2119,7 @@ select.form-input option{background:#202E42;color:var(--text)}
   try {
     const client = await import('/@vite/client');
     const hmr = client.createHotContext('hmr-handler/fake.js');
-    hmr.on('vite:afterUpdate', window['__ICUBE_WEBVIEW_HMR_CALLBACK_1785250440821']);
+    hmr.on('vite:afterUpdate', window['__ICUBE_WEBVIEW_HMR_CALLBACK_1785251044381']);
   } catch {}
 })();</script><style>.buttonsCard-bTXa5j {
   padding: var(--spacer-4);
@@ -2476,7 +2476,7 @@ select.form-input option{background:#202E42;color:var(--text)}
   try {
     const client = await import('/@vite/client');
     const hmr = client.createHotContext('hmr-handler/fake.js');
-    hmr.on('vite:afterUpdate', window['__ICUBE_WEBVIEW_HMR_CALLBACK_1785250440830']);
+    hmr.on('vite:afterUpdate', window['__ICUBE_WEBVIEW_HMR_CALLBACK_1785251044393']);
   } catch {}
 })();</script><style>.buttonsCard-bTXa5j {
   padding: var(--spacer-4);
@@ -4508,7 +4508,7 @@ select.form-input option{background:#202E42;color:var(--text)}
 <div id="app" style="height: 633px;">
 
 <!-- ========== Home Screen ========== -->
-<div id="home-screen" class="screen" style="display: none;">
+<div id="home-screen" class="screen" style="display: flex;">
   <div class="home-content">
     <div style="text-align:center;">
       <h1 class="game-title">Echo</h1>
@@ -4550,18 +4550,18 @@ select.form-input option{background:#202E42;color:var(--text)}
 </div>
 
 <!-- ========== World Loading Screen ========== -->
-<div id="world-loading-screen" class="screen" style="display: none;">
+<div id="world-loading-screen" class="screen" style="display:none">
   <div class="world-loading-content">
     <div class="world-loading-text">正在加载世界<span class="dots"><span></span><span></span><span></span></span></div>
-    <div class="world-loading-bar"><div class="world-loading-bar-fill" style=""></div></div>
+    <div class="world-loading-bar"><div class="world-loading-bar-fill"></div></div>
   </div>
 </div>
 
 <!-- ========== Game Screen ========== -->
-<div id="game-screen" class="screen" style="display: flex;">
+<div id="game-screen" class="screen" style="display:none">
 
   <!-- Chat Tab -->
-  <div id="tab-chat" class="tab-content has-bg" style="display: none;">
+  <div id="tab-chat" class="tab-content has-bg">
     <div class="bg-overlay chat-mask"></div>
     <div class="tab-header"><button class="fs-btn" onclick="toggleFullscreen()" title="全屏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"></path></svg></button><span class="tab-header-title">聊天</span></div>
     <div id="chat-messages"><div class="memory-empty">开始你的故事<br><span style="font-size:11px;opacity:0.6">在下方输入消息</span></div></div>
@@ -4576,57 +4576,18 @@ select.form-input option{background:#202E42;color:var(--text)}
   </div>
 
   <!-- Bonds Tab -->
-  <div id="tab-bonds" class="tab-content has-bg" style="display: none;">
+  <div id="tab-bonds" class="tab-content has-bg" style="display:none">
     <div class="bg-overlay"></div>
     <div class="tab-header"><button class="fs-btn" onclick="toggleFullscreen()" title="全屏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"></path></svg></button><span class="tab-header-title">羁绊</span></div>
-    <div id="bonds-content"><div class="narrative-block" data-id="evt_zhedao_opening">
-      <div class="narr-card ai">
-        <div class="narr-card-header">
-          <span class="narr-card-tag">叙事</span>
-          <div class="narr-card-header-actions">
-            <button class="narr-card-header-btn" onclick="editNarrative('evt_zhedao_opening','ai')">EDIT</button>
-            <button class="narr-card-header-btn" onclick="refreshNarrative('evt_zhedao_opening','ai')">RETRY</button>
-            <button class="narr-card-header-btn danger" onclick="deleteNarrative('evt_zhedao_opening','ai')">DELETE</button>
-          </div>
-        </div>
-        <div class="narr-card-body" id="ai-narr-evt_zhedao_opening">萧昶那座空置多年、只雇了婆子打理的京城旧宅，在圣旨下达的第二日，就被礼部的人匆匆布置上简陋的红绸。<br><br>没有盛大的纳聘流程，没有挑良辰吉日的繁琐仪式，傍晚时分，一顶简陋小轿直接抬进府门，下人手脚麻利地将一身绯红喜服的新娘子送进了主院新房。<br><br>处理完兵部繁杂公务，踏着暮色回到府邸时，萧昶单手解下腰间染着淡淡硝烟气息的佩刀扔在案几上，皱着眉推开新房的房门。<br><br>远在边关的老将军一得知他被强行赐婚，便立即派了人来提点他。<br><br><i>「这场婚事蹊跷，朝堂近日风波不断，你切勿强硬冲撞、乱发脾性。不必冷待，亦不必上心，安稳应付过朝堂耳目，日后再送回府上即可。」</i><br><br>萧昶在门口定定地站了好一会儿，终于抬脚跨了进去。<br><br>屋内烛火柔和摇曳，宽大厚重的喜服衬得床边人身形单薄，乌发规整束在礼冠之下，脊背挺得端正克制。</div>
-        <div class="narr-card-actions" id="ai-actions-evt_zhedao_opening"></div>
-      </div></div><div class="narrative-block" data-id="evt_1785250524470">
-      <div class="narr-card player">
-        <div class="narr-card-header">
-          <span class="narr-card-tag">愿望</span>
-          <div class="narr-card-header-actions">
-            <button class="narr-card-header-btn" onclick="editNarrative('evt_1785250524470','player')">EDIT</button>
-            <button class="narr-card-header-btn" onclick="refreshNarrative('evt_1785250524470','player')">RETRY</button>
-            <button class="narr-card-header-btn danger" onclick="deleteNarrative('evt_1785250524470','player')">DELETE</button>
-          </div>
-        </div>
-        <div class="narr-card-body" id="player-narr-evt_1785250524470">房门推开的微风拂动了红盖头的边缘，也送入了一股混杂着冰冷铁锈与淡淡硝烟的气息。郦其玉等了片刻，只听到沉重却迟疑的脚步声停在几步之外，对方似乎并无意上前挑盖头。<br><br><i>「既然是奉旨成婚的棋子，又何必在这儿装什么按部就班的相敬如宾。」</i><br><br>郦其玉索性不再等那不知何时才会落下的秤杆，抬手径直攀上头顶，一把扯下了那遮挡视线的碍眼红绸。<br><br>视野骤然开朗。郦其玉微微仰起头，迎着摇曳的烛火，目光毫无避讳地直直朝门口站立的高大男人望了过去。</div>
-        <div class="narr-card-actions" id="player-actions-evt_1785250524470"></div>
-      </div>
-      <div class="narr-card ai">
-        <div class="narr-card-header">
-          <span class="narr-card-tag">叙事</span>
-          <div class="narr-card-header-actions">
-            <button class="narr-card-header-btn" onclick="editNarrative('evt_1785250524470','ai')">EDIT</button>
-            <button class="narr-card-header-btn" onclick="refreshNarrative('evt_1785250524470','ai')">RETRY</button>
-            <button class="narr-card-header-btn danger" onclick="deleteNarrative('evt_1785250524470','ai')">DELETE</button>
-          </div>
-        </div>
-        <div class="narr-card-body" id="ai-narr-evt_1785250524470">萧昶的身躯微微一僵。他那张在北关风沙里打磨得如刀削般冷硬的面庞上，极快地掠过一丝诧异。<br><br>在边境杀敌无数的统帅，此刻面对一个自断退路、眼神清亮得毫无惧色的名门公子，竟罕见地感到了几分局促。他下意识地将粗糙且布满老茧的右手往身后避了避，试图藏起指缝里洗不净的陈年血迹与刀伤。<br><br><i>「这京城里养出来的尊贵人，皮肉娇嫩得仿佛风一吹便要化了，行事作风倒比军中的汉子还要利落几分。」</i><br><br>萧昶上前两步，沉重的靴底在干净的青砖地面上踏出沉闷的声响。他垂眸看着被随意丢弃在床角的那抹刺眼红绸，平缓了一下粗重的呼吸，用沙哑而低沉的嗓音开口：<br><br><b>"既然盖头已揭，那些虚礼便免了。"</b><br><br>烛光将萧昶高大魁梧的阴影完全笼罩在床榻之上，压迫感十足。他扯了扯嘴角，似乎是想摆出一个表示安抚的表情，却因为常年不笑而显得面部线条更加紧绷吓人。<br><br><b>"这门婚事并非本将所愿，委屈了郦公子。这府邸虽旧，但衣食供给绝不会短缺。往后若觉得烦闷，在府内各处随意走动便是，只是莫要随意出府，免得招惹朝中那些眼线。"</b><br><br>说罢，他有些局促地避开了郦其玉那双过分干净的眼睛，转过身走到桌案旁，端起早已冷透的茶盏，仰头灌了一大口，试图压下心头那股莫名升腾的燥意。</div>
-        <div class="narr-card-actions" id="ai-actions-evt_1785250524470"></div>
-      </div></div><div id="bonds-state-ui"></div></div>
-    <div id="bonds-input-area" class="input-bar">
-        <input type="text" id="event-input" placeholder="继续投递剧情愿望..." onkeydown="if(event.key==='Enter')sendEventWish()">
-        <button onmousedown="event.preventDefault()" onclick="sendEventWish()">投递</button>
-      <button class="danger">退出</button></div>
+    <div id="bonds-content"></div>
+    <div id="bonds-input-area" class="input-bar"></div>
   </div>
 
   <!-- Memory Tab -->
-  <div id="tab-memory" class="tab-content has-bg" style="display: none;">
+  <div id="tab-memory" class="tab-content has-bg" style="display:none">
     <div class="bg-overlay"></div>
     <div class="tab-header"><button class="fs-btn" onclick="toggleFullscreen()" title="全屏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"></path></svg></button><span class="tab-header-title">记忆</span></div>
-    <div id="memory-cards"><div class="memory-empty">暂无记忆卡片<br><span style="font-size:11px;color:rgba(131,147,168,0.55)">点击下方按钮生成记忆摘要</span></div></div>
+    <div id="memory-cards"></div>
     <div class="memory-actions">
       <button class="memory-action-btn" id="improve-memory-btn" onclick="improveMemory()">完善记忆</button>
     </div>
@@ -4637,129 +4598,79 @@ select.form-input option{background:#202E42;color:var(--text)}
     <div class="bg-overlay"></div>
     <div class="tab-header"><button class="fs-btn" onclick="toggleFullscreen()" title="全屏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"></path></svg></button><span class="tab-header-title">秘密</span></div>
     <div id="secret-content">
-    <div class="secret-module secret-module-records" onclick="openSecretRecords()">
-      <div class="secret-module-icon">📋</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">查看记录</div>
-        <div class="secret-module-desc">历次窥探留下的痕迹</div>
+      <div class="secret-module secret-module-records" onclick="openSecretRecords()">
+        <div class="secret-module-icon">📋</div>
+        <div class="secret-module-info">
+          <div class="secret-module-name">查看记录</div>
+          <div class="secret-module-desc">历次窥探留下的痕迹</div>
+        </div>
+        <div class="secret-module-arrow">›</div>
       </div>
-      <div class="secret-module-arrow">›</div>
-    </div>
-    <div class="secret-module" onclick="openSecretModule('memo')">
-      <div class="secret-module-icon">📝</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">他的备忘录</div>
-        <div class="secret-module-desc">窥探他记下的心事</div>
+      <div class="secret-module" onclick="openSecretModule('memo')">
+        <div class="secret-module-icon">📝</div>
+        <div class="secret-module-info">
+          <div class="secret-module-name">他的备忘录</div>
+          <div class="secret-module-desc">窥探他记下的心事</div>
+        </div>
+        <div class="secret-module-arrow">›</div>
       </div>
-      <div class="secret-module-arrow">›</div>
-    </div>
-    <div class="secret-module" onclick="openSecretModule('bookmark')">
-      <div class="secret-module-icon">🔖</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">他的收藏网址</div>
-        <div class="secret-module-desc">窥探他收藏的书签</div>
+      <div class="secret-module" onclick="openSecretModule('bookmark')">
+        <div class="secret-module-icon">🔖</div>
+        <div class="secret-module-info">
+          <div class="secret-module-name">他的收藏网址</div>
+          <div class="secret-module-desc">窥探他收藏的书签</div>
+        </div>
+        <div class="secret-module-arrow">›</div>
       </div>
-      <div class="secret-module-arrow">›</div>
-    </div>
-    <div class="secret-module" onclick="openSecretModule('mailbox')">
-      <div class="secret-module-icon">✉</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">他的信箱</div>
-        <div class="secret-module-desc">收发的短信记录</div>
+      <div class="secret-module" onclick="openSecretModule('mailbox')">
+        <div class="secret-module-icon">✉</div>
+        <div class="secret-module-info">
+          <div class="secret-module-name">他的信箱</div>
+          <div class="secret-module-desc">收发的短信记录</div>
+        </div>
+        <div class="secret-module-arrow">›</div>
       </div>
-      <div class="secret-module-arrow">›</div>
-    </div>
-    <div class="secret-module" onclick="openSecretModule('cart')">
-      <div class="secret-module-icon">🛒</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">他的购物车</div>
-        <div class="secret-module-desc">购物车 / 运输 / 寄退 / 订单</div>
+      <div class="secret-module" onclick="openSecretModule('cart')">
+        <div class="secret-module-icon">🛒</div>
+        <div class="secret-module-info">
+          <div class="secret-module-name">他的购物车</div>
+          <div class="secret-module-desc">购物车 / 运输 / 寄退 / 订单</div>
+        </div>
+        <div class="secret-module-arrow">›</div>
       </div>
-      <div class="secret-module-arrow">›</div>
-    </div>
-    <div class="secret-module" onclick="openSecretModule('wish')">
-      <div class="secret-module-icon">🌠</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">他的心愿</div>
-        <div class="secret-module-desc">窥探他藏在心底的愿望</div>
+      <div class="secret-module" onclick="openSecretModule('wish')">
+        <div class="secret-module-icon">🌠</div>
+        <div class="secret-module-info">
+          <div class="secret-module-name">他的心愿</div>
+          <div class="secret-module-desc">窥探他藏在心底的愿望</div>
+        </div>
+        <div class="secret-module-arrow">›</div>
       </div>
-      <div class="secret-module-arrow">›</div>
-    </div>
-    <div class="secret-module" onclick="openSecretModule('plan')">
-      <div class="secret-module-icon">🗺️</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">他的秘密计划</div>
-        <div class="secret-module-desc">便利贴与时间轴</div>
+      <div class="secret-module" onclick="openSecretModule('plan')">
+        <div class="secret-module-icon">🗺️</div>
+        <div class="secret-module-info">
+          <div class="secret-module-name">他的秘密计划</div>
+          <div class="secret-module-desc">便利贴与时间轴</div>
+        </div>
+        <div class="secret-module-arrow">›</div>
       </div>
-      <div class="secret-module-arrow">›</div>
     </div>
-  </div>
   </div>
 
   <!-- Settings Tab -->
-  <div id="tab-settings" class="tab-content has-bg" style="display: flex;">
+  <div id="tab-settings" class="tab-content has-bg" style="display:none">
     <div class="bg-overlay"></div>
     <div class="tab-header"><button class="fs-btn" onclick="toggleFullscreen()" title="全屏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"></path></svg></button><span class="tab-header-title">设定</span></div>
-    <div id="settings-content">
-    <div class="char-card" onclick="openCharacterEditor('me')">
-      <div class="char-card-bg me" style=""></div>
-      <div class="char-card-watermark">郦</div>
-      <div class="char-card-overlay"></div>
-      <div class="char-card-info">
-        <div class="char-card-name">郦其玉</div>
-        <div class="char-card-liner"><span style="opacity:0.4;font-size:12px;">未设置</span></div>
-      </div>
-    </div>
-  
-    <div class="char-card" onclick="openCharacterEditor('other')">
-      <div class="char-card-bg other" style="background-image:url('https://umi688.github.io/Echo/images/HeadZDX.jpg');background-size:cover;background-position:center"></div>
-      
-      <div class="char-card-overlay"></div>
-      <div class="char-card-info">
-        <div class="char-card-name">萧昶</div>
-        <div class="char-card-liner">原来轻飘飘的雪，也能折断这柄刀。</div>
-      </div>
-    </div>
-  
-    <div class="rules-section " id="rules-section">
-      <div class="rules-header" onclick="toggleRulesSection()">
-        <span class="rules-title">外部规则</span>
-        <span class="rules-toggle" id="rules-toggle-text">展开</span>
-      </div>
-      <div class="rules-body">
-        <div class="rules-list" id="rules-list">
-  
-      <div class="rule-card-btn" onclick="openRuleEditor('r_zhedao_1')">
-        <div>
-          <div class="rule-card-name">基础王朝设定</div>
-          <div class="rule-card-preview">王朝国号：大朔。
-时代阶段：王朝立国一百一十二年，国运中期，...</div>
-        </div>
-        <span class="rule-card-arrow">编辑</span>
-      </div>
-    
-        </div>
-        <div style="padding:0 16px 12px;">
-          <button class="add-rule-btn" onclick="addRule()">＋ 新增规则</button>
-        </div>
-      </div>
-    </div>
-  
-    <div class="settings-actions">
-      <button class="settings-action-btn" onclick="saveGame()">存档</button>
-      <button class="settings-action-btn" onclick="showLoadModal(false)">读档</button>
-      <button class="settings-action-btn danger" onclick="confirmReturnTitle()">返回标题</button>
-    </div>
-  </div>
+    <div id="settings-content"></div>
   </div>
 
   <!-- Bottom Nav -->
   <nav id="bottom-nav">
-    <button class="nav-btn" data-tab="chat" onclick="switchTab('chat')">聊天</button>
+    <button class="nav-btn active" data-tab="chat" onclick="switchTab('chat')">聊天</button>
     <button class="nav-btn" data-tab="bonds" onclick="switchTab('bonds')">羁绊</button>
     <button class="nav-btn" data-tab="memory" onclick="switchTab('memory')">记忆</button>
     <button class="nav-btn" data-tab="secret" onclick="switchTab('secret')">秘密</button>
-    <button class="nav-btn active" data-tab="settings" onclick="switchTab('settings')">设定</button>
+    <button class="nav-btn" data-tab="settings" onclick="switchTab('settings')">设定</button>
   </nav>
 </div>
 
