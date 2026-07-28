@@ -5636,7 +5636,10 @@ function loadFromSlot(slotId, fromHome) {
   }
   // Save current progress before loading (prevent data loss)
   if (state.data) saveToStorage();
+  // Preserve API config — it should survive save/load (like confirmLoadScript)
+  const savedApiConfig = state.data ? state.data.apiConfig : null;
   state.data = deepMerge(structuredClone(DEFAULT_DATA), save.data);
+  if (savedApiConfig) state.data.apiConfig = savedApiConfig;
   // Reset all runtime state to avoid stale leftovers
   state.eventState = 'idle';
   state.currentChainId = null;
@@ -5647,6 +5650,7 @@ function loadFromSlot(slotId, fromHome) {
   state.chatSessionId++;
   state.rulesExpanded = false;
   saveToStorage();
+  applyBgImage();
   closeModal();
   if (fromHome) {
     document.getElementById('home-screen').style.display = 'none';
