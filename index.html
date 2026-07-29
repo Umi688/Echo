@@ -1075,9 +1075,8 @@ html:-webkit-full-screen #app{
 .secret-detail-panel{
   flex:1;
   overflow-y:auto;
-  padding:8px 4px 20px;
+  padding:8px 0 20px;
   -webkit-overflow-scrolling:touch;
-  margin:0 4px;
 }
 .secret-detail-panel-inner{
   background:linear-gradient(160deg,rgba(20,32,48,0.5) 0%,rgba(15,26,43,0.5) 50%,rgba(20,32,48,0.5) 100%);
@@ -1625,6 +1624,88 @@ html:-webkit-full-screen #app{
   word-break:break-word;
   line-height:1.6;
   letter-spacing:0.5px;
+}
+
+/* News: Tabloid items */
+.news-item{
+  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.7) 100%);
+  backdrop-filter:blur(12px);
+  padding:20px 22px;
+  margin-bottom:14px;
+  position:relative;
+  border-left:3px solid rgba(208,217,229,0.35);
+  border-radius:0 4px 4px 0;
+  overflow:hidden;
+}
+.news-item:last-child{margin-bottom:0}
+.news-item::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,rgba(208,217,229,0.2) 0%,rgba(131,147,168,0.08) 40%,transparent 100%);
+}
+.news-item-title{
+  font-size:15px;
+  color:rgba(208,217,229,0.98);
+  letter-spacing:2px;
+  font-weight:500;
+  margin-bottom:10px;
+  word-break:break-word;
+  line-height:1.5;
+}
+.news-item-text{
+  font-size:14px;
+  line-height:1.85;
+  color:rgba(131,147,168,0.92);
+  word-break:break-word;
+  letter-spacing:0.5px;
+  font-family:"Noto Serif SC","STSong","PingFang SC",serif;
+}
+
+/* CP Shipping */
+.cp-item{
+  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.7) 100%);
+  backdrop-filter:blur(12px);
+  padding:18px 20px;
+  margin-bottom:14px;
+  position:relative;
+  border-left:2px solid rgba(255,180,180,0.3);
+  border-radius:0 3px 3px 0;
+  overflow:hidden;
+}
+.cp-item:last-child{margin-bottom:0}
+.cp-item::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,rgba(255,180,180,0.15) 0%,transparent 60%);
+}
+.cp-item-title{
+  font-size:13px;
+  color:rgba(255,200,200,0.9);
+  letter-spacing:2.5px;
+  text-indent:1px;
+  font-weight:500;
+  margin-bottom:8px;
+  word-break:break-word;
+}
+.cp-item-text{
+  font-size:14px;
+  line-height:1.85;
+  color:rgba(131,147,168,0.92);
+  word-break:break-word;
+  overflow-wrap:break-word;
+  letter-spacing:0.5px;
+  font-family:"Noto Serif SC","STSong","PingFang SC",serif;
+}
+/* Paragraph spacing inside news & CP text */
+.news-item-text p,.cp-item-text p{
+  margin:0 0 10px 0;
+}
+.news-item-text p:last-child,.cp-item-text p:last-child{
+  margin-bottom:0;
 }
 
 /* ========== Settings Tab ========== */
@@ -2273,6 +2354,22 @@ select.form-input option{background:#202E42;color:var(--text)}
         <div class="secret-module-info">
           <div class="secret-module-name">他的秘密计划</div>
           <div class="secret-module-desc">便利贴与时间轴</div>
+        </div>
+        <div class="secret-module-arrow">›</div>
+      </div>
+      <div class="secret-module" onclick="openSecretModule('news')">
+        <div class="secret-module-icon">📰</div>
+        <div class="secret-module-info">
+          <div class="secret-module-name">坊间小报</div>
+          <div class="secret-module-desc">坊间大事与流言八卦</div>
+        </div>
+        <div class="secret-module-arrow">›</div>
+      </div>
+      <div class="secret-module" onclick="openSecretModule('cp')">
+        <div class="secret-module-icon">💞</div>
+        <div class="secret-module-info">
+          <div class="secret-module-name">来磕CP了！</div>
+          <div class="secret-module-desc">线人专访·名场面·高糖预警</div>
         </div>
         <div class="secret-module-arrow">›</div>
       </div>
@@ -3049,6 +3146,12 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
+// Render text as <p> paragraphs, splitting on newlines for visual spacing
+function renderParagraphs(text) {
+  if (!text) return '';
+  return text.split(/\n+/).filter(p => p.trim()).map(p => `<p>${escapeHtml(p.trim())}</p>`).join('');
+}
+
 // Format narrative text: paragraph breaks + 「」italic (thoughts) + ""bold (dialogue)
 function formatNarrativeText(text) {
   if (!text) return '';
@@ -3206,6 +3309,10 @@ function buildModeInstruction(mode) {
     return '\n【当前模式：心愿生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意看到了你藏在手机备忘录深处的心愿清单。\n请以第一人称视角生成你此刻真实存在的3-5条心愿。\n要求：\n1. 内容必须紧扣你的人设、性格、背景、日常生活和近期经历——不要写空泛的通用心愿\n2. 至少有一条与主控角色有关——关于TA的愿望、想为TA做的事、想和TA一起做的事等\n3. 心愿类型多样：可以是大大小小的人生愿望、日常小心愿、关于某个人的愿望、关于自己的愿望等\n4. 语气要符合你的性格特征——是认真的、随意的、还是嘴硬心软的，由你的人设决定\n5. 每条格式严格为：心愿标题|||心愿内容\n6. 条目之间用一个空行分隔\n7. 心愿内容可以多行，但不得出现|||字符\n8. 只输出心愿内容，不要加任何说明或解释\n';
   } else if (mode === 'secret-plan') {
     return '\n【当前模式：秘密计划生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意看到了你藏在抽屉里的秘密计划本。\n请以第一人称视角生成你的秘密计划，包含两个部分。\n\n严格按以下格式输出：\n\n【便利贴】\n你在制定这个秘密计划时贴在墙上的便利贴，记录你当时的内心想法、动机、纠结。\n直接写出便利贴上的文字内容，像真实的手写便利贴一样随意、真实、碎片化。\n可以是一段话，也可以是几个零散的短句。\n\n【时间轴】\n你规划的一天内从早到晚的行动安排，按时间顺序排列。\n每条格式严格为：时间|||行动内容\n时间用时分格式如"07:30""12:00""18:45""22:00"\n行动内容简明扼要，说明这个时间点要做什么。\n生成5-8条时间安排，覆盖从早到晚。\n\n两部分之间用一个空行分隔。\n内容要紧扣你的人设、性格、近期经历和与主控角色的关系状态。\n计划内容要真实合理，符合你的日常生活节奏。\n只输出计划内容，不要加任何说明。\n';
+  } else if (mode === 'secret-news') {
+    return '\n【当前模式：坊间小报生成】\n你现在是这个世界里的一个旁观者，你熟知这个世界正在发生的大小事件和坊间流传的八卦。\n请根据以下AI角色与主控角色近期的真实生活动态，生成此刻这个世界里的新闻和八卦。\n内容要紧扣他们的世界设定、近期经历和人际关系——不要写空泛的通用新闻。\n\n生成3-5条新闻或八卦，每条格式严格为：标题|||内容\n条目之间用一个空行分隔。\n内容不得出现|||字符。\n每条内容控制在200-400字，用换行分成2-3个自然段落，不要挤成一团。\n\n新闻类型可以多样：\n- 重大事件：世界发生的变故、大事\n- 坊间传闻：关于某个角色的流言、街头巷尾的闲话\n- 花边八卦：茶余饭后的谈资、有趣的小道消息\n- 突发快讯：最新消息、突发事件\n\n新闻和八卦要与角色所处的世界设定（历史背景、社会环境）相符合。\n可以涉及角色本人或他们身边的人，也可以是更广阔世界中的事件。\n只输出新闻内容，不要加任何说明。\n';
+  } else if (mode === 'secret-cp') {
+    return '\n【当前模式：CP读者反响生成】\n你是一位热情的读者，一直在追看两位角色之间的故事发展，现在要写一期读者反响专栏来表达你的激动心情。\n请根据以下他们近期的真实生活动态，以读者视角生成4篇专栏内容。\n内容要紧扣他们的关系状态和近期经历——不要写空泛的通用内容。\n\n生成4篇内容，每条格式严格为：标题|||内容\n条目之间用一个空行分隔。\n内容不得出现|||字符。\n每条内容用换行分成2-4个自然段落，不要挤成一团。\n\n4篇内容分别对应以下主题（每条标题要体现主题特色）：\n1. 线人专访：以细致敏锐的眼光捕捉他们之间一个不为人注意的互动细节，像写人物特稿一样有料、有看头。\n2. 名场面回顾：盘点他们之间最经典、最令人心动的交往瞬间，像写视频解说一样有画面感，让人身临其境。\n3. 心动预警：描写一个让人心跳加速的甜蜜细节，用活泼明快的笔调，充满惊喜和开心，像跟朋友安利一样兴奋。\n4. 同人安利：以创作者的视角描述一篇同人作品（可以是同人文片段、插画描述、混剪视频等），像在社交平台上热情推荐一样。\n\n语气要像一位忠实又热情的读者——活泼、生动、充满喜爱，可以适当夸张和感叹，像在跟朋友分享你发现的好故事。\n只输出内容，不要加任何说明。\n';
   }
   return '';
 }
@@ -4378,6 +4485,22 @@ function renderSecretHome() {
       </div>
       <div class="secret-module-arrow">›</div>
     </div>
+    <div class="secret-module" onclick="openSecretModule('news')">
+      <div class="secret-module-icon">📰</div>
+      <div class="secret-module-info">
+        <div class="secret-module-name">坊间小报</div>
+        <div class="secret-module-desc">坊间大事与流言八卦</div>
+      </div>
+      <div class="secret-module-arrow">›</div>
+    </div>
+    <div class="secret-module" onclick="openSecretModule('cp')">
+      <div class="secret-module-icon">💞</div>
+      <div class="secret-module-info">
+        <div class="secret-module-name">来磕CP了！</div>
+        <div class="secret-module-desc">线人专访·名场面·高糖预警</div>
+      </div>
+      <div class="secret-module-arrow">›</div>
+    </div>
   `;
 }
 
@@ -4388,7 +4511,9 @@ const SECRET_TYPE_NAMES = {
   'mailbox': '他的信箱',
   'cart': '他的购物车',
   'wish': '他的心愿',
-  'plan': '他的秘密计划'
+  'plan': '他的秘密计划',
+  'news': '坊间小报',
+  'cp': '来磕CP了！'
 };
 
 function formatSecretRecordTime(timestamp) {
@@ -4588,6 +4713,42 @@ function openSecretModule(type) {
     } else {
       generatePlan(charName);
     }
+  } else if (type === 'news') {
+    container.innerHTML = `
+      <div class="secret-detail-panel">
+        <div class="secret-detail-panel-inner">
+          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
+          <div class="secret-detail-title">坊间小报</div>
+          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
+        </div>
+      </div>
+    `;
+    if (state.secretCache.news) {
+      const listEl = document.getElementById('secret-detail-list');
+      listEl.className = '';
+      listEl.innerHTML = state.secretCache.news;
+      showSecretActions('news', state.secretCache.news);
+    } else {
+      generateNews(charName);
+    }
+  } else if (type === 'cp') {
+    container.innerHTML = `
+      <div class="secret-detail-panel">
+        <div class="secret-detail-panel-inner">
+          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
+          <div class="secret-detail-title">来磕CP了！</div>
+          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
+        </div>
+      </div>
+    `;
+    if (state.secretCache.cp) {
+      const listEl = document.getElementById('secret-detail-list');
+      listEl.className = '';
+      listEl.innerHTML = state.secretCache.cp;
+      showSecretActions('cp', state.secretCache.cp);
+    } else {
+      generateCP(charName);
+    }
   }
 }
 
@@ -4740,6 +4901,8 @@ function retrySecretGen(type) {
   else if (type === 'cart') generateCart(charName);
   else if (type === 'wish') generateWish(charName);
   else if (type === 'plan') generatePlan(charName);
+  else if (type === 'news') generateNews(charName);
+  else if (type === 'cp') generateCP(charName);
   else generateHistory(charName, type); // bookmark
 }
 
@@ -5023,6 +5186,86 @@ async function generatePlan(charName) {
     if (genId !== state.secretGenId) return;
     listEl.className = '';
     listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('plan')">重试</button></div>`;
+  }
+}
+
+async function generateNews(charName) {
+  const listEl = document.getElementById('secret-detail-list');
+  const context = buildSecretContext();
+  const prompt = `有人翻开了今日的坊间小报，想看看这个世界里正在发生什么大事、坊间流传着什么八卦。\n请根据以下角色近期的真实生活动态，生成此刻这个世界里的新闻和八卦。\n${context}\n\n请直接输出内容，不要加任何说明。`;
+
+  const genId = ++state.secretGenId;
+  try {
+    const result = await callAI(prompt, 'secret-news');
+    if (genId !== state.secretGenId) return;
+    // Split by blank lines to get individual news items
+    const rawItems = result.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
+    let html = '';
+    for (const rawItem of rawItems) {
+      // Each item format: title|||content
+      const parts = rawItem.split('|||').map(s => s.trim()).filter(s => s);
+      if (parts.length >= 2) {
+        const title = parts[0].replace(/\s+/g, ' ');
+        const content = parts.slice(1).join('\n').replace(/\s+$/, '');
+        html += `
+          <div class="news-item">
+            <div class="news-item-title">${escapeHtml(title)}</div>
+            <div class="news-item-text">${renderParagraphs(content)}</div>
+          </div>
+        `;
+      }
+    }
+    listEl.className = '';
+    listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
+    if (html && state.secretModuleType === 'news') {
+      if (!state.secretCache) state.secretCache = {};
+      state.secretCache.news = html;
+      showSecretActions('news', html);
+    }
+  } catch(e) {
+    if (genId !== state.secretGenId) return;
+    listEl.className = '';
+    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('news')">重试</button></div>`;
+  }
+}
+
+async function generateCP(charName) {
+  const listEl = document.getElementById('secret-detail-list');
+  const context = buildSecretContext();
+  const prompt = `有读者追看了两位角色的故事后激动不已，写了一期读者反响专栏。请根据以下角色近期的真实生活动态，以读者视角生成4篇专栏内容。\n包括线人专访、名场面回顾、心动预警、还有同人安利。\n${context}\n\n请直接输出内容，不要加任何说明。`;
+
+  const genId = ++state.secretGenId;
+  try {
+    const result = await callAI(prompt, 'secret-cp');
+    if (genId !== state.secretGenId) return;
+    // Split by blank lines to get individual CP items
+    const rawItems = result.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
+    let html = '';
+    for (const rawItem of rawItems) {
+      // Each item format: title|||content
+      const parts = rawItem.split('|||').map(s => s.trim()).filter(s => s);
+      if (parts.length >= 2) {
+        const title = parts[0].replace(/\s+/g, ' ');
+        const content = parts.slice(1).join('\n').replace(/\s+$/, '');
+        html += `
+          <div class="cp-item">
+            <div class="cp-item-title">${escapeHtml(title)}</div>
+            <div class="cp-item-text">${renderParagraphs(content)}</div>
+          </div>
+        `;
+      }
+    }
+    listEl.className = '';
+    listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
+    if (html && state.secretModuleType === 'cp') {
+      if (!state.secretCache) state.secretCache = {};
+      state.secretCache.cp = html;
+      showSecretActions('cp', html);
+    }
+  } catch(e) {
+    if (genId !== state.secretGenId) return;
+    listEl.className = '';
+    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('cp')">重试</button></div>`;
   }
 }
 
