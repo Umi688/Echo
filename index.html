@@ -1107,13 +1107,13 @@ html:-webkit-full-screen #app{
 .secret-back:hover{color:var(--gold)}
 .secret-actions{
   display:flex;
-  gap:8px;
-  padding:12px 16px 16px;
+  gap:14px;
+  padding:14px;
   flex-shrink:0;
 }
 .secret-action-btn{
   flex:1;
-  padding:11px 0;
+  padding:14px;
   border:none;
   border-radius:3px;
   font-size:13px;
@@ -1663,49 +1663,226 @@ html:-webkit-full-screen #app{
   font-family:"Noto Serif SC","STSong","PingFang SC",serif;
 }
 
-/* CP Shipping */
-.cp-item{
+/* Paragraph spacing inside news text */
+.news-item-text p{
+  margin:0 0 10px 0;
+}
+.news-item-text p:last-child{
+  margin-bottom:0;
+}
+
+/* Forum: Anonymous alt account */
+.forum-post{
   background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.7) 100%);
   backdrop-filter:blur(12px);
-  padding:18px 20px;
+  padding:20px 22px;
   margin-bottom:14px;
+  border-radius:0 4px 4px 0;
+  border-left:3px solid rgba(208,217,229,0.35);
   position:relative;
-  border-left:2px solid rgba(255,180,180,0.3);
-  border-radius:0 3px 3px 0;
   overflow:hidden;
 }
-.cp-item:last-child{margin-bottom:0}
-.cp-item::before{
+.forum-post::before{
   content:'';
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,rgba(255,180,180,0.15) 0%,transparent 60%);
+  background:linear-gradient(90deg,rgba(208,217,229,0.2) 0%,rgba(131,147,168,0.08) 40%,transparent 100%);
 }
-.cp-item-title{
-  font-size:13px;
-  color:rgba(255,200,200,0.9);
-  letter-spacing:2.5px;
-  text-indent:1px;
+.forum-post-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
+}
+.forum-post-avatar{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
   font-weight:500;
-  margin-bottom:8px;
+  color:rgba(255,255,255,0.9);
+  flex-shrink:0;
+}
+.forum-post-userinfo{flex:1;min-width:0}
+.forum-post-username{
+  font-size:14px;
+  color:rgba(208,217,229,0.95);
+  letter-spacing:1px;
+  font-weight:500;
+  margin-bottom:2px;
+}
+.forum-post-sig{
+  font-size:11px;
+  color:var(--gold-faint);
+  letter-spacing:0.5px;
   word-break:break-word;
 }
-.cp-item-text{
+.forum-post-time{
+  font-size:11px;
+  color:rgba(131,147,168,0.5);
+  flex-shrink:0;
+}
+.forum-post-title{
+  font-size:15px;
+  color:rgba(208,217,229,0.98);
+  letter-spacing:1.5px;
+  font-weight:500;
+  margin-bottom:10px;
+  word-break:break-word;
+  line-height:1.5;
+}
+.forum-post-text{
   font-size:14px;
   line-height:1.85;
   color:rgba(131,147,168,0.92);
   word-break:break-word;
-  overflow-wrap:break-word;
   letter-spacing:0.5px;
   font-family:"Noto Serif SC","STSong","PingFang SC",serif;
 }
-/* Paragraph spacing inside news & CP text */
-.news-item-text p,.cp-item-text p{
+.forum-post-text p{
   margin:0 0 10px 0;
 }
-.news-item-text p:last-child,.cp-item-text p:last-child{
+.forum-post-text p:last-child{
   margin-bottom:0;
+}
+/* Forum replies */
+.forum-replies{
+  background:linear-gradient(160deg,rgba(20,32,48,0.4) 0%,rgba(15,26,43,0.4) 100%);
+  backdrop-filter:blur(8px);
+  border-radius:4px;
+  padding:16px 14px;
+}
+.forum-replies-label{
+  font-size:10px;
+  color:rgba(131,147,168,0.5);
+  letter-spacing:1.5px;
+  margin-bottom:12px;
+  text-transform:uppercase;
+}
+.forum-reply{
+  display:flex;
+  gap:10px;
+  margin-bottom:14px;
+  padding-bottom:14px;
+  border-bottom:1px solid rgba(131,147,168,0.08);
+}
+.forum-reply:last-child{
+  margin-bottom:0;
+  padding-bottom:0;
+  border-bottom:none;
+}
+.forum-reply-avatar{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  font-weight:500;
+  color:rgba(255,255,255,0.85);
+  flex-shrink:0;
+}
+.forum-reply-content{flex:1;min-width:0}
+.forum-reply-header{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+  margin-bottom:4px;
+}
+.forum-reply-name{
+  font-size:12px;
+  color:rgba(208,217,229,0.8);
+  letter-spacing:0.5px;
+  font-weight:500;
+}
+.forum-reply-time{
+  font-size:10px;
+  color:rgba(131,147,168,0.45);
+}
+.forum-reply-text{
+  font-size:13px;
+  line-height:1.7;
+  color:rgba(131,147,168,0.85);
+  word-break:break-word;
+  letter-spacing:0.3px;
+}
+
+/* Group Chat: friends figured it out */
+.gchat-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:14px 16px;
+  margin-bottom:12px;
+  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.7) 100%);
+  backdrop-filter:blur(12px);
+  border-radius:0 4px 4px 0;
+  border-left:3px solid rgba(208,217,229,0.35);
+  position:relative;
+  overflow:hidden;
+}
+.gchat-header-icon{
+  font-size:20px;
+}
+.gchat-header-info{flex:1}
+.gchat-header-name{
+  font-size:14px;
+  color:rgba(208,217,229,0.95);
+  letter-spacing:1.5px;
+  font-weight:500;
+  margin-bottom:2px;
+}
+.gchat-header-meta{
+  font-size:11px;
+  color:var(--gold-faint);
+  letter-spacing:1px;
+}
+.gchat-body{
+  background:linear-gradient(160deg,rgba(20,32,48,0.6) 0%,rgba(15,26,43,0.6) 100%);
+  backdrop-filter:blur(10px);
+  border-radius:4px;
+  padding:4px 14px;
+}
+.gchat-msg{
+  padding:14px 0;
+  border-top:1px solid rgba(131,147,168,0.12);
+}
+.gchat-msg:first-of-type{
+  border-top:none;
+  padding-top:4px;
+}
+.gchat-msg-name{
+  font-size:12px;
+  color:rgba(208,217,229,0.7);
+  letter-spacing:1px;
+  font-weight:700;
+  margin-bottom:6px;
+}
+.gchat-msg-text{
+  font-size:13px;
+  line-height:1.85;
+  color:rgba(208,217,229,0.88);
+  word-break:break-word;
+  letter-spacing:0.3px;
+}
+.gchat-msg-text p{
+  margin:0 0 8px 0;
+}
+.gchat-msg-text p:last-child{
+  margin-bottom:0;
+}
+.gchat-system{
+  text-align:center;
+  font-size:11px;
+  color:rgba(131,147,168,0.5);
+  letter-spacing:1px;
+  padding:8px 0;
+  margin-bottom:12px;
 }
 
 /* ========== Settings Tab ========== */
@@ -2357,6 +2534,14 @@ select.form-input option{background:#202E42;color:var(--text)}
         </div>
         <div class="secret-module-arrow">›</div>
       </div>
+      <div class="secret-module" onclick="openSecretModule('forum')">
+        <div class="secret-module-icon">🎴</div>
+        <div class="secret-module-info">
+          <div class="secret-module-name">他的论坛小号</div>
+          <div class="secret-module-desc">匿名提问与路人回复</div>
+        </div>
+        <div class="secret-module-arrow">›</div>
+      </div>
       <div class="secret-module" onclick="openSecretModule('news')">
         <div class="secret-module-icon">📰</div>
         <div class="secret-module-info">
@@ -2365,11 +2550,11 @@ select.form-input option{background:#202E42;color:var(--text)}
         </div>
         <div class="secret-module-arrow">›</div>
       </div>
-      <div class="secret-module" onclick="openSecretModule('cp')">
-        <div class="secret-module-icon">💞</div>
+      <div class="secret-module" onclick="openSecretModule('friends')">
+        <div class="secret-module-icon">💬</div>
         <div class="secret-module-info">
-          <div class="secret-module-name">来磕CP了！</div>
-          <div class="secret-module-desc">线人专访·名场面·高糖预警</div>
+          <div class="secret-module-name">朋友们早就看出来了</div>
+          <div class="secret-module-desc">一场群聊翻出所有细节</div>
         </div>
         <div class="secret-module-arrow">›</div>
       </div>
@@ -3310,9 +3495,11 @@ function buildModeInstruction(mode) {
   } else if (mode === 'secret-plan') {
     return '\n【当前模式：秘密计划生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意看到了你藏在抽屉里的秘密计划本。\n请以第一人称视角生成你的秘密计划，包含两个部分。\n\n严格按以下格式输出：\n\n【便利贴】\n你在制定这个秘密计划时贴在墙上的便利贴，记录你当时的内心想法、动机、纠结。\n直接写出便利贴上的文字内容，像真实的手写便利贴一样随意、真实、碎片化。\n可以是一段话，也可以是几个零散的短句。\n\n【时间轴】\n你规划的一天内从早到晚的行动安排，按时间顺序排列。\n每条格式严格为：时间|||行动内容\n时间用时分格式如"07:30""12:00""18:45""22:00"\n行动内容简明扼要，说明这个时间点要做什么。\n生成5-8条时间安排，覆盖从早到晚。\n\n两部分之间用一个空行分隔。\n内容要紧扣你的人设、性格、近期经历和与主控角色的关系状态。\n计划内容要真实合理，符合你的日常生活节奏。\n只输出计划内容，不要加任何说明。\n';
   } else if (mode === 'secret-news') {
-    return '\n【当前模式：坊间小报生成】\n你现在是这个世界里的一个旁观者，你熟知这个世界正在发生的大小事件和坊间流传的八卦。\n请根据以下AI角色与主控角色近期的真实生活动态，生成此刻这个世界里的新闻和八卦。\n内容要紧扣他们的世界设定、近期经历和人际关系——不要写空泛的通用新闻。\n\n生成3-5条新闻或八卦，每条格式严格为：标题|||内容\n条目之间用一个空行分隔。\n内容不得出现|||字符。\n每条内容控制在200-400字，用换行分成2-3个自然段落，不要挤成一团。\n\n新闻类型可以多样：\n- 重大事件：世界发生的变故、大事\n- 坊间传闻：关于某个角色的流言、街头巷尾的闲话\n- 花边八卦：茶余饭后的谈资、有趣的小道消息\n- 突发快讯：最新消息、突发事件\n\n新闻和八卦要与角色所处的世界设定（历史背景、社会环境）相符合。\n可以涉及角色本人或他们身边的人，也可以是更广阔世界中的事件。\n只输出新闻内容，不要加任何说明。\n';
-  } else if (mode === 'secret-cp') {
-    return '\n【当前模式：CP读者反响生成】\n你是一位热情的读者，一直在追看两位角色之间的故事发展，现在要写一期读者反响专栏来表达你的激动心情。\n请根据以下他们近期的真实生活动态，以读者视角生成4篇专栏内容。\n内容要紧扣他们的关系状态和近期经历——不要写空泛的通用内容。\n\n生成4篇内容，每条格式严格为：标题|||内容\n条目之间用一个空行分隔。\n内容不得出现|||字符。\n每条内容用换行分成2-4个自然段落，不要挤成一团。\n\n4篇内容分别对应以下主题（每条标题要体现主题特色）：\n1. 线人专访：以细致敏锐的眼光捕捉他们之间一个不为人注意的互动细节，像写人物特稿一样有料、有看头。\n2. 名场面回顾：盘点他们之间最经典、最令人心动的交往瞬间，像写视频解说一样有画面感，让人身临其境。\n3. 心动预警：描写一个让人心跳加速的甜蜜细节，用活泼明快的笔调，充满惊喜和开心，像跟朋友安利一样兴奋。\n4. 同人安利：以创作者的视角描述一篇同人作品（可以是同人文片段、插画描述、混剪视频等），像在社交平台上热情推荐一样。\n\n语气要像一位忠实又热情的读者——活泼、生动、充满喜爱，可以适当夸张和感叹，像在跟朋友分享你发现的好故事。\n只输出内容，不要加任何说明。\n';
+    return '\n【当前模式：坊间小报生成】\n你现在是这个世界里的一个旁观者，你熟知这个世界正在发生的大小事件和坊间流传的八卦。\n请根据以下AI角色与主控角色近期的真实生活动态，生成此刻这个世界里的新闻和八卦。\n内容要紧扣他们的世界设定、近期经历和人际关系——不要写空泛的通用新闻。\n\n生成3-5条新闻或八卦，每条格式严格为：标题|||内容\n条目之间用一个空行分隔。\n内容不得出现|||字符。\n每条内容写成400字左右的完整文章，不要截断，用换行分成2-3个自然段落，不要挤成一团。\n\n新闻类型可以多样：\n- 重大事件：世界发生的变故、大事\n- 坊间传闻：关于某个角色的流言、街头巷尾的闲话\n- 花边八卦：茶余饭后的谈资、有趣的小道消息\n- 突发快讯：最新消息、突发事件\n\n新闻和八卦要与角色所处的世界设定（历史背景、社会环境）相符合。\n可以涉及角色本人或他们身边的人，也可以是更广阔世界中的事件。\n只输出新闻内容，不要加任何说明。\n';
+  } else if (mode === 'secret-friends') {
+    return '\n【当前模式：朋友群聊生成】\n你现在是AI角色身边的一群朋友们，你们建了一个没有AI角色和主控角色在场的群聊，正在热烈讨论他们两个人的关系。\n你深知他们之间的一切细节——毕竟朋友们早就看出来了。\n请根据以下AI角色与主控角色近期的真实生活动态，生成一场群聊记录。\n内容要紧扣他们的关系状态和近期经历——不要写空泛的通用内容。\n\n参与者为3-5位NPC朋友，他们可以是AI角色的同事、发小、室友、邻居等，每人有鲜明的性格和说话风格。\n群聊中朋友们你一言我一语，翻出AI角色和主控角色之间的各种细节，讨论他们的关系。\n有人起哄、有人分析、有人爆料、有人吐槽，像真实的群聊一样自然生动。\n\n严格按以下格式输出，每条消息格式为：发言人|||消息内容\n条目之间用一个空行分隔。\n消息内容不得出现|||字符。\n消息内容可以多行，用换行分隔，但每条消息不宜过长（1-5句为宜）。\n\n群聊开头用一行格式为：系统|||群聊名称 来标识群聊标题（群聊名称要有趣，体现朋友们的起哄风格）。\n生成15-25条消息，节奏自然，有来有回。\n可以穿插个别"系统消息"格式：系统|||消息内容（如"XX邀请YY加入了群聊""XX修改群名为XX"等），增加真实感。\n\n发言人的名字要各有特色，符合其身份。\n消息内容要用各自的口吻和语气，体现不同性格。\n讨论的内容要基于近期对话和事件的细节，像朋友们真的在八卦一样具体。\n只输出群聊内容，不要加任何说明。\n';
+  } else if (mode === 'secret-forum') {
+    return '\n【当前模式：论坛小号生成】\nAI角色有些事情不好用真实身份讨论，于是开了一个匿名小号在论坛提问。\n请根据以下AI角色近期的真实生活动态，生成他的匿名提问和路人回复。\n内容要紧扣他的内心纠结、人际关系和近期经历——不要写空泛的通用内容。\n\n严格按以下格式输出：\n\n【帖子】\n小号名称|||个性签名|||问题标题|||问题内容|||时间戳\n小号名称要像论坛匿名ID，不要用真实姓名\n个性签名简短有特点，反映角色隐藏的一面\n问题标题要吸引人，体现他想讨论的核心困惑\n问题内容详细描述他的困扰，用第一人称，语气要符合他的性格但更匿名化\n问题内容可以换行分成2-3个自然段落，但不得出现|||字符\n时间戳用"刚刚""x小时前""x天前"等格式\n\n【回复】\n生成3-5条路人回复，每条格式为：路人ID|||回复内容|||时间戳\n路人ID要像真实论坛用户名\n回复内容不得出现|||字符\n回复内容可以换行分成1-2个自然段落\n有的认真分析，有的调侃，有的分享类似经历，有的跑题\n时间戳要符合回复顺序（比帖子晚）\n回复之间用一个空行分隔\n\n帖子和回复之间用一个空行分隔。\n只输出论坛内容，不要加任何说明。\n';
   }
   return '';
 }
@@ -4485,6 +4672,14 @@ function renderSecretHome() {
       </div>
       <div class="secret-module-arrow">›</div>
     </div>
+    <div class="secret-module" onclick="openSecretModule('forum')">
+      <div class="secret-module-icon">🎴</div>
+      <div class="secret-module-info">
+        <div class="secret-module-name">他的论坛小号</div>
+        <div class="secret-module-desc">匿名提问与路人回复</div>
+      </div>
+      <div class="secret-module-arrow">›</div>
+    </div>
     <div class="secret-module" onclick="openSecretModule('news')">
       <div class="secret-module-icon">📰</div>
       <div class="secret-module-info">
@@ -4493,11 +4688,11 @@ function renderSecretHome() {
       </div>
       <div class="secret-module-arrow">›</div>
     </div>
-    <div class="secret-module" onclick="openSecretModule('cp')">
-      <div class="secret-module-icon">💞</div>
+    <div class="secret-module" onclick="openSecretModule('friends')">
+      <div class="secret-module-icon">💬</div>
       <div class="secret-module-info">
-        <div class="secret-module-name">来磕CP了！</div>
-        <div class="secret-module-desc">线人专访·名场面·高糖预警</div>
+        <div class="secret-module-name">朋友们早就看出来了</div>
+        <div class="secret-module-desc">一场群聊翻出所有细节</div>
       </div>
       <div class="secret-module-arrow">›</div>
     </div>
@@ -4512,8 +4707,9 @@ const SECRET_TYPE_NAMES = {
   'cart': '他的购物车',
   'wish': '他的心愿',
   'plan': '他的秘密计划',
+  'forum': '他的论坛小号',
   'news': '坊间小报',
-  'cp': '来磕CP了！'
+  'friends': '朋友们早就看出来了'
 };
 
 function formatSecretRecordTime(timestamp) {
@@ -4713,6 +4909,24 @@ function openSecretModule(type) {
     } else {
       generatePlan(charName);
     }
+  } else if (type === 'forum') {
+    container.innerHTML = `
+      <div class="secret-detail-panel">
+        <div class="secret-detail-panel-inner">
+          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
+          <div class="secret-detail-title">他的论坛小号</div>
+          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
+        </div>
+      </div>
+    `;
+    if (state.secretCache.forum) {
+      const listEl = document.getElementById('secret-detail-list');
+      listEl.className = '';
+      listEl.innerHTML = state.secretCache.forum;
+      showSecretActions('forum', state.secretCache.forum);
+    } else {
+      generateForum(charName);
+    }
   } else if (type === 'news') {
     container.innerHTML = `
       <div class="secret-detail-panel">
@@ -4731,23 +4945,23 @@ function openSecretModule(type) {
     } else {
       generateNews(charName);
     }
-  } else if (type === 'cp') {
+  } else if (type === 'friends') {
     container.innerHTML = `
       <div class="secret-detail-panel">
         <div class="secret-detail-panel-inner">
           <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
-          <div class="secret-detail-title">来磕CP了！</div>
+          <div class="secret-detail-title">朋友们早就看出来了</div>
           <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
         </div>
       </div>
     `;
-    if (state.secretCache.cp) {
+    if (state.secretCache.friends) {
       const listEl = document.getElementById('secret-detail-list');
       listEl.className = '';
-      listEl.innerHTML = state.secretCache.cp;
-      showSecretActions('cp', state.secretCache.cp);
+      listEl.innerHTML = state.secretCache.friends;
+      showSecretActions('friends', state.secretCache.friends);
     } else {
-      generateCP(charName);
+      generateFriends(charName);
     }
   }
 }
@@ -4901,8 +5115,9 @@ function retrySecretGen(type) {
   else if (type === 'cart') generateCart(charName);
   else if (type === 'wish') generateWish(charName);
   else if (type === 'plan') generatePlan(charName);
+  else if (type === 'forum') generateForum(charName);
   else if (type === 'news') generateNews(charName);
-  else if (type === 'cp') generateCP(charName);
+  else if (type === 'friends') generateFriends(charName);
   else generateHistory(charName, type); // bookmark
 }
 
@@ -5189,6 +5404,121 @@ async function generatePlan(charName) {
   }
 }
 
+async function generateForum(charName) {
+  const listEl = document.getElementById('secret-detail-list');
+  const context = buildSecretContext();
+  const prompt = `有些事情他不好用真实身份讨论，于是开了一个匿名小号在论坛提问。请根据以下角色近期的真实生活动态，生成他的匿名提问和路人回复。\n${context}\n\n请直接输出论坛内容，不要加任何说明。`;
+
+  const genId = ++state.secretGenId;
+  try {
+    const result = await callAI(prompt, 'secret-forum');
+    if (genId !== state.secretGenId) return;
+
+    // Parse the response: split into post section and reply section
+    let postRaw = '';
+    let repliesRaw = '';
+
+    const postMatch = result.match(/【帖子】\s*([\s\S]*?)(?:\n\s*【回复】|$)/);
+    const replyMatch = result.match(/【回复】\s*([\s\S]*?)$/);
+
+    if (postMatch) postRaw = postMatch[1].trim();
+    if (replyMatch) repliesRaw = replyMatch[1].trim();
+
+    // Fallback: if no markers found, treat first block as post, rest as replies
+    if (!postRaw && !repliesRaw) {
+      const blocks = result.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
+      if (blocks.length > 0) postRaw = blocks[0];
+      if (blocks.length > 1) repliesRaw = blocks.slice(1).join('\n\n');
+    }
+
+    let html = '';
+
+    // Parse post: name|||sig|||title|||content|||time
+    if (postRaw) {
+      const parts = postRaw.split('|||').map(s => s.trim());
+      if (parts.length >= 5) {
+        const name = parts[0].replace(/\s+/g, ' ');
+        const sig = parts[1].replace(/\s+/g, ' ');
+        const title = parts[2].replace(/\s+/g, ' ');
+        const content = parts.slice(3, -1).join('\n').replace(/\s+$/, '');
+        const time = parts[parts.length - 1].replace(/\s+/g, ' ');
+        const avatarChar = name.charAt(0) || '匿';
+        html += `
+          <div class="forum-post">
+            <div class="forum-post-header">
+              <div class="forum-post-avatar" style="background:linear-gradient(135deg,#4A6FA5,#6B8DB8);">${escapeHtml(avatarChar)}</div>
+              <div class="forum-post-userinfo">
+                <div class="forum-post-username">${escapeHtml(name)}</div>
+                <div class="forum-post-sig">${escapeHtml(sig)}</div>
+              </div>
+              <div class="forum-post-time">${escapeHtml(time)}</div>
+            </div>
+            <div class="forum-post-title">${escapeHtml(title)}</div>
+            <div class="forum-post-text">${renderParagraphs(content)}</div>
+          </div>
+        `;
+      }
+    }
+
+    // Parse replies: each block is 路人ID|||content|||time
+    if (repliesRaw) {
+      const replyBlocks = repliesRaw.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
+      if (replyBlocks.length > 0) {
+        const replyColors = [
+          'linear-gradient(135deg,#7B68AE,#9B8AC4)',
+          'linear-gradient(135deg,#5B9BD5,#7BB5E8)',
+          'linear-gradient(135deg,#E07B5A,#F09B7A)',
+          'linear-gradient(135deg,#5DAE8B,#7DC4A8)',
+          'linear-gradient(135deg,#D4A843,#E8C46B)'
+        ];
+        let repliesHtml = '';
+        replyBlocks.forEach((block, idx) => {
+          const parts = block.split('|||').map(s => s.trim());
+          if (parts.length >= 3) {
+            const rName = parts[0].replace(/\s+/g, ' ');
+            const rContent = parts.slice(1, -1).join('\n').replace(/\s+$/, '');
+            const rTime = parts[parts.length - 1].replace(/\s+/g, ' ');
+            const rAvatar = rName.charAt(0) || '路';
+            const rColor = replyColors[idx % replyColors.length];
+            repliesHtml += `
+              <div class="forum-reply">
+                <div class="forum-reply-avatar" style="background:${rColor};">${escapeHtml(rAvatar)}</div>
+                <div class="forum-reply-content">
+                  <div class="forum-reply-header">
+                    <span class="forum-reply-name">${escapeHtml(rName)}</span>
+                    <span class="forum-reply-time">${escapeHtml(rTime)}</span>
+                  </div>
+                  <div class="forum-reply-text">${renderParagraphs(rContent)}</div>
+                </div>
+              </div>
+            `;
+          }
+        });
+        if (repliesHtml) {
+          html += `
+            <div class="forum-replies">
+              <div class="forum-replies-label">路人回复</div>
+              ${repliesHtml}
+            </div>
+          `;
+        }
+      }
+    }
+
+    listEl.className = '';
+    listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
+    if (html && state.secretModuleType === 'forum') {
+      if (!state.secretCache) state.secretCache = {};
+      state.secretCache.forum = html;
+      showSecretActions('forum', html);
+    }
+  } catch(e) {
+    if (genId !== state.secretGenId) return;
+    listEl.className = '';
+    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('forum')">重试</button></div>`;
+  }
+}
+
 async function generateNews(charName) {
   const listEl = document.getElementById('secret-detail-list');
   const context = buildSecretContext();
@@ -5229,43 +5559,67 @@ async function generateNews(charName) {
   }
 }
 
-async function generateCP(charName) {
+async function generateFriends(charName) {
   const listEl = document.getElementById('secret-detail-list');
   const context = buildSecretContext();
-  const prompt = `有读者追看了两位角色的故事后激动不已，写了一期读者反响专栏。请根据以下角色近期的真实生活动态，以读者视角生成4篇专栏内容。\n包括线人专访、名场面回顾、心动预警、还有同人安利。\n${context}\n\n请直接输出内容，不要加任何说明。`;
+  const prompt = `朋友们建了一个没有两位主角在场的群聊，正在热烈讨论他们的关系。请根据以下角色近期的真实生活动态，生成一场群聊记录。\n参与者为NPC朋友们，他们翻出了两位主角之间的各种细节。\n${context}\n\n请直接输出群聊内容，不要加任何说明。`;
 
   const genId = ++state.secretGenId;
   try {
-    const result = await callAI(prompt, 'secret-cp');
+    const result = await callAI(prompt, 'secret-friends');
     if (genId !== state.secretGenId) return;
-    // Split by blank lines to get individual CP items
+    // Split by blank lines to get individual messages
     const rawItems = result.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
     let html = '';
+    let groupName = '';
     for (const rawItem of rawItems) {
-      // Each item format: title|||content
       const parts = rawItem.split('|||').map(s => s.trim()).filter(s => s);
       if (parts.length >= 2) {
-        const title = parts[0].replace(/\s+/g, ' ');
+        const speaker = parts[0].replace(/\s+/g, ' ');
         const content = parts.slice(1).join('\n').replace(/\s+$/, '');
-        html += `
-          <div class="cp-item">
-            <div class="cp-item-title">${escapeHtml(title)}</div>
-            <div class="cp-item-text">${renderParagraphs(content)}</div>
-          </div>
-        `;
+        if (speaker === '系统') {
+          if (!groupName) {
+            // First system message = group name
+            groupName = content;
+            html += `
+              <div class="gchat-header">
+                <div class="gchat-header-icon">💬</div>
+                <div class="gchat-header-info">
+                  <div class="gchat-header-name">${escapeHtml(groupName)}</div>
+                  <div class="gchat-header-meta">群聊 · 朋友们</div>
+                </div>
+              </div>
+              <div class="gchat-body">
+            `;
+          } else {
+            // System message within chat
+            html += `<div class="gchat-system">${renderParagraphs(content)}</div>`;
+          }
+        } else {
+          html += `
+            <div class="gchat-msg">
+              <div class="gchat-msg-name">「${escapeHtml(speaker)}」</div>
+              <div class="gchat-msg-text">${renderParagraphs(content)}</div>
+            </div>
+          `;
+        }
       }
+    }
+    // Close gchat-body if it was opened
+    if (groupName) {
+      html += `</div>`;
     }
     listEl.className = '';
     listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
-    if (html && state.secretModuleType === 'cp') {
+    if (html && state.secretModuleType === 'friends') {
       if (!state.secretCache) state.secretCache = {};
-      state.secretCache.cp = html;
-      showSecretActions('cp', html);
+      state.secretCache.friends = html;
+      showSecretActions('friends', html);
     }
   } catch(e) {
     if (genId !== state.secretGenId) return;
     listEl.className = '';
-    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('cp')">重试</button></div>`;
+    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('friends')">重试</button></div>`;
   }
 }
 
