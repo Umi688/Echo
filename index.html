@@ -3537,7 +3537,10 @@ async function callAI(userMessage, mode) {
   ];
 
   try {
-    return await callOpenAICompatible(messages, config);
+    const maxTokens = mode === 'secret-news' ? 6000
+      : mode.startsWith('secret-') ? 4000
+      : 2000;
+    return await callOpenAICompatible(messages, config, maxTokens);
   } catch(e) {
     console.error('AI调用失败', e);
     throw e;
@@ -3545,7 +3548,7 @@ async function callAI(userMessage, mode) {
 }
 
 // 统一 OpenAI 兼容调用（支持所有 OpenAI 兼容平台：DeepSeek官方/OpenRouter/各类代理等）
-async function callOpenAICompatible(messages, config) {
+async function callOpenAICompatible(messages, config, maxTokens) {
   // 规范化 baseUrl：去除末尾的 / 和 /v1
   let base = (config.baseUrl || '').replace(/\/+$/, '');
   base = base.replace(/\/v1$/, '');
@@ -3564,7 +3567,7 @@ async function callOpenAICompatible(messages, config) {
         model: config.model,
         messages: messages,
         temperature: 0.85,
-        max_tokens: 2000,
+        max_tokens: maxTokens || 2000,
         stream: false
       }),
       signal: controller.signal
@@ -3583,7 +3586,9 @@ async function callOpenAICompatible(messages, config) {
   }
   const data = await resp.json();
   if (!data.choices || !data.choices[0]) throw new Error('API返回为空');
-  return data.choices[0].message.content.trim();
+  const content = (data.choices[0].message.content || '').trim();
+  if (!content) throw new Error('API返回内容为空（可能是内容审查拦截或token超限）');
+  return content;
 }
 
 // 自动拉取平台下属的模型列表（OpenAI 兼容 GET /v1/models）
