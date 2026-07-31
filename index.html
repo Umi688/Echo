@@ -3582,9 +3582,10 @@ function extractKeywords(text) {
 // L4 记忆卡片：memoryCards[]
 // 保底层：最近 8 张永远全量注入。
 // 检索层：从更早的卡片中，按当前输入的关键词命中数挑最多 3 张补注入（命中越多越相关）。
-function buildMemoryPrompt(userMessage) {
+function buildMemoryPrompt(userMessage, mode) {
   if (!state.data.memoryCards.length) return '';
-  const RECENT_KEEP = 8;
+  // 秘密模块只需近 3 张记忆卡（+检索），保持子模块轻量独立
+  const RECENT_KEEP = (mode && mode.startsWith('secret-')) ? 3 : 8;
   const RETRIEVE_MAX = 3;
   const allCards = state.data.memoryCards;
 
@@ -3748,7 +3749,7 @@ function buildSystemPrompt(mode, userMessage) {
   prompt += buildBaseAnchor();      // L1 基础锚定
   prompt += buildCharacterPrompt();  // L2 人设库
   prompt += buildRulesPrompt();      // L3 外部规则
-  prompt += buildMemoryPrompt(userMessage);     // L4 记忆卡片（含检索层）
+  prompt += buildMemoryPrompt(userMessage, mode);     // L4 记忆卡片（含检索层）
   prompt += buildModeInstruction(mode); // L6 模式指令
   return prompt;
 }
@@ -3817,6 +3818,27 @@ async function callOpenAICompatible(messages, config, maxTokens) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 90000);
 
+  // 构建请求体：检测到 Gemini 模型时附加 safety_settings，放宽安全过滤阈值。
+  // Gemini 默认阈值为 BLOCK_MEDIUM_AND_ABOVE（中等风险即拦截），
+  // 对古言权谋、战争、政治等正常创作题材误判率极高。
+  // 改为 BLOCK_ONLY_HIGH：仅拦截高概率有害内容，大幅减少误判 [$TRAE_REF](https://ai.google.dev/gemini-api/docs/safety-settings?hl=zh-cn)
+  const reqBody = {
+    model: config.model,
+    messages: messages,
+    temperature: 0.85,
+    max_tokens: maxTokens || 2000
+  };
+  const isGemini = /gemini/i.test(config.model || '') || /generativelanguage\.googleapis\.com/i.test(base);
+  if (isGemini) {
+    reqBody.safety_settings = [
+      { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_ONLY_HIGH' },
+      { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_ONLY_HIGH' },
+      { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_ONLY_HIGH' },
+      { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_ONLY_HIGH' },
+      { category: 'HARM_CATEGORY_CIVIC_INTEGRITY', threshold: 'BLOCK_ONLY_HIGH' }
+    ];
+  }
+
   let resp;
   try {
     resp = await fetch(`${base}/v1/chat/completions`, {
@@ -3825,12 +3847,7 @@ async function callOpenAICompatible(messages, config, maxTokens) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${config.apiKey}`
       },
-      body: JSON.stringify({
-        model: config.model,
-        messages: messages,
-        temperature: 0.85,
-        max_tokens: maxTokens || 2000
-      }),
+      body: JSON.stringify(reqBody),
       signal: controller.signal
     });
   } catch(e) {
@@ -5285,13 +5302,13 @@ function buildSecretContext() {
     ctx += '\n【近期对话记录】暂无对话，你们还没有开始交流。\n';
   }
 
-  // Recent events - story context
+  // Recent events - story context (全文注入，不截断)
   const recentEvents = state.data.eventHistory.slice(-8);
   if (recentEvents.length) {
     ctx += '\n【近期经历的事件】\n';
     recentEvents.forEach(evt => {
-      const narrative = evt.aiNarrative ? evt.aiNarrative.substring(0, 150) : '';
-      ctx += `- ${evt.wish}（${narrative}...）\n`;
+      const narrative = evt.aiNarrative || '';
+      ctx += `愿望：${evt.wish}\n叙事：${narrative}\n---\n`;
     });
   }
 
