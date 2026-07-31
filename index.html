@@ -2872,39 +2872,37 @@ async function ensureStorageReady() {
 }
 
 function saveToStorage() {
-  // Trim chat history only if extremely long to avoid localStorage quota issues.
-  // Keep the latest 500 messages — enough for context without losing too much.
-  if (state.data.chatHistory && state.data.chatHistory.length > 500) {
-    state.data.chatHistory = state.data.chatHistory.slice(-500);
-    showToast('聊天记录过长，已保留最近500条');
-  }
-  // Trim event history: keep latest 200 events.
-  // 上下文窗口只用最近 20 个，超出的靠记忆卡承载，200 条足够回溯。
-  if (state.data.eventHistory && state.data.eventHistory.length > 200) {
-    const removed = state.data.eventHistory.length - 200;
-    state.data.eventHistory = state.data.eventHistory.slice(-200);
-    showToast(`事件记录过长，已保留最近200条（清理${removed}条旧事件，建议定期生成记忆卡片）`);
-  }
+  // 不再自动清理事件/对话历史 —— 完整保留所有已生成的记录。
+  // 存储容量由 IndexedDB（上限远高于 localStorage）承载；
+  // 仅在真正写入失败时才提示用户手动处理，绝不静默裁剪数据。
   try {
     const dataWithVersion = { ...state.data, _version: APP_VERSION };
     const jsonStr = JSON.stringify(dataWithVersion);
     // 同步更新内存缓存 + 异步写入 IndexedDB
     _memCache[STORAGE_KEY] = jsonStr;
     if (_dbReady) {
-      dbPut(STORAGE_KEY, jsonStr).catch(() => {});
+      dbPut(STORAGE_KEY, jsonStr).then(_ok => {
+        if (!_ok) {
+          console.error('IndexedDB 写入失败，数据仅保留在内存中');
+          showToast('存储写入失败，数据仅暂存于内存，请检查存储空间');
+        }
+      }).catch(() => {
+        console.error('IndexedDB 写入异常');
+        showToast('存储写入失败，数据仅暂存于内存，请检查存储空间');
+      });
     } else {
       // 降级 localStorage
       localStorage.setItem(STORAGE_KEY, jsonStr);
     }
     return true;
   } catch(e) {
-    console.error('保存失败，尝试清理存档后重试', e);
-    // Quota exceeded — try emergency cleanup and retry
+    console.error('保存失败', e);
+    // localStorage 配额不足：仅清除存档槽位（不影响当前对话/事件）后重试
     if (emergencyClearStorage()) {
-      showToast('存储空间已自动清理');
+      showToast('存档槽位已清理以释放空间（当前对话与事件不受影响）');
       return true;
     }
-    showToast('保存失败：存储空间不足，请清理浏览器数据');
+    showToast('保存失败：存储空间不足，请手动导出或清理浏览器数据');
     return false;
   }
 }
