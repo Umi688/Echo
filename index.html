@@ -3849,7 +3849,27 @@ async function callOpenAICompatible(messages, config, maxTokens) {
   // 解析返回
   const data = await resp.json();
   if (!data.choices || !data.choices[0]) throw new Error('API返回为空');
-  const content = (data.choices[0].message.content || '').trim();
+  const choice = data.choices[0];
+  const content = (choice.message?.content || '').trim();
+
+  // 检测内容审查拦截：Google Gemini 通过 OpenAI 兼容端点返回时，
+  // HTTP 状态码为 200，但 finish_reason 标记为 safety/content_filter，
+  // 或 content 里直接塞入了审查错误的英文说明文本。
+  const safetyReasons = ['safety', 'content_filter', 'recitation'];
+  if (safetyReasons.includes(choice.finish_reason)) {
+    throw new Error('内容被安全审查拦截（finish_reason: ' + choice.finish_reason + '），请调整剧情内容后重试');
+  }
+  // 内容审查错误文本特征（Gemini 会把这段话塞进 content 而非走错误码）
+  const censorshipPatterns = [
+    /prompt could not be submitted/i,
+    /sensitive words? that violate/i,
+    /Generative AI Prohibited Use policy/i,
+    /Try rephrasing the prompt/i
+  ];
+  if (content && censorshipPatterns.some(re => re.test(content))) {
+    throw new Error('内容被安全审查拦截，请调整剧情内容后重试');
+  }
+
   if (!content) throw new Error('API返回内容为空（可能是内容审查拦截或token超限）');
   return content;
 }
@@ -4718,6 +4738,10 @@ async function improveMemory() {
 
   try {
     const result = await callAI(summary, 'memory');
+    // 兜底校验：如果返回内容看起来像错误信息（英文 API 报错等），拒绝存入记忆卡
+    if (!result || result.length < 10 || /^[\s\S]*[a-zA-Z]{40,}[\s\S]*$/.test(result) && !/[\u4e00-\u9fff]/.test(result)) {
+      throw new Error('返回内容异常，疑似API错误信息，未存入记忆');
+    }
     const cardId = 'mem_' + Date.now();
     state.data.memoryCards.push({
       id: cardId,
@@ -4826,6 +4850,10 @@ async function regenerateMemoryCard(cardId) {
 
   try {
     const result = await callAI(summary, 'memory');
+    // 兜底校验：如果返回内容看起来像错误信息（英文 API 报错等），拒绝覆盖记忆卡
+    if (!result || result.length < 10 || /^[\s\S]*[a-zA-Z]{40,}[\s\S]*$/.test(result) && !/[\u4e00-\u9fff]/.test(result)) {
+      throw new Error('返回内容异常，疑似API错误信息，记忆卡未更新');
+    }
     card.content = result;
     saveToStorage();
     // Only update the single card text (no full re-render)
