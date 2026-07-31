@@ -2755,6 +2755,122 @@ const STORAGE_KEY = 'aitg_current';
 const SAVES_KEY = 'aitg_saves';
 const APP_VERSION = '3.0'; // 版本号，改动时递增可强制清除旧缓存数据
 
+/* ----- IndexedDB 存储层（替代 localStorage，容量从 5MB 提升到数百 MB）-----
+ * 设计原则：
+ *  - 对上层透明：saveToStorage/loadFromStorage/getAllSaves/writeAllSaves 接口不变
+ *  - 异步内部转同步对外：用同步标志位 + Promise 缓存，保证调用方无需改 await
+ *  - 自动迁移：首次检测到 localStorage 有旧数据时自动迁移到 IndexedDB
+ *  - 降级兼容：IndexedDB 不可用时自动回退 localStorage
+ */
+let _db = null;
+let _dbReady = false;
+let _dbInitPromise = null;
+
+function openDB() {
+  if (_dbInitPromise) return _dbInitPromise;
+  _dbInitPromise = new Promise((resolve) => {
+    if (!window.indexedDB) { _dbReady = false; resolve(null); return; }
+    try {
+      const req = indexedDB.open('aitg_db', 1);
+      req.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains('kv')) {
+          db.createObjectStore('kv');
+        }
+      };
+      req.onsuccess = (e) => {
+        _db = e.target.result;
+        _dbReady = true;
+        resolve(_db);
+      };
+      req.onerror = () => { _dbReady = false; resolve(null); };
+    } catch(e) { _dbReady = false; resolve(null); }
+  });
+  return _dbInitPromise;
+}
+
+function dbGet(key) {
+  return new Promise((resolve) => {
+    if (!_dbReady || !_db) { resolve(undefined); return; }
+    try {
+      const tx = _db.transaction('kv', 'readonly');
+      const req = tx.objectStore('kv').get(key);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => resolve(undefined);
+    } catch(e) { resolve(undefined); }
+  });
+}
+
+function dbPut(key, value) {
+  return new Promise((resolve) => {
+    if (!_dbReady || !_db) { resolve(false); return; }
+    try {
+      const tx = _db.transaction('kv', 'readwrite');
+      tx.objectStore('kv').put(value, key);
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => resolve(false);
+    } catch(e) { resolve(false); }
+  });
+}
+
+function dbDelete(key) {
+  return new Promise((resolve) => {
+    if (!_dbReady || !_db) { resolve(false); return; }
+    try {
+      const tx = _db.transaction('kv', 'readwrite');
+      tx.objectStore('kv').delete(key);
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => resolve(false);
+    } catch(e) { resolve(false); }
+  });
+}
+
+// 同步缓存：IndexedDB 是异步的，但上层代码是同步调用。
+// 用内存缓存 + 标志位解决：写入时同步更新缓存（异步写 DB），读取时先读缓存。
+const _memCache = {};
+let _memCacheLoaded = false;
+
+// 初始化存储：打开 DB，迁移旧 localStorage 数据，加载缓存
+async function initStorage() {
+  await openDB();
+  if (!_dbReady) {
+    // IndexedDB 不可用，降级 localStorage（从 localStorage 加载到缓存）
+    _memCache[STORAGE_KEY] = localStorage.getItem(STORAGE_KEY);
+    _memCache[SAVES_KEY] = localStorage.getItem(SAVES_KEY);
+    _memCacheLoaded = true;
+    return;
+  }
+  // 检查 IndexedDB 是否已有数据
+  const hasCurrent = await dbGet(STORAGE_KEY);
+  if (hasCurrent !== undefined) {
+    // IndexedDB 已有数据，加载到缓存
+    _memCache[STORAGE_KEY] = typeof hasCurrent === 'string' ? hasCurrent : JSON.stringify(hasCurrent);
+    const savesData = await dbGet(SAVES_KEY);
+    _memCache[SAVES_KEY] = savesData !== undefined ? (typeof savesData === 'string' ? savesData : JSON.stringify(savesData)) : null;
+    _memCacheLoaded = true;
+  } else {
+    // IndexedDB 无数据，检查 localStorage 是否有旧数据需要迁移
+    const lsCurrent = localStorage.getItem(STORAGE_KEY);
+    const lsSaves = localStorage.getItem(SAVES_KEY);
+    if (lsCurrent) {
+      await dbPut(STORAGE_KEY, lsCurrent);
+      localStorage.removeItem(STORAGE_KEY);
+    }
+    if (lsSaves) {
+      await dbPut(SAVES_KEY, lsSaves);
+      localStorage.removeItem(SAVES_KEY);
+    }
+    _memCache[STORAGE_KEY] = lsCurrent || null;
+    _memCache[SAVES_KEY] = lsSaves || null;
+    _memCacheLoaded = true;
+  }
+}
+
+// 等待存储就绪（在 init 中调用）
+async function ensureStorageReady() {
+  if (!_memCacheLoaded) await initStorage();
+}
+
 function saveToStorage() {
   // Trim chat history only if extremely long to avoid localStorage quota issues.
   // Keep the latest 500 messages — enough for context without losing too much.
@@ -2762,9 +2878,24 @@ function saveToStorage() {
     state.data.chatHistory = state.data.chatHistory.slice(-500);
     showToast('聊天记录过长，已保留最近500条');
   }
+  // Trim event history: keep latest 200 events.
+  // 上下文窗口只用最近 20 个，超出的靠记忆卡承载，200 条足够回溯。
+  if (state.data.eventHistory && state.data.eventHistory.length > 200) {
+    const removed = state.data.eventHistory.length - 200;
+    state.data.eventHistory = state.data.eventHistory.slice(-200);
+    showToast(`事件记录过长，已保留最近200条（清理${removed}条旧事件，建议定期生成记忆卡片）`);
+  }
   try {
     const dataWithVersion = { ...state.data, _version: APP_VERSION };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(dataWithVersion));
+    const jsonStr = JSON.stringify(dataWithVersion);
+    // 同步更新内存缓存 + 异步写入 IndexedDB
+    _memCache[STORAGE_KEY] = jsonStr;
+    if (_dbReady) {
+      dbPut(STORAGE_KEY, jsonStr).catch(() => {});
+    } else {
+      // 降级 localStorage
+      localStorage.setItem(STORAGE_KEY, jsonStr);
+    }
     return true;
   } catch(e) {
     console.error('保存失败，尝试清理存档后重试', e);
@@ -2780,13 +2911,19 @@ function saveToStorage() {
 
 function loadFromStorage() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = _memCache[STORAGE_KEY] || localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
       // 版本不匹配：清除旧数据，但保留并迁移 API 配置
       if (parsed._version !== APP_VERSION) {
         console.log('版本不匹配，清除旧数据', parsed._version, '→', APP_VERSION);
         const savedApiConfig = parsed.apiConfig || null;
+        _memCache[STORAGE_KEY] = null;
+        _memCache[SAVES_KEY] = null;
+        if (_dbReady) {
+          dbDelete(STORAGE_KEY).catch(() => {});
+          dbDelete(SAVES_KEY).catch(() => {});
+        }
         localStorage.removeItem(STORAGE_KEY);
         localStorage.removeItem(SAVES_KEY);
         state.data = structuredClone(DEFAULT_DATA);
@@ -2840,16 +2977,23 @@ function deepMerge(base, override) {
 }
 
 /* ========== 初始化 ========== */
-function init() {
-  // Clean up old array-format saves to free up localStorage space
-  const rawSaves = localStorage.getItem(SAVES_KEY);
+async function init() {
+  // 等待 IndexedDB 存储层就绪（含旧 localStorage 数据自动迁移）
+  await ensureStorageReady();
+
+  // Clean up old array-format saves
+  const rawSaves = _memCache[SAVES_KEY];
   if (rawSaves) {
     try {
       const parsed = JSON.parse(rawSaves);
       if (Array.isArray(parsed)) {
+        _memCache[SAVES_KEY] = null;
+        if (_dbReady) dbDelete(SAVES_KEY).catch(() => {});
         localStorage.removeItem(SAVES_KEY);
       }
     } catch(e) {
+      _memCache[SAVES_KEY] = null;
+      if (_dbReady) dbDelete(SAVES_KEY).catch(() => {});
       localStorage.removeItem(SAVES_KEY);
     }
   }
@@ -2870,14 +3014,22 @@ function applyBgImage() {
   document.documentElement.style.setProperty('--bg-image', bg ? `url('${bg}')` : "url('https://umi688.github.io/Echo/images/bg1.jpg')");
 }
 
-// Emergency cleanup: if localStorage is full, clear saves to make room
+// Emergency cleanup: if storage is full, clear saves to make room
 function emergencyClearStorage() {
-  // Remove all saves first
+  // Remove all saves first (IndexedDB + localStorage + memory cache)
+  _memCache[SAVES_KEY] = null;
+  if (_dbReady) dbDelete(SAVES_KEY).catch(() => {});
   localStorage.removeItem(SAVES_KEY);
   // Try saving current data again (include _version so it survives next load)
   try {
     const dataWithVersion = { ...state.data, _version: APP_VERSION };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(dataWithVersion));
+    const jsonStr = JSON.stringify(dataWithVersion);
+    _memCache[STORAGE_KEY] = jsonStr;
+    if (_dbReady) {
+      dbPut(STORAGE_KEY, jsonStr).catch(() => {});
+    } else {
+      localStorage.setItem(STORAGE_KEY, jsonStr);
+    }
     return true;
   } catch(e) {
     console.error('紧急清理后仍无法保存', e);
@@ -3403,26 +3555,104 @@ function buildRulesPrompt() {
   return prompt;
 }
 
+// 从当前输入文本提取关键词，用于检索旧记忆卡。
+// 策略：人设姓名（高权重）+ 按标点切出的短词 + 长段中文二元组（过滤两边都是停用字的噪声）。
+function extractKeywords(text) {
+  if (!text) return [];
+  const stopChars = new Set('的了是在他和她你我这那就都不没也有与到给让被把对向个们上下里中后前时地得着过为以而之于其此怎什么哪');
+  const segments = text.split(/[，。！？、；：""''「」【】（）()\[\]\s\n\r·,.!?;:'"…—\-]+/).filter(s => s);
+  const keywords = new Set();
+  const meName = (state.data.characters.me.name || '').trim();
+  const otherName = (state.data.characters.other.name || '').trim();
+  if (meName) keywords.add(meName);
+  if (otherName) keywords.add(otherName);
+  segments.forEach(seg => {
+    if (seg.length <= 4) {
+      if (![...seg].every(c => stopChars.has(c))) keywords.add(seg);
+    } else {
+      for (let i = 0; i < seg.length - 1; i++) {
+        const bg = seg.substring(i, i + 2);
+        if (!stopChars.has(bg[0]) || !stopChars.has(bg[1])) {
+          keywords.add(bg);
+        }
+      }
+    }
+  });
+  return [...keywords];
+}
+
 // L4 记忆卡片：memoryCards[]
-function buildMemoryPrompt() {
+// 保底层：最近 8 张永远全量注入。
+// 检索层：从更早的卡片中，按当前输入的关键词命中数挑最多 3 张补注入（命中越多越相关）。
+function buildMemoryPrompt(userMessage) {
   if (!state.data.memoryCards.length) return '';
+  const RECENT_KEEP = 8;
+  const RETRIEVE_MAX = 3;
+  const allCards = state.data.memoryCards;
+
+  // 保底层：最近 8 张，永远全量注入
+  const recentCards = allCards.slice(-RECENT_KEEP);
   let prompt = '\n【长期记忆锚点（历史摘要，防止遗忘）】\n';
-  state.data.memoryCards.forEach(card => {
+  recentCards.forEach(card => {
     prompt += `- ${card.content}\n`;
   });
+
+  // 检索层：从更早的卡片中按关键词相关性召回
+  const olderCards = allCards.slice(0, -RECENT_KEEP);
+  if (olderCards.length > 0 && userMessage) {
+    const keywords = extractKeywords(userMessage);
+    if (keywords.length > 0) {
+      const meName = (state.data.characters.me.name || '').trim();
+      const otherName = (state.data.characters.other.name || '').trim();
+      const nameSet = new Set([meName, otherName].filter(Boolean));
+      const scored = olderCards.map(card => {
+        const content = card.content || '';
+        let score = 0;
+        keywords.forEach(kw => {
+          if (kw && content.includes(kw)) score += nameSet.has(kw) ? 3 : 1;
+        });
+        return { card, score };
+      }).filter(s => s.score > 0)
+        .sort((a, b) => b.score - a.score);
+      const recalled = scored.slice(0, RETRIEVE_MAX).map(s => s.card);
+      if (recalled.length > 0) {
+        prompt += '\n【检索召回的相关旧记忆（按当前内容相关性补充，勿与上方近期记忆重复）】\n';
+        recalled.forEach(card => {
+          prompt += `- ${card.content}\n`;
+        });
+      }
+    }
+  }
   return prompt;
+}
+
+// 从已查看的秘密记录中提取纯文本（全文），用于跨模块注入。
+// 秘密记录存的是渲染后的 HTML，这里用临时 DOM 提取 textContent。
+// 不做字数截断：记录本身由 AI 生成、长度可控，全文注入衔接效果更好。
+function buildSecretRecordsPrompt() {
+  const recs = state.data.secretRecords;
+  if (!recs || recs.length === 0) return '';
+  const recent = [...recs].sort((a, b) => b.timestamp - a.timestamp).slice(0, 3);
+  let txt = '\n【近期偷看的秘密记录（AI角色的真实生活细节，供感知其日常状态，勿复述其中内容）】\n';
+  recent.forEach(rec => {
+    const typeName = SECRET_TYPE_NAMES[rec.type] || rec.type;
+    const tmp = document.createElement('div');
+    tmp.innerHTML = rec.html || '';
+    const plain = (tmp.textContent || '').replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
+    txt += `【${typeName}】\n${plain}\n---\n`;
+  });
+  return txt;
 }
 
 // L5 即时上下文：最近20条记录
 // 双向打通：聊天能看到近期剧情，剧情能看到近期聊天
+// 早期历史摘要已删除：早期细节由 L4 记忆卡片（最近8张 + 检索层）承载
 function buildHistoryMessages(mode) {
   const MAX_PRIMARY = 40;     // 主上下文条数上限（提高以增强长程记忆）
   const MAX_CROSS = 10;       // 跨模块注入条数上限
-  const MAX_EARLY = 15;      // 早期历史摘要条数（防止遗忘旧NPC和事件）
 
   let primary = [];
   let cross = [];
-  let early = [];
 
   if (mode === 'chat') {
     // 聊天模式：主上下文是聊天记录，跨模块注入近期剧情叙事
@@ -3436,29 +3666,7 @@ function buildHistoryMessages(mode) {
         const wish = e.polishedWish || e.wish || '';
         return `愿望：${wish}\n叙事：${e.aiNarrative || ''}`;
       }).join('\n---\n');
-      cross = [{ role: 'user', content: `【近期剧情进展（供你感知当前剧情状态，勿在聊天中复述）】\n${eventSummary}` }];
-    }
-    // 早期历史摘要：超出主上下文范围的旧聊天和旧事件，防止遗忘早期NPC和经历
-    const earlyChats = state.data.chatHistory.slice(0, -MAX_PRIMARY);
-    const earlyEvents = state.data.eventHistory.slice(0, -MAX_CROSS);
-    if (earlyChats.length > 0 || earlyEvents.length > 0) {
-      let earlySummary = '【早期历史摘要（很久以前发生的事，不要遗忘这些人物和经历）】\n';
-      if (earlyEvents.length > 0) {
-        earlySummary += '早期事件：\n';
-        earlyEvents.slice(-MAX_EARLY).forEach(e => {
-          const wish = e.polishedWish || e.wish || '';
-          const narr = (e.aiNarrative || '').substring(0, 80);
-          earlySummary += `- ${wish}（${narr}…）\n`;
-        });
-      }
-      if (earlyChats.length > 0) {
-        earlySummary += '早期对话：\n';
-        earlyChats.slice(-MAX_EARLY).forEach(h => {
-          const speaker = h.role === 'user' ? '主控' : 'AI角色';
-          earlySummary += `${speaker}：${h.content || ''}\n`;
-        });
-      }
-      early = [{ role: 'user', content: earlySummary }];
+      cross.push({ role: 'user', content: `【近期剧情进展（供你感知当前剧情状态，勿在聊天中复述）】\n${eventSummary}` });
     }
   } else if (mode === 'event') {
     // 剧情模式：主上下文是剧情事件链，跨模块注入近期聊天
@@ -3472,32 +3680,7 @@ function buildHistoryMessages(mode) {
         const speaker = h.role === 'user' ? '主控' : 'AI角色';
         return `${speaker}：${h.content || ''}`;
       }).join('\n');
-      cross = [{ role: 'user', content: `【近期聊天记录（供你感知当前关系状态和约定，叙事中可自然承接）】\n${chatSummary}` }];
-    }
-    // 早期历史摘要
-    const allEventPairs = state.data.eventHistory.flatMap(e => [
-      { wish: e.wish, narrative: e.aiNarrative }
-    ]);
-    const earlyEventCount = Math.floor(MAX_PRIMARY / 2);
-    const earlyEvents = allEventPairs.slice(0, -earlyEventCount);
-    const earlyChats = state.data.chatHistory.slice(0, -MAX_CROSS);
-    if (earlyEvents.length > 0 || earlyChats.length > 0) {
-      let earlySummary = '【早期历史摘要（很久以前发生的事，不要遗忘这些人物和经历）】\n';
-      if (earlyEvents.length > 0) {
-        earlySummary += '早期事件：\n';
-        earlyEvents.slice(-MAX_EARLY).forEach(e => {
-          const narr = (e.narrative || '').substring(0, 80);
-          earlySummary += `- ${e.wish}（${narr}…）\n`;
-        });
-      }
-      if (earlyChats.length > 0) {
-        earlySummary += '早期对话：\n';
-        earlyChats.slice(-MAX_EARLY).forEach(h => {
-          const speaker = h.role === 'user' ? '主控' : 'AI角色';
-          earlySummary += `${speaker}：${h.content || ''}\n`;
-        });
-      }
-      early = [{ role: 'user', content: earlySummary }];
+      cross.push({ role: 'user', content: `【近期聊天记录（供你感知当前关系状态和约定，叙事中可自然承接）】\n${chatSummary}` });
     }
   } else if (mode === 'polish') {
     // 润色模式：注入近期剧情叙事作为上下文，确保润色文本与上文衔接
@@ -3511,35 +3694,18 @@ function buildHistoryMessages(mode) {
         const speaker = h.role === 'user' ? '主控' : 'AI角色';
         return `${speaker}：${h.content || ''}`;
       }).join('\n');
-      cross = [{ role: 'user', content: `【近期聊天记录（供你感知当前关系状态，勿在叙事中复述）】\n${chatSummary}` }];
-    }
-    // 早期历史摘要
-    const earlyEventCount = Math.floor(MAX_PRIMARY / 2);
-    const earlyEvents = state.data.eventHistory.slice(0, -earlyEventCount);
-    const earlyChats = state.data.chatHistory.slice(0, -MAX_CROSS);
-    if (earlyEvents.length > 0 || earlyChats.length > 0) {
-      let earlySummary = '【早期历史摘要（很久以前发生的事，不要遗忘这些人物和经历）】\n';
-      if (earlyEvents.length > 0) {
-        earlySummary += '早期事件：\n';
-        earlyEvents.slice(-MAX_EARLY).forEach(e => {
-          const wish = e.polishedWish || e.wish || '';
-          const narr = (e.aiNarrative || '').substring(0, 80);
-          earlySummary += `- ${wish}（${narr}…）\n`;
-        });
-      }
-      if (earlyChats.length > 0) {
-        earlySummary += '早期对话：\n';
-        earlyChats.slice(-MAX_EARLY).forEach(h => {
-          const speaker = h.role === 'user' ? '主控' : 'AI角色';
-          earlySummary += `${speaker}：${h.content || ''}\n`;
-        });
-      }
-      early = [{ role: 'user', content: earlySummary }];
+      cross.push({ role: 'user', content: `【近期聊天记录（供你感知当前关系状态，勿在叙事中复述）】\n${chatSummary}` });
     }
   }
 
-  // 顺序：早期摘要 → 跨模块上下文 → 主上下文（当前交互在最末尾，最受关注）
-  return [...early, ...cross, ...primary];
+  // 跨模块注入：近3条秘密记录，增强各模块与秘密内容的衔接
+  const secretPrompt = buildSecretRecordsPrompt();
+  if (secretPrompt) {
+    cross.push({ role: 'user', content: secretPrompt });
+  }
+
+  // 顺序：跨模块上下文 → 主上下文（当前交互在最末尾，最受关注）
+  return [...cross, ...primary];
 }
 
 // L6 模式指令：根据 mode 动态注入
@@ -3553,7 +3719,7 @@ function buildModeInstruction(mode) {
   } else if (mode === 'polish') {
     return '\n【当前模式：润色】\n规则：\n1. 本模式下你不是在扮演AI角色，而是作为第三人称叙事者。叙事视角主体是主控角色。\n2. 玩家输入的是基于主控角色自身角度的剧情愿望、反应或期望的发展。将其润色为以主控为视角焦点的小说风格叙事文段。保留玩家原意的核心。\n3. 严格使用第三人称叙述。玩家输入中的"我"一律替换为主控角色的姓名（或"他/她"），指代AI角色时一律使用AI角色的姓名（或"他/她"）。全文禁止出现"你""你的""你们"等任何第二人称代词。\n4. 润色文本默认应从上条叙事文本或润色文本的结束处自然衔接，延续当前场景和时空。严禁复述或重复上文已出现过的内容。\n5.若有心理活动：小段插入第一人称或自由间接引语呈现角色当下的内心独白、回忆、矛盾、独白塑造情感冲突（如自责与不甘交织、想追问又克制、甜蜜回忆与当下苦涩对比）。\n6.格式要求：心理活动用「」括起来，对话内容用""括起来。段落之间用换行分隔，不要挤在一起。\n7.只输出润色后的文段，不加任何说明。\n';
   } else if (mode === 'memory') {
-    return '\n【当前模式：记忆总结】\n规则：\n1. 根据用户提供的近期聊天记录和事件记录，总结关键信息。\n2. 提取：重要事件、角色关系变化、人物状态演变。\n3. 输出格式：一段简洁的摘要，不超过200字。用"你"指代主控角色，用AI角色姓名指代AI角色。\n4. 只记录已发生的事实，不加入推测或评价。\n5. 直接输出摘要正文，不要加任何标题、标记或说明（如"记忆总结"等字样一律不要出现）。\n';
+    return '\n【当前模式：记忆总结】\n规则：\n1. 根据用户提供的近期聊天记录和事件记录，总结关键信息。\n2. 提取：重要事件、角色关系变化、人物状态演变。尽量保留具体细节，如涉及的人物姓名、具体约定、关键道具、地点、转折点等，不要只写空泛的概括。\n3. 输出格式：一段简洁的摘要，不超过500字。用"你"指代主控角色，用AI角色姓名指代AI角色。\n4. 只记录已发生的事实，不加入推测或评价。\n5. 直接输出摘要正文，不要加任何标题、标记或说明（如"记忆总结"等字样一律不要出现）。\n';
   } else if (mode === 'secret-memo') {
     return '\n【当前模式：备忘录生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意翻看了你手机里的备忘录。\n请以第一人称视角生成你备忘录里此刻真实存在的3-5条内容。\n要求：\n1. 内容必须紧扣你的人设、性格、背景、日常生活和近期经历——不要写空泛的通用备忘录\n2. 至少有一条与你和主控角色之间的关系或近期互动有关\n3. 类型多样：待办事项、心情记录、碎碎念、灵感片段、人际备注、购物清单等\n4. 语气、用词习惯、甚至标点风格都要符合你的性格特征\n5. 每条格式严格为：标题|||正文|||时间\n6. 条目之间用一个空行分隔\n7. 正文可以多行，但正文中不得出现|||字符\n8. 时间用简短格式如"3天前""昨天 22:30""上周五""刚刚"\n9. 只输出备忘录内容，不要加任何说明或解释\n';
   } else if (mode === 'secret-bookmark') {
@@ -3578,12 +3744,13 @@ function buildModeInstruction(mode) {
 
 // 完整 System Prompt 拼装：L1 → L2 → L3 → L4 → L6
 // L5（即时上下文）作为 history messages 单独传入，不拼入 system prompt
-function buildSystemPrompt(mode) {
+// userMessage 透传给 L4 记忆卡片，用于检索旧卡
+function buildSystemPrompt(mode, userMessage) {
   let prompt = '';
   prompt += buildBaseAnchor();      // L1 基础锚定
   prompt += buildCharacterPrompt();  // L2 人设库
   prompt += buildRulesPrompt();      // L3 外部规则
-  prompt += buildMemoryPrompt();     // L4 记忆卡片
+  prompt += buildMemoryPrompt(userMessage);     // L4 记忆卡片（含检索层）
   prompt += buildModeInstruction(mode); // L6 模式指令
   return prompt;
 }
@@ -3598,7 +3765,7 @@ async function callAI(userMessage, mode) {
     return mockResponse(mode, userMessage);
   }
 
-  const systemPrompt = buildSystemPrompt(mode);
+  const systemPrompt = buildSystemPrompt(mode, userMessage);
   // L5 即时上下文：最近20条记录，作为 history messages 注入
   const historyMsgs = (mode === 'chat' || mode === 'event' || mode === 'polish') ? buildHistoryMessages(mode) : [];
 
@@ -3612,11 +3779,35 @@ async function callAI(userMessage, mode) {
     const maxTokens = mode === 'secret-news' ? 8000
       : mode.startsWith('secret-') ? 4000
       : 2000;
-    return await callOpenAICompatible(messages, config, maxTokens);
+    // 自动重试：网络/超时类错误重试 1 次，内容审查类不重试
+    return await callWithRetry(() => callOpenAICompatible(messages, config, maxTokens), 1);
   } catch(e) {
     console.error('AI调用失败', e);
     throw e;
   }
+}
+
+// 自动重试包装：仅对网络错误/超时/5xx 重试，内容审查/4xx 不重试
+async function callWithRetry(fn, maxRetries) {
+  let lastError;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch(e) {
+      lastError = e;
+      const msg = (e.message || '').toLowerCase();
+      // 可重试：网络错误、超时、5xx 服务端错误
+      const isRetryable = e.name === 'AbortError'
+        || msg.includes('网络请求失败')
+        || msg.includes('超时')
+        || /api\s+5\d{2}/.test(msg)
+        || msg.includes('failed to fetch');
+      if (!isRetryable || attempt === maxRetries) throw e;
+      // 重试前等 1 秒
+      await new Promise(r => setTimeout(r, 1000));
+    }
+  }
+  throw lastError;
 }
 
 // 统一 OpenAI 兼容调用（支持所有 OpenAI 兼容平台：DeepSeek官方/OpenRouter/各类代理等）
@@ -3627,6 +3818,7 @@ async function callOpenAICompatible(messages, config, maxTokens) {
   // 超时控制：90秒无响应则中止请求，防止 UI 永久卡在加载状态
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 90000);
+
   let resp;
   try {
     resp = await fetch(`${base}/v1/chat/completions`, {
@@ -3639,8 +3831,7 @@ async function callOpenAICompatible(messages, config, maxTokens) {
         model: config.model,
         messages: messages,
         temperature: 0.85,
-        max_tokens: maxTokens || 2000,
-        stream: false
+        max_tokens: maxTokens || 2000
       }),
       signal: controller.signal
     });
@@ -3656,6 +3847,8 @@ async function callOpenAICompatible(messages, config, maxTokens) {
     const errText = await resp.text();
     throw new Error(`API ${resp.status}: ${errText}`);
   }
+
+  // 解析返回
   const data = await resp.json();
   if (!data.choices || !data.choices[0]) throw new Error('API返回为空');
   const content = (data.choices[0].message.content || '').trim();
@@ -3838,8 +4031,8 @@ async function sendChatMessage() {
           role: 'assistant', content: cleanReply,
           timestamp: Date.now(), sessionId: state.chatSessionId
         });
-        saveToStorage();
         appendChatMessage(state.data.chatHistory.length - 1);
+        saveToStorage();
       }
     } catch(e) {
       removeTypingIndicator();
@@ -3876,8 +4069,8 @@ async function sendChatMessage() {
         role: 'assistant', content: cleanReply,
         timestamp: Date.now(), sessionId: state.chatSessionId
       });
-      saveToStorage();
       appendChatMessage(state.data.chatHistory.length - 1);
+      saveToStorage();
     }
   } catch(e) {
     removeTypingIndicator();
@@ -3886,8 +4079,8 @@ async function sendChatMessage() {
       role: 'assistant', content: '（回复失败，请检查API配置）',
       timestamp: Date.now(), sessionId: state.chatSessionId
     });
-    saveToStorage();
     appendChatMessage(state.data.chatHistory.length - 1);
+    saveToStorage();
   } finally {
     state.isLoading = false;
     btn.disabled = false;
@@ -5076,28 +5269,6 @@ function buildSecretContext() {
     });
   }
 
-  // Early history summary — prevent forgetting old NPCs and events
-  const earlyChats = state.data.chatHistory.slice(0, -25);
-  const earlyEvents = state.data.eventHistory.slice(0, -8);
-  if (earlyChats.length > 0 || earlyEvents.length > 0) {
-    ctx += '\n【早期历史摘要（很久以前的事，不要遗忘这些人物和经历）】\n';
-    if (earlyEvents.length > 0) {
-      ctx += '早期事件：\n';
-      earlyEvents.slice(-10).forEach(evt => {
-        const wish = evt.polishedWish || evt.wish || '';
-        const narr = (evt.aiNarrative || '').substring(0, 80);
-        ctx += `- ${wish}（${narr}…）\n`;
-      });
-    }
-    if (earlyChats.length > 0) {
-      ctx += '早期对话：\n';
-      earlyChats.slice(-10).forEach(msg => {
-        const speaker = msg.role === 'user' ? me : other;
-        ctx += `${speaker}：${msg.content}\n`;
-      });
-    }
-  }
-
   // Current real time
   const now = new Date();
   const weekdays = ['周日','周一','周二','周三','周四','周五','周六'];
@@ -6219,10 +6390,11 @@ function saveApiConfig() {
 /* ========== 存档/读档 ========== */
 const MANUAL_SLOTS = 9; // 9 manual save slots
 
-// Get all saves (slots) from localStorage as an object keyed by slot id
+// Get all saves (slots) as an object keyed by slot id
+// 优先从 IndexedDB 内存缓存读取，降级 localStorage
 // Automatically migrates/cleans up old array-format saves
 function getAllSaves() {
-  const raw = localStorage.getItem(SAVES_KEY);
+  const raw = _memCache[SAVES_KEY] || localStorage.getItem(SAVES_KEY);
   if (!raw) return {};
   const parsed = JSON.parse(raw);
   // Old format was an array — discard it and start fresh with slot-based object
@@ -6232,7 +6404,13 @@ function getAllSaves() {
 
 function writeAllSaves(saves) {
   try {
-    localStorage.setItem(SAVES_KEY, JSON.stringify(saves));
+    const jsonStr = JSON.stringify(saves);
+    _memCache[SAVES_KEY] = jsonStr;
+    if (_dbReady) {
+      dbPut(SAVES_KEY, jsonStr).catch(() => {});
+    } else {
+      localStorage.setItem(SAVES_KEY, jsonStr);
+    }
     return true;
   } catch(e) {
     console.error('存档写入失败', e);
