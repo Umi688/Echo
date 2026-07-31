@@ -3416,11 +3416,13 @@ function buildMemoryPrompt() {
 // L5 即时上下文：最近20条记录
 // 双向打通：聊天能看到近期剧情，剧情能看到近期聊天
 function buildHistoryMessages(mode) {
-  const MAX_PRIMARY = 20;     // 主上下文条数上限
-  const MAX_CROSS = 6;        // 跨模块注入条数上限（避免 token 膨胀）
+  const MAX_PRIMARY = 40;     // 主上下文条数上限（提高以增强长程记忆）
+  const MAX_CROSS = 10;       // 跨模块注入条数上限
+  const MAX_EARLY = 15;      // 早期历史摘要条数（防止遗忘旧NPC和事件）
 
   let primary = [];
   let cross = [];
+  let early = [];
 
   if (mode === 'chat') {
     // 聊天模式：主上下文是聊天记录，跨模块注入近期剧情叙事
@@ -3436,6 +3438,28 @@ function buildHistoryMessages(mode) {
       }).join('\n---\n');
       cross = [{ role: 'user', content: `【近期剧情进展（供你感知当前剧情状态，勿在聊天中复述）】\n${eventSummary}` }];
     }
+    // 早期历史摘要：超出主上下文范围的旧聊天和旧事件，防止遗忘早期NPC和经历
+    const earlyChats = state.data.chatHistory.slice(0, -MAX_PRIMARY);
+    const earlyEvents = state.data.eventHistory.slice(0, -MAX_CROSS);
+    if (earlyChats.length > 0 || earlyEvents.length > 0) {
+      let earlySummary = '【早期历史摘要（很久以前发生的事，不要遗忘这些人物和经历）】\n';
+      if (earlyEvents.length > 0) {
+        earlySummary += '早期事件：\n';
+        earlyEvents.slice(-MAX_EARLY).forEach(e => {
+          const wish = e.polishedWish || e.wish || '';
+          const narr = (e.aiNarrative || '').substring(0, 80);
+          earlySummary += `- ${wish}（${narr}…）\n`;
+        });
+      }
+      if (earlyChats.length > 0) {
+        earlySummary += '早期对话：\n';
+        earlyChats.slice(-MAX_EARLY).forEach(h => {
+          const speaker = h.role === 'user' ? '主控' : 'AI角色';
+          earlySummary += `${speaker}：${h.content || ''}\n`;
+        });
+      }
+      early = [{ role: 'user', content: earlySummary }];
+    }
   } else if (mode === 'event') {
     // 剧情模式：主上下文是剧情事件链，跨模块注入近期聊天
     primary = state.data.eventHistory.flatMap(e => [
@@ -3449,6 +3473,31 @@ function buildHistoryMessages(mode) {
         return `${speaker}：${h.content || ''}`;
       }).join('\n');
       cross = [{ role: 'user', content: `【近期聊天记录（供你感知当前关系状态和约定，叙事中可自然承接）】\n${chatSummary}` }];
+    }
+    // 早期历史摘要
+    const allEventPairs = state.data.eventHistory.flatMap(e => [
+      { wish: e.wish, narrative: e.aiNarrative }
+    ]);
+    const earlyEventCount = Math.floor(MAX_PRIMARY / 2);
+    const earlyEvents = allEventPairs.slice(0, -earlyEventCount);
+    const earlyChats = state.data.chatHistory.slice(0, -MAX_CROSS);
+    if (earlyEvents.length > 0 || earlyChats.length > 0) {
+      let earlySummary = '【早期历史摘要（很久以前发生的事，不要遗忘这些人物和经历）】\n';
+      if (earlyEvents.length > 0) {
+        earlySummary += '早期事件：\n';
+        earlyEvents.slice(-MAX_EARLY).forEach(e => {
+          const narr = (e.narrative || '').substring(0, 80);
+          earlySummary += `- ${e.wish}（${narr}…）\n`;
+        });
+      }
+      if (earlyChats.length > 0) {
+        earlySummary += '早期对话：\n';
+        earlyChats.slice(-MAX_EARLY).forEach(h => {
+          const speaker = h.role === 'user' ? '主控' : 'AI角色';
+          earlySummary += `${speaker}：${h.content || ''}\n`;
+        });
+      }
+      early = [{ role: 'user', content: earlySummary }];
     }
   } else if (mode === 'polish') {
     // 润色模式：注入近期剧情叙事作为上下文，确保润色文本与上文衔接
@@ -3464,10 +3513,33 @@ function buildHistoryMessages(mode) {
       }).join('\n');
       cross = [{ role: 'user', content: `【近期聊天记录（供你感知当前关系状态，勿在叙事中复述）】\n${chatSummary}` }];
     }
+    // 早期历史摘要
+    const earlyEventCount = Math.floor(MAX_PRIMARY / 2);
+    const earlyEvents = state.data.eventHistory.slice(0, -earlyEventCount);
+    const earlyChats = state.data.chatHistory.slice(0, -MAX_CROSS);
+    if (earlyEvents.length > 0 || earlyChats.length > 0) {
+      let earlySummary = '【早期历史摘要（很久以前发生的事，不要遗忘这些人物和经历）】\n';
+      if (earlyEvents.length > 0) {
+        earlySummary += '早期事件：\n';
+        earlyEvents.slice(-MAX_EARLY).forEach(e => {
+          const wish = e.polishedWish || e.wish || '';
+          const narr = (e.aiNarrative || '').substring(0, 80);
+          earlySummary += `- ${wish}（${narr}…）\n`;
+        });
+      }
+      if (earlyChats.length > 0) {
+        earlySummary += '早期对话：\n';
+        earlyChats.slice(-MAX_EARLY).forEach(h => {
+          const speaker = h.role === 'user' ? '主控' : 'AI角色';
+          earlySummary += `${speaker}：${h.content || ''}\n`;
+        });
+      }
+      early = [{ role: 'user', content: earlySummary }];
+    }
   }
 
-  // 跨模块上下文放在主上下文之前，让主上下文（当前进行中的交互）更靠后、更受关注
-  return [...cross, ...primary];
+  // 顺序：早期摘要 → 跨模块上下文 → 主上下文（当前交互在最末尾，最受关注）
+  return [...early, ...cross, ...primary];
 }
 
 // L6 模式指令：根据 mode 动态注入
@@ -3495,7 +3567,7 @@ function buildModeInstruction(mode) {
   } else if (mode === 'secret-plan') {
     return '\n【当前模式：秘密计划生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意看到了你藏在抽屉里的秘密计划本。\n请以第一人称视角生成你的秘密计划，包含两个部分。\n\n严格按以下格式输出：\n\n【便利贴】\n你在制定这个秘密计划时贴在墙上的便利贴，记录你当时的内心想法、动机、纠结。\n直接写出便利贴上的文字内容，像真实的手写便利贴一样随意、真实、碎片化。\n可以是一段话，也可以是几个零散的短句。\n\n【时间轴】\n你规划的一天内从早到晚的行动安排，按时间顺序排列。\n每条格式严格为：时间|||行动内容\n时间用时分格式如"07:30""12:00""18:45""22:00"\n行动内容简明扼要，说明这个时间点要做什么。\n生成5-8条时间安排，覆盖从早到晚。\n\n两部分之间用一个空行分隔。\n内容要紧扣你的人设、性格、近期经历和与主控角色的关系状态。\n计划内容要真实合理，符合你的日常生活节奏。\n只输出计划内容，不要加任何说明。\n';
   } else if (mode === 'secret-news') {
-    return '\n【当前模式：坊间小报生成】\n你现在是这个世界里的一个旁观者，你熟知这个世界正在发生的大小事件和坊间流传的八卦。\n请根据以下AI角色与主控角色近期的真实生活动态，生成此刻这个世界里的新闻和八卦。\n内容要紧扣他们的世界设定、近期经历和人际关系——不要写空泛的通用新闻。\n\n生成3-5条新闻或八卦，每条格式严格为：标题|||内容\n条目之间用一个空行分隔。\n内容不得出现|||字符。\n每条内容写成400字左右的完整文章，不要截断，用换行分成2-3个自然段落，不要挤成一团。\n\n新闻类型可以多样：\n- 重大事件：世界发生的变故、大事\n- 坊间传闻：关于某个角色的流言、街头巷尾的闲话\n- 花边八卦：茶余饭后的谈资、有趣的小道消息\n- 突发快讯：最新消息、突发事件\n\n新闻和八卦要与角色所处的世界设定（历史背景、社会环境）相符合。\n可以涉及角色本人或他们身边的人，也可以是更广阔世界中的事件。\n只输出新闻内容，不要加任何说明。\n';
+    return '\n【当前模式：坊间小报生成】\n你现在是这个世界里的一个旁观者，你熟知这个世界正在发生的大小事件和坊间流传的八卦。\n请根据以下AI角色与主控角色近期的真实生活动态，生成此刻这个世界里的新闻和八卦。\n内容要紧扣他们的世界设定、近期经历和人际关系——不要写空泛的通用新闻。\n\n生成3-5条新闻或八卦，每条格式严格为：标题|||内容\n条目之间用一个空行分隔。\n内容不得出现|||字符。\n每条内容写成300-400字的完整文章，不要少于300字，不要截断，用换行分成2-3个自然段落，不要挤成一团。\n\n新闻类型可以多样：\n- 重大事件：世界发生的变故、大事\n- 坊间传闻：关于某个角色的流言、街头巷尾的闲话\n- 花边八卦：茶余饭后的谈资、有趣的小道消息\n- 突发快讯：最新消息、突发事件\n\n新闻和八卦要与角色所处的世界设定（历史背景、社会环境）相符合。\n可以涉及角色本人或他们身边的人，也可以是更广阔世界中的事件。\n只输出新闻内容，不要加任何说明。\n';
   } else if (mode === 'secret-friends') {
     return '\n【当前模式：朋友群聊生成】\n你现在是AI角色身边的一群朋友们，你们建了一个没有AI角色和主控角色在场的群聊，正在热烈讨论他们两个人的关系。\n你深知他们之间的一切细节——毕竟朋友们早就看出来了。\n请根据以下AI角色与主控角色近期的真实生活动态，生成一场群聊记录。\n内容要紧扣他们的关系状态和近期经历——不要写空泛的通用内容。\n\n参与者为3-5位NPC朋友，他们可以是AI角色的同事、发小、室友、邻居等，每人有鲜明的性格和说话风格。\n群聊中朋友们你一言我一语，翻出AI角色和主控角色之间的各种细节，讨论他们的关系。\n有人起哄、有人分析、有人爆料、有人吐槽，像真实的群聊一样自然生动。\n\n严格按以下格式输出，每条消息格式为：发言人|||消息内容\n条目之间用一个空行分隔。\n消息内容不得出现|||字符。\n消息内容可以多行，用换行分隔，但每条消息不宜过长（1-5句为宜）。\n\n群聊开头用一行格式为：系统|||群聊名称 来标识群聊标题（群聊名称要有趣，体现朋友们的起哄风格）。\n生成15-25条消息，节奏自然，有来有回。\n可以穿插个别"系统消息"格式：系统|||消息内容（如"XX邀请YY加入了群聊""XX修改群名为XX"等），增加真实感。\n\n发言人的名字要各有特色，符合其身份。\n消息内容要用各自的口吻和语气，体现不同性格。\n讨论的内容要基于近期对话和事件的细节，像朋友们真的在八卦一样具体。\n只输出群聊内容，不要加任何说明。\n';
   } else if (mode === 'secret-forum') {
@@ -3537,7 +3609,7 @@ async function callAI(userMessage, mode) {
   ];
 
   try {
-    const maxTokens = mode === 'secret-news' ? 6000
+    const maxTokens = mode === 'secret-news' ? 8000
       : mode.startsWith('secret-') ? 4000
       : 2000;
     return await callOpenAICompatible(messages, config, maxTokens);
@@ -4983,7 +5055,7 @@ function buildSecretContext() {
   const other = state.data.characters.other.name || 'TA';
 
   // Recent conversations - real-time dialogue context
-  const recentChats = state.data.chatHistory.slice(-15);
+  const recentChats = state.data.chatHistory.slice(-25);
   if (recentChats.length) {
     ctx += '\n【近期对话记录（你的真实生活动态）】\n';
     recentChats.forEach(msg => {
@@ -4995,13 +5067,35 @@ function buildSecretContext() {
   }
 
   // Recent events - story context
-  const recentEvents = state.data.eventHistory.slice(-4);
+  const recentEvents = state.data.eventHistory.slice(-8);
   if (recentEvents.length) {
     ctx += '\n【近期经历的事件】\n';
     recentEvents.forEach(evt => {
-      const narrative = evt.aiNarrative ? evt.aiNarrative.substring(0, 120) : '';
+      const narrative = evt.aiNarrative ? evt.aiNarrative.substring(0, 150) : '';
       ctx += `- ${evt.wish}（${narrative}...）\n`;
     });
+  }
+
+  // Early history summary — prevent forgetting old NPCs and events
+  const earlyChats = state.data.chatHistory.slice(0, -25);
+  const earlyEvents = state.data.eventHistory.slice(0, -8);
+  if (earlyChats.length > 0 || earlyEvents.length > 0) {
+    ctx += '\n【早期历史摘要（很久以前的事，不要遗忘这些人物和经历）】\n';
+    if (earlyEvents.length > 0) {
+      ctx += '早期事件：\n';
+      earlyEvents.slice(-10).forEach(evt => {
+        const wish = evt.polishedWish || evt.wish || '';
+        const narr = (evt.aiNarrative || '').substring(0, 80);
+        ctx += `- ${wish}（${narr}…）\n`;
+      });
+    }
+    if (earlyChats.length > 0) {
+      ctx += '早期对话：\n';
+      earlyChats.slice(-10).forEach(msg => {
+        const speaker = msg.role === 'user' ? me : other;
+        ctx += `${speaker}：${msg.content}\n`;
+      });
+    }
   }
 
   // Current real time
