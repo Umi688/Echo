@@ -5446,18 +5446,14 @@ async function generateCart(charName) {
     const result = await callAI(prompt, 'secret-cart');
     if (genId !== state.secretGenId) return;
 
-    // Normalize newlines to ||| within the raw result for easier parsing
-    const normalized = result.replace(/\r?\n/g, '|||');
-
-    // Split into sections by 【section_name】 markers
-    // Use a unique delimiter to avoid fragile position math
+    // 稳健解析：在原始文本上用正则提取各板块，与 generatePlan/generateForum 一致。
+    // 不再做"换行→|||"归一化——那会把字段分隔符和行分隔符混为一谈，
+    // 且要求【板块名】后紧跟换行才能匹配，AI 格式稍有偏差就会全部解析失败。
     const sectionMap = {};
-    const delim = '\u0001SEC\u0001';
-    const delimited = normalized.replace(/【(购物车|运输中|寄退|历史订单)】\|\|\|?/g, (m, name) => delim + name + delim);
-    const parts = delimited.split(delim);
-    // parts[0] = before first section (empty), then alternating: name, content, name, content, ...
-    for (let i = 1; i < parts.length; i += 2) {
-      sectionMap[parts[i]] = (parts[i + 1] || '').trim();
+    const sectionRegex = /【(购物车|运输中|寄退|历史订单)】\s*([\s\S]*?)(?=【(?:购物车|运输中|寄退|历史订单)】|$)/g;
+    let secMatch;
+    while ((secMatch = sectionRegex.exec(result)) !== null) {
+      sectionMap[secMatch[1]] = secMatch[2].trim();
     }
 
     const sectionConfigs = [
@@ -5470,65 +5466,65 @@ async function generateCart(charName) {
     let html = '';
     sectionConfigs.forEach((config, idx) => {
       const sectionText = sectionMap[config.name] || '';
-      const items = sectionText.split('|||').map(s => s.trim()).filter(s => s);
+      // 每条数据占一行；字段内部用 ||| 分隔
+      const lines = sectionText.split(/\n/).map(s => s.trim()).filter(s => s);
       let bodyHtml = '';
 
       if (config.type === 'cart-list') {
         // 商品名 ||| 商品简介 (2 fields per item)
-        // Heuristic: if "name" looks like a description, swap with desc
         const descPatterns = /(想买|需要|用来|适合|方便|因为|所以|觉得|可以|好看|好用|便宜|划算|喜欢|想要|准备|打算|最近)/;
-        const count = Math.floor(items.length / 2);
-        for (let g = 0; g < count; g++) {
-          const i = g * 2;
-          let name = items[i].replace(/\s+/g, ' ');
-          let desc = items[i + 1].replace(/\s+/g, ' ');
-          // If name contains description-like keywords but desc doesn't, swap
-          if (descPatterns.test(name) && !descPatterns.test(desc)) {
-            const tmp = name; name = desc; desc = tmp;
+        for (const line of lines) {
+          const fields = line.split('|||').map(s => s.trim());
+          if (fields.length >= 2) {
+            let name = fields[0].replace(/\s+/g, ' ');
+            let desc = fields.slice(1).join(' ').replace(/\s+/g, ' ');
+            if (descPatterns.test(name) && !descPatterns.test(desc)) {
+              const tmp = name; name = desc; desc = tmp;
+            }
+            bodyHtml += `
+              <div class="cart-item">
+                <div class="cart-item-name">${escapeHtml(name)}</div>
+                <div class="cart-item-desc">${escapeHtml(desc)}</div>
+              </div>`;
           }
-          bodyHtml += `
-            <div class="cart-item">
-              <div class="cart-item-name">${escapeHtml(name)}</div>
-              <div class="cart-item-desc">${escapeHtml(desc)}</div>
-            </div>`;
         }
       } else if (config.type === 'shipping' || config.type === 'return') {
         // 商品名 ||| 运输状态 ||| 理由 (3 fields per item)
-        // Known status keywords — if the AI puts one in the name field, swap
         const statusKeywords = /^(已发货|运输中|派送中|待取件|已揽收|在途|已下单|待发货|退货中|已揽件|退款处理中|已退款|退货申请中|待退货|已退回|处理中)$/;
-        const count = Math.floor(items.length / 3);
-        for (let g = 0; g < count; g++) {
-          const i = g * 3;
-          let name = items[i].replace(/\s+/g, ' ');
-          let status = items[i + 1].replace(/\s+/g, ' ');
-          const reason = items[i + 2].replace(/\s+/g, ' ');
-          // Heuristic: if "name" is actually a status keyword, swap with status
-          if (statusKeywords.test(name)) {
-            const tmp = name; name = status; status = tmp;
+        for (const line of lines) {
+          const fields = line.split('|||').map(s => s.trim());
+          if (fields.length >= 3) {
+            let name = fields[0].replace(/\s+/g, ' ');
+            let status = fields[1].replace(/\s+/g, ' ');
+            const reason = fields.slice(2).join(' ').replace(/\s+/g, ' ');
+            if (statusKeywords.test(name)) {
+              const tmp = name; name = status; status = tmp;
+            }
+            bodyHtml += `
+              <div class="cart-item">
+                <div class="cart-item-top">
+                  <div class="cart-item-name">${escapeHtml(name)}</div>
+                  <div class="cart-status-badge">${escapeHtml(status)}</div>
+                </div>
+                <div class="cart-item-desc">${escapeHtml(reason)}</div>
+              </div>`;
           }
-          bodyHtml += `
-            <div class="cart-item">
-              <div class="cart-item-top">
-                <div class="cart-item-name">${escapeHtml(name)}</div>
-                <div class="cart-status-badge">${escapeHtml(status)}</div>
-              </div>
-              <div class="cart-item-desc">${escapeHtml(reason)}</div>
-            </div>`;
         }
       } else if (config.type === 'orders') {
         // 购买日期 ||| 商品名 ||| 购买理由 (3 fields per item)
-        const count = Math.floor(items.length / 3);
-        for (let g = 0; g < count; g++) {
-          const i = g * 3;
-          const date = items[i].replace(/\s+/g, ' ');
-          const name = items[i + 1].replace(/\s+/g, ' ');
-          const reason = items[i + 2].replace(/\s+/g, ' ');
-          bodyHtml += `
-            <div class="cart-timeline-item">
-              <div class="cart-timeline-date">${escapeHtml(date)}</div>
-              <div class="cart-timeline-name">${escapeHtml(name)}</div>
-              <div class="cart-item-desc">${escapeHtml(reason)}</div>
-            </div>`;
+        for (const line of lines) {
+          const fields = line.split('|||').map(s => s.trim());
+          if (fields.length >= 3) {
+            const date = fields[0].replace(/\s+/g, ' ');
+            const name = fields[1].replace(/\s+/g, ' ');
+            const reason = fields.slice(2).join(' ').replace(/\s+/g, ' ');
+            bodyHtml += `
+              <div class="cart-timeline-item">
+                <div class="cart-timeline-date">${escapeHtml(date)}</div>
+                <div class="cart-timeline-name">${escapeHtml(name)}</div>
+                <div class="cart-item-desc">${escapeHtml(reason)}</div>
+              </div>`;
+          }
         }
       }
 
