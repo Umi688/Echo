@@ -1001,15 +1001,20 @@ html:-webkit-full-screen #app{
   overflow-y:auto;
   padding:12px 16px 16px;
   display:flex;
-  flex-direction:column;
+  flex-wrap:wrap;
   gap:10px;
   -webkit-overflow-scrolling:touch;
 }
+/* 子模块卡片：默认为竖向紧凑卡，每排2个 */
 .secret-module{
+  flex:0 0 calc(50% - 5px);
   display:flex;
+  flex-direction:column;
   align-items:center;
-  gap:14px;
-  padding:20px 18px;
+  justify-content:center;
+  gap:11px;
+  padding:22px 10px 20px;
+  text-align:center;
   background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.72) 100%);
   backdrop-filter:blur(12px);
   border:none;
@@ -1027,13 +1032,23 @@ html:-webkit-full-screen #app{
 }
 .secret-module:hover{background:rgba(81,99,124,0.75)}
 .secret-module:active{transform:scale(0.98)}
-/* 查看记录：冷调浅银白背景与下方模块形成对比 */
+/* 紧凑卡隐藏箭头 */
+.secret-module-arrow{display:none}
+/* 查看记录：保持原样 —— 全宽横向，冷调浅银白背景 */
 .secret-module-records{
+  flex:0 0 100%;
+  flex-direction:row;
+  align-items:center;
+  text-align:left;
+  gap:14px;
+  padding:20px 18px;
   background:linear-gradient(135deg,rgba(208,217,229,0.85) 0%,rgba(131,147,168,0.7) 50%,rgba(81,99,124,0.65) 100%);
 }
+.secret-module-records .secret-module-arrow{display:block}
 .secret-module-records:hover{background:linear-gradient(135deg,rgba(208,217,229,0.9) 0%,rgba(131,147,168,0.75) 50%,rgba(81,99,124,0.7) 100%)}
-.secret-module-records .secret-module-name{color:#0F1A2B}
+.secret-module-records .secret-module-name{color:#0F1A2B;font-size:15px;letter-spacing:2.5px}
 .secret-module-records .secret-module-desc{color:rgba(15,26,43,0.6)}
+.secret-module-records .secret-module-info{flex:1;width:auto}
 .secret-module-records .secret-module-icon{
   background:rgba(15,26,43,0.1);
   border:1px solid rgba(15,26,43,0.15);
@@ -1050,19 +1065,21 @@ html:-webkit-full-screen #app{
   border-radius:4px;
   flex-shrink:0;
 }
-.secret-module-info{flex:1}
+.secret-module-info{width:100%}
 .secret-module-name{
-  font-size:15px;
+  font-size:14px;
   color:rgba(131,147,168,0.95);
-  letter-spacing:2.5px;
+  letter-spacing:1.5px;
   text-indent:1px;
   margin-bottom:4px;
   font-weight:400;
+  word-break:break-word;
 }
 .secret-module-desc{
   font-size:11px;
   color:var(--gold-faint);
-  letter-spacing:1.5px;
+  letter-spacing:1px;
+  line-height:1.5;
 }
 .secret-module-arrow{
   font-size:20px;
@@ -1070,7 +1087,7 @@ html:-webkit-full-screen #app{
   flex-shrink:0;
   transition:transform 0.3s var(--ease);
 }
-.secret-module:hover .secret-module-arrow{transform:translateX(3px);color:var(--gold)}
+.secret-module-records:hover .secret-module-arrow{transform:translateX(3px);color:var(--gold)}
 /* Secret detail view */
 .secret-detail-panel{
   flex:1;
@@ -1885,6 +1902,273 @@ html:-webkit-full-screen #app{
   margin-bottom:12px;
 }
 
+/* Grudge Book: 恋爱记仇本 */
+.grudge-item{
+  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.72) 100%);
+  backdrop-filter:blur(12px);
+  padding:18px 20px;
+  margin-bottom:14px;
+  position:relative;
+  border-left:2px solid rgba(208,217,229,0.35);
+  border-radius:0 3px 3px 0;
+  overflow:hidden;
+}
+.grudge-item:last-child{margin-bottom:0}
+.grudge-item::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,rgba(208,217,229,0.2) 0%,rgba(131,147,168,0.08) 40%,transparent 100%);
+}
+.grudge-item-header{
+  display:flex;
+  align-items:baseline;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+}
+.grudge-item-charge{
+  font-size:13px;
+  color:var(--gold);
+  letter-spacing:2.5px;
+  text-indent:1px;
+  font-weight:500;
+  opacity:0.9;
+  word-break:break-word;
+}
+.grudge-item-sep{
+  font-size:12px;
+  color:var(--gold-faint);
+  margin:0 6px;
+  opacity:0.7;
+  flex-shrink:0;
+}
+.grudge-item-time{
+  font-size:11px;
+  color:var(--gold-faint);
+  letter-spacing:1px;
+  flex-shrink:0;
+  font-weight:400;
+  white-space:nowrap;
+}
+.grudge-item-text{
+  font-size:14px;
+  line-height:1.85;
+  color:rgba(131,147,168,0.92);
+  word-break:break-word;
+  overflow-wrap:break-word;
+  letter-spacing:0.5px;
+  font-family:"Noto Serif SC","STSong","PingFang SC",serif;
+}
+.grudge-item-reveal{
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px dashed rgba(208,217,229,0.12);
+  font-size:12px;
+  line-height:1.7;
+  color:rgba(208,217,229,0.62);
+  letter-spacing:0.5px;
+  font-style:italic;
+}
+
+/* Voice Drafts: 语音草稿箱 */
+.voice-item{
+  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.72) 100%);
+  backdrop-filter:blur(12px);
+  padding:16px 18px;
+  margin-bottom:14px;
+  position:relative;
+  border-radius:0 3px 3px 0;
+  border-left:2px solid rgba(208,217,229,0.4);
+  overflow:hidden;
+}
+.voice-item:last-child{margin-bottom:0}
+.voice-item::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,rgba(208,217,229,0.2) 0%,rgba(131,147,168,0.08) 40%,transparent 100%);
+}
+/* 时间戳 */
+.voice-item-time{
+  font-size:11px;
+  color:var(--gold-faint);
+  letter-spacing:1px;
+  margin-bottom:12px;
+}
+/* 直线语音条 */
+.voice-bar{
+  height:3px;
+  background:rgba(131,147,168,0.15);
+  border-radius:2px;
+  overflow:hidden;
+  margin-bottom:14px;
+}
+.voice-bar-fill{
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,rgba(208,217,229,0.5) 0%,var(--gold) 100%);
+  border-radius:2px;
+  transition:width 0.3s var(--ease);
+}
+/* 文字内容 */
+.voice-item-text{
+  font-size:14px;
+  line-height:1.8;
+  color:rgba(131,147,168,0.92);
+  word-break:break-word;
+  letter-spacing:0.4px;
+  margin-bottom:12px;
+}
+/* 底部：状态 + 时长 */
+.voice-item-foot{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+.voice-item-status{
+  font-size:11px;
+  color:rgba(208,217,229,0.5);
+  letter-spacing:1px;
+}
+.voice-item-duration{
+  font-size:11px;
+  color:var(--gold-faint);
+  letter-spacing:1px;
+  flex-shrink:0;
+  white-space:nowrap;
+}
+
+/* Novel: 家产竟是我自己 */
+.novel-wrap{
+  margin-bottom:16px;
+}
+.novel-card{
+  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.7) 100%);
+  backdrop-filter:blur(12px);
+  padding:22px 22px 20px;
+  margin-bottom:14px;
+  border-radius:0 4px 4px 0;
+  border-left:3px solid rgba(208,217,229,0.35);
+  position:relative;
+  overflow:hidden;
+}
+.novel-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,rgba(208,217,229,0.2) 0%,rgba(131,147,168,0.08) 40%,transparent 100%);
+}
+.novel-card-tag{
+  display:inline-block;
+  font-size:10px;
+  color:rgba(208,217,229,0.7);
+  letter-spacing:1.5px;
+  padding:2px 8px;
+  border:1px solid rgba(208,217,229,0.2);
+  border-radius:2px;
+  margin-bottom:12px;
+}
+.novel-card-title{
+  font-size:17px;
+  color:rgba(208,217,229,0.98);
+  letter-spacing:2px;
+  font-weight:500;
+  margin-bottom:6px;
+  word-break:break-word;
+  line-height:1.5;
+}
+.novel-card-author{
+  font-size:11px;
+  color:var(--gold-faint);
+  letter-spacing:1px;
+  margin-bottom:14px;
+}
+.novel-card-excerpt{
+  font-size:14px;
+  line-height:1.95;
+  color:rgba(131,147,168,0.92);
+  word-break:break-word;
+  letter-spacing:0.5px;
+  font-family:"Noto Serif SC","STSong","PingFang SC",serif;
+}
+.novel-card-excerpt p{
+  margin:0 0 10px 0;
+}
+.novel-card-excerpt p:last-child{
+  margin-bottom:0;
+}
+/* Novel comments */
+.novel-comments{
+  background:linear-gradient(160deg,rgba(20,32,48,0.4) 0%,rgba(15,26,43,0.4) 100%);
+  backdrop-filter:blur(8px);
+  border-radius:4px;
+  padding:16px 14px;
+}
+.novel-comments-label{
+  font-size:10px;
+  color:rgba(131,147,168,0.5);
+  letter-spacing:1.5px;
+  margin-bottom:12px;
+  text-transform:uppercase;
+}
+.novel-comment{
+  display:flex;
+  gap:10px;
+  margin-bottom:14px;
+  padding-bottom:14px;
+  border-bottom:1px solid rgba(131,147,168,0.08);
+}
+.novel-comment:last-child{
+  margin-bottom:0;
+  padding-bottom:0;
+  border-bottom:none;
+}
+.novel-comment-avatar{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  font-weight:500;
+  color:rgba(255,255,255,0.85);
+  flex-shrink:0;
+}
+.novel-comment-content{flex:1;min-width:0}
+.novel-comment-header{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+  margin-bottom:4px;
+}
+.novel-comment-name{
+  font-size:12px;
+  color:rgba(208,217,229,0.8);
+  letter-spacing:0.5px;
+  font-weight:500;
+}
+.novel-comment-time{
+  font-size:10px;
+  color:rgba(131,147,168,0.45);
+}
+.novel-comment-text{
+  font-size:13px;
+  line-height:1.7;
+  color:rgba(131,147,168,0.85);
+  word-break:break-word;
+  letter-spacing:0.3px;
+}
+.secret-record-card-body .grudge-item,
+.secret-record-card-body .voice-item,
+.secret-record-card-body .novel-card{
+  background:rgba(15,26,43,0.2);
+}
+
 /* ========== Settings Tab ========== */
 #settings-content{
   flex:1;
@@ -2514,7 +2798,7 @@ select.form-input option{background:#202E42;color:var(--text)}
         <div class="secret-module-icon">🛒</div>
         <div class="secret-module-info">
           <div class="secret-module-name">他的购物车</div>
-          <div class="secret-module-desc">购物车 / 运输 / 寄退 / 订单</div>
+          <div class="secret-module-desc">偷偷看一下他买了什么？</div>
         </div>
         <div class="secret-module-arrow">›</div>
       </div>
@@ -2538,7 +2822,7 @@ select.form-input option{background:#202E42;color:var(--text)}
         <div class="secret-module-icon">🎴</div>
         <div class="secret-module-info">
           <div class="secret-module-name">他的论坛小号</div>
-          <div class="secret-module-desc">匿名提问与路人回复</div>
+          <div class="secret-module-desc">有些事情需要匿名才敢去问</div>
         </div>
         <div class="secret-module-arrow">›</div>
       </div>
@@ -2550,11 +2834,35 @@ select.form-input option{background:#202E42;color:var(--text)}
         </div>
         <div class="secret-module-arrow">›</div>
       </div>
+      <div class="secret-module" onclick="openSecretModule('voice')">
+        <div class="secret-module-icon">🎙️</div>
+        <div class="secret-module-info">
+          <div class="secret-module-name">语音草稿箱</div>
+          <div class="secret-module-desc">草稿箱里没按下发送的话</div>
+        </div>
+        <div class="secret-module-arrow">›</div>
+      </div>
+      <div class="secret-module" onclick="openSecretModule('grudge')">
+        <div class="secret-module-icon">📓</div>
+        <div class="secret-module-info">
+          <div class="secret-module-name">恋爱记仇本</div>
+          <div class="secret-module-desc">记下的每一笔，都是想你</div>
+        </div>
+        <div class="secret-module-arrow">›</div>
+      </div>
       <div class="secret-module" onclick="openSecretModule('friends')">
         <div class="secret-module-icon">💬</div>
         <div class="secret-module-info">
           <div class="secret-module-name">朋友们早就看出来了</div>
           <div class="secret-module-desc">一场群聊翻出所有细节</div>
+        </div>
+        <div class="secret-module-arrow">›</div>
+      </div>
+      <div class="secret-module" onclick="openSecretModule('novel')">
+        <div class="secret-module-icon">📖</div>
+        <div class="secret-module-info">
+          <div class="secret-module-name">家产竟是我自己</div>
+          <div class="secret-module-desc">有人把你们写成了小说</div>
         </div>
         <div class="secret-module-arrow">›</div>
       </div>
@@ -4965,7 +5273,7 @@ function renderSecretHome() {
       <div class="secret-module-icon">🛒</div>
       <div class="secret-module-info">
         <div class="secret-module-name">他的购物车</div>
-        <div class="secret-module-desc">购物车 / 运输 / 寄退 / 订单</div>
+        <div class="secret-module-desc">偷偷看一下他买了什么？</div>
       </div>
       <div class="secret-module-arrow">›</div>
     </div>
@@ -4989,7 +5297,7 @@ function renderSecretHome() {
       <div class="secret-module-icon">🎴</div>
       <div class="secret-module-info">
         <div class="secret-module-name">他的论坛小号</div>
-        <div class="secret-module-desc">匿名提问与路人回复</div>
+        <div class="secret-module-desc">有些事情需要匿名才敢去问</div>
       </div>
       <div class="secret-module-arrow">›</div>
     </div>
@@ -5001,11 +5309,35 @@ function renderSecretHome() {
       </div>
       <div class="secret-module-arrow">›</div>
     </div>
+    <div class="secret-module" onclick="openSecretModule('voice')">
+      <div class="secret-module-icon">🎙️</div>
+      <div class="secret-module-info">
+        <div class="secret-module-name">语音草稿箱</div>
+        <div class="secret-module-desc">草稿箱里没按下发送的话</div>
+      </div>
+      <div class="secret-module-arrow">›</div>
+    </div>
+    <div class="secret-module" onclick="openSecretModule('grudge')">
+      <div class="secret-module-icon">📓</div>
+      <div class="secret-module-info">
+        <div class="secret-module-name">恋爱记仇本</div>
+        <div class="secret-module-desc">记下的每一笔，都是想你</div>
+      </div>
+      <div class="secret-module-arrow">›</div>
+    </div>
     <div class="secret-module" onclick="openSecretModule('friends')">
       <div class="secret-module-icon">💬</div>
       <div class="secret-module-info">
         <div class="secret-module-name">朋友们早就看出来了</div>
         <div class="secret-module-desc">一场群聊翻出所有细节</div>
+      </div>
+      <div class="secret-module-arrow">›</div>
+    </div>
+    <div class="secret-module" onclick="openSecretModule('novel')">
+      <div class="secret-module-icon">📖</div>
+      <div class="secret-module-info">
+        <div class="secret-module-name">家产竟是我自己</div>
+        <div class="secret-module-desc">有人把你们写成了小说</div>
       </div>
       <div class="secret-module-arrow">›</div>
     </div>
@@ -5022,7 +5354,10 @@ const SECRET_TYPE_NAMES = {
   'plan': '他的秘密计划',
   'forum': '他的论坛小号',
   'news': '坊间小报',
-  'friends': '朋友们早就看出来了'
+  'friends': '朋友们早就看出来了',
+  'grudge': '恋爱记仇本',
+  'voice': '语音草稿箱',
+  'novel': '家产竟是我自己'
 };
 
 function formatSecretRecordTime(timestamp) {
@@ -5276,6 +5611,60 @@ function openSecretModule(type) {
     } else {
       generateFriends(charName);
     }
+  } else if (type === 'grudge') {
+    container.innerHTML = `
+      <div class="secret-detail-panel">
+        <div class="secret-detail-panel-inner">
+          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
+          <div class="secret-detail-title">恋爱记仇本</div>
+          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
+        </div>
+      </div>
+    `;
+    if (state.secretCache.grudge) {
+      const listEl = document.getElementById('secret-detail-list');
+      listEl.className = '';
+      listEl.innerHTML = state.secretCache.grudge;
+      showSecretActions('grudge', state.secretCache.grudge);
+    } else {
+      generateGrudge(charName);
+    }
+  } else if (type === 'voice') {
+    container.innerHTML = `
+      <div class="secret-detail-panel">
+        <div class="secret-detail-panel-inner">
+          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
+          <div class="secret-detail-title">语音草稿箱</div>
+          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
+        </div>
+      </div>
+    `;
+    if (state.secretCache.voice) {
+      const listEl = document.getElementById('secret-detail-list');
+      listEl.className = '';
+      listEl.innerHTML = state.secretCache.voice;
+      showSecretActions('voice', state.secretCache.voice);
+    } else {
+      generateVoice(charName);
+    }
+  } else if (type === 'novel') {
+    container.innerHTML = `
+      <div class="secret-detail-panel">
+        <div class="secret-detail-panel-inner">
+          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
+          <div class="secret-detail-title">家产竟是我自己</div>
+          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
+        </div>
+      </div>
+    `;
+    if (state.secretCache.novel) {
+      const listEl = document.getElementById('secret-detail-list');
+      listEl.className = '';
+      listEl.innerHTML = state.secretCache.novel;
+      showSecretActions('novel', state.secretCache.novel);
+    } else {
+      generateNovel(charName);
+    }
   }
 }
 
@@ -5431,6 +5820,9 @@ function retrySecretGen(type) {
   else if (type === 'forum') generateForum(charName);
   else if (type === 'news') generateNews(charName);
   else if (type === 'friends') generateFriends(charName);
+  else if (type === 'grudge') generateGrudge(charName);
+  else if (type === 'voice') generateVoice(charName);
+  else if (type === 'novel') generateNovel(charName);
   else generateHistory(charName, type); // bookmark
 }
 
@@ -5929,6 +6321,191 @@ async function generateFriends(charName) {
     if (genId !== state.secretGenId) return;
     listEl.className = '';
     listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('friends')">重试</button></div>`;
+  }
+}
+
+// ========== 恋爱记仇本 ==========
+async function generateGrudge(charName) {
+  const listEl = document.getElementById('secret-detail-list');
+  const context = buildSecretContext();
+  const prompt = `此刻有人偷偷翻开了他的"恋爱记仇本"。\n因为某些事情，他狠狠地记下了一笔。但与其说是记仇，不如说是想你了。\n请根据以下他近期的真实生活动态，生成他记仇本里此刻真实存在的3-5条内容。\n每条都是一件让他"记仇"的小事，表面是抱怨，字里行间却全是想念与在意。\n${context}\n\n每条格式严格为：罪名|||记仇经过|||真心话|||时间\n罪名是他给这件事起的小标题，记仇经过是他气鼓鼓的描述，真心话是那句暴露他其实只想你的话，时间为具体日期时间。\n条目之间用空行分隔。请直接输出内容，不要加任何说明。`;
+
+  const genId = ++state.secretGenId;
+  try {
+    const result = await callAI(prompt, 'secret-grudge');
+    if (genId !== state.secretGenId) return;
+    const rawItems = result.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
+    let html = '';
+    for (const rawItem of rawItems) {
+      const parts = rawItem.split('|||').map(s => s.trim()).filter(s => s);
+      if (parts.length >= 4) {
+        const charge = parts[0].replace(/\s+/g, ' ');
+        const grudge = parts.slice(1, -2).join('\n').replace(/\s+$/, '');
+        const reveal = parts[parts.length - 2].replace(/\s+/g, ' ');
+        const time = parts[parts.length - 1].replace(/\s+/g, ' ');
+        html += `
+          <div class="grudge-item">
+            <div class="grudge-item-header">
+              <div class="grudge-item-charge">「${escapeHtml(charge)}」</div>
+              <div class="grudge-item-sep">｜</div>
+              <div class="grudge-item-time">${escapeHtml(time)}</div>
+            </div>
+            <div class="grudge-item-text">${escapeHtml(grudge)}</div>
+            <div class="grudge-item-reveal">${escapeHtml(reveal)}</div>
+          </div>
+        `;
+      }
+    }
+    listEl.className = '';
+    listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
+    if (html && state.secretModuleType === 'grudge') {
+      if (!state.secretCache) state.secretCache = {};
+      state.secretCache.grudge = html;
+      showSecretActions('grudge', html);
+    }
+  } catch(e) {
+    if (genId !== state.secretGenId) return;
+    listEl.className = '';
+    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('grudge')">重试</button></div>`;
+  }
+}
+
+// ========== 语音草稿箱 ==========
+async function generateVoice(charName) {
+  const listEl = document.getElementById('secret-detail-list');
+  const context = buildSecretContext();
+  const prompt = `此刻有人偷偷点开了他语音消息的"草稿箱"，那里藏着几条他录好却始终没按下发送的话。\n请根据以下他近期的真实生活动态，生成他草稿箱里此刻真实存在的3-5条未发送语音。\n每条都是他想对你说却没说出口的话，听到最后才知道他真正想让你明白什么。\n${context}\n\n每条格式严格为：时长|||语音文字|||时间\n时长形如"0:12"，语音文字是这段语音转写出的内容，时间为具体日期时间。\n条目之间用空行分隔。请直接输出内容，不要加任何说明。`;
+
+  const genId = ++state.secretGenId;
+  try {
+    const result = await callAI(prompt, 'secret-voice');
+    if (genId !== state.secretGenId) return;
+    const rawItems = result.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
+    let html = '';
+    for (const rawItem of rawItems) {
+      const parts = rawItem.split('|||').map(s => s.trim()).filter(s => s);
+      if (parts.length >= 3) {
+        const duration = parts[0].replace(/\s+/g, ' ');
+        const text = parts.slice(1, -1).join('\n').replace(/\s+$/, '');
+        const time = parts[parts.length - 1].replace(/\s+/g, ' ');
+        html += `
+          <div class="voice-item">
+            <div class="voice-item-time">${escapeHtml(time)}</div>
+            <div class="voice-bar"><div class="voice-bar-fill"></div></div>
+            <div class="voice-item-text">${escapeHtml(text)}</div>
+            <div class="voice-item-foot">
+              <span class="voice-item-status">未发送 · 草稿箱</span>
+              <span class="voice-item-duration">${escapeHtml(duration)}</span>
+            </div>
+          </div>
+        `;
+      }
+    }
+    listEl.className = '';
+    listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
+    if (html && state.secretModuleType === 'voice') {
+      if (!state.secretCache) state.secretCache = {};
+      state.secretCache.voice = html;
+      showSecretActions('voice', html);
+    }
+  } catch(e) {
+    if (genId !== state.secretGenId) return;
+    listEl.className = '';
+    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('voice')">重试</button></div>`;
+  }
+}
+
+// ========== 家产竟是我自己 ==========
+async function generateNovel(charName) {
+  const listEl = document.getElementById('secret-detail-list');
+  const context = buildSecretContext();
+  const prompt = `有人偷偷把你们的故事写成了连载小说，发在网文平台上，评论区磕疯了。\n请根据以下两位主角近期的真实生活动态，生成一章小说节选和读者评论区。\n小说以第三人称书写你们的关系，读者能从字里行间磕到你们的感情。\n${context}\n\n格式严格如下：\n【小说】\n书名|||作者笔名|||正文节选\n【评论】\n读者ID|||评论内容|||时间\n读者ID|||评论内容|||时间\n（评论3-5条，条目间用空行分隔）\n请直接输出内容，不要加任何说明。`;
+
+  const genId = ++state.secretGenId;
+  try {
+    const result = await callAI(prompt, 'secret-novel');
+    if (genId !== state.secretGenId) return;
+
+    // 解析【小说】与【评论】两个板块
+    const novelMatch = result.match(/【小说】\s*([\s\S]*?)(?:\n\s*【评论】|$)/);
+    const commentMatch = result.match(/【评论】\s*([\s\S]*?)$/);
+
+    let html = '<div class="novel-wrap">';
+
+    // 小说节选
+    if (novelMatch) {
+      const novelRaw = novelMatch[1].trim();
+      const parts = novelRaw.split('|||').map(s => s.trim());
+      if (parts.length >= 3) {
+        const title = parts[0].replace(/\s+/g, ' ');
+        const author = parts[1].replace(/\s+/g, ' ');
+        const excerpt = parts.slice(2).join('\n').replace(/\s+$/, '');
+        html += `
+          <div class="novel-card">
+            <div class="novel-card-tag">连载小说 · 节选</div>
+            <div class="novel-card-title">${escapeHtml(title)}</div>
+            <div class="novel-card-author">作者：${escapeHtml(author)}</div>
+            <div class="novel-card-excerpt">${renderParagraphs(excerpt)}</div>
+          </div>
+        `;
+      }
+    }
+
+    // 评论区
+    if (commentMatch) {
+      const commentBlocks = commentMatch[1].split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
+      const commentColors = [
+        'linear-gradient(135deg,#7B68AE,#9B8AC4)',
+        'linear-gradient(135deg,#5B9BD5,#7BB5E8)',
+        'linear-gradient(135deg,#E07B5A,#F09B7A)',
+        'linear-gradient(135deg,#5DAE8B,#7DC4A8)',
+        'linear-gradient(135deg,#D4A843,#E8C46B)'
+      ];
+      let commentsHtml = '';
+      commentBlocks.forEach((block, idx) => {
+        const parts = block.split('|||').map(s => s.trim());
+        if (parts.length >= 3) {
+          const cName = parts[0].replace(/\s+/g, ' ');
+          const cContent = parts.slice(1, -1).join('\n').replace(/\s+$/, '');
+          const cTime = parts[parts.length - 1].replace(/\s+/g, ' ');
+          const cAvatar = cName.charAt(0) || '匿';
+          const cColor = commentColors[idx % commentColors.length];
+          commentsHtml += `
+            <div class="novel-comment">
+              <div class="novel-comment-avatar" style="background:${cColor};">${escapeHtml(cAvatar)}</div>
+              <div class="novel-comment-content">
+                <div class="novel-comment-header">
+                  <span class="novel-comment-name">${escapeHtml(cName)}</span>
+                  <span class="novel-comment-time">${escapeHtml(cTime)}</span>
+                </div>
+                <div class="novel-comment-text">${renderParagraphs(cContent)}</div>
+              </div>
+            </div>
+          `;
+        }
+      });
+      if (commentsHtml) {
+        html += `
+          <div class="novel-comments">
+            <div class="novel-comments-label">读者评论 · 磕疯了</div>
+            ${commentsHtml}
+          </div>
+        `;
+      }
+    }
+
+    html += '</div>';
+    listEl.className = '';
+    listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
+    if (state.secretModuleType === 'novel') {
+      if (!state.secretCache) state.secretCache = {};
+      state.secretCache.novel = html;
+      if (novelMatch || commentMatch) showSecretActions('novel', html);
+    }
+  } catch(e) {
+    if (genId !== state.secretGenId) return;
+    listEl.className = '';
+    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('novel')">重试</button></div>`;
   }
 }
 
