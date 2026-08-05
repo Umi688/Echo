@@ -2032,131 +2032,88 @@ html:-webkit-full-screen #app{
   white-space:nowrap;
 }
 
-/* Novel: 家产竟是我自己 */
-.novel-wrap{
+/* Impression: 他的印象笔记 */
+.impression-wrap{
   margin-bottom:16px;
 }
-.novel-card{
-  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.7) 100%);
+.impression-section{
+  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.72) 100%);
   backdrop-filter:blur(12px);
-  padding:22px 22px 20px;
+  padding:18px 20px;
   margin-bottom:14px;
-  border-radius:0 4px 4px 0;
-  border-left:3px solid rgba(208,217,229,0.35);
   position:relative;
+  border-left:2px solid rgba(208,217,229,0.35);
+  border-radius:0 3px 3px 0;
   overflow:hidden;
 }
-.novel-card::before{
+.impression-section:last-child{margin-bottom:0}
+.impression-section::before{
   content:'';
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
   background:linear-gradient(90deg,rgba(208,217,229,0.2) 0%,rgba(131,147,168,0.08) 40%,transparent 100%);
 }
-.novel-card-tag{
-  display:inline-block;
-  font-size:10px;
-  color:rgba(208,217,229,0.7);
-  letter-spacing:1.5px;
-  padding:2px 8px;
-  border:1px solid rgba(208,217,229,0.2);
-  border-radius:2px;
-  margin-bottom:12px;
-}
-.novel-card-title{
-  font-size:17px;
-  color:rgba(208,217,229,0.98);
+.impression-section-label{
+  font-size:13px;
+  color:var(--gold);
   letter-spacing:2px;
   font-weight:500;
-  margin-bottom:6px;
-  word-break:break-word;
-  line-height:1.5;
+  margin-bottom:14px;
+  text-indent:1px;
 }
-.novel-card-author{
+/* 我眼中的TA */
+.impression-eyes-meta{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:12px;
+}
+.impression-eyes-time{
   font-size:11px;
   color:var(--gold-faint);
   letter-spacing:1px;
-  margin-bottom:14px;
+  white-space:nowrap;
 }
-.novel-card-excerpt{
+.impression-eyes-from{
+  font-size:11px;
+  color:rgba(208,217,229,0.5);
+  letter-spacing:1px;
+  white-space:nowrap;
+}
+.impression-eyes-text{
   font-size:14px;
-  line-height:1.95;
+  line-height:1.85;
   color:rgba(131,147,168,0.92);
   word-break:break-word;
+  overflow-wrap:break-word;
   letter-spacing:0.5px;
   font-family:"Noto Serif SC","STSong","PingFang SC",serif;
 }
-.novel-card-excerpt p{
-  margin:0 0 10px 0;
+.impression-eyes-text p{
+  margin:0 0 8px 0;
 }
-.novel-card-excerpt p:last-child{
+.impression-eyes-text p:last-child{
   margin-bottom:0;
 }
-/* Novel comments */
-.novel-comments{
-  background:linear-gradient(160deg,rgba(20,32,48,0.4) 0%,rgba(15,26,43,0.4) 100%);
-  backdrop-filter:blur(8px);
-  border-radius:4px;
-  padding:16px 14px;
-}
-.novel-comments-label{
-  font-size:10px;
-  color:rgba(131,147,168,0.5);
-  letter-spacing:1.5px;
-  margin-bottom:12px;
-  text-transform:uppercase;
-}
-.novel-comment{
-  display:flex;
-  gap:10px;
-  margin-bottom:14px;
-  padding-bottom:14px;
-  border-bottom:1px solid rgba(131,147,168,0.08);
-}
-.novel-comment:last-child{
-  margin-bottom:0;
-  padding-bottom:0;
-  border-bottom:none;
-}
-.novel-comment-avatar{
-  width:28px;
-  height:28px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:11px;
-  font-weight:500;
-  color:rgba(255,255,255,0.85);
-  flex-shrink:0;
-}
-.novel-comment-content{flex:1;min-width:0}
-.novel-comment-header{
-  display:flex;
-  align-items:baseline;
-  gap:8px;
-  margin-bottom:4px;
-}
-.novel-comment-name{
-  font-size:12px;
-  color:rgba(208,217,229,0.8);
-  letter-spacing:0.5px;
-  font-weight:500;
-}
-.novel-comment-time{
-  font-size:10px;
-  color:rgba(131,147,168,0.45);
-}
-.novel-comment-text{
-  font-size:13px;
+/* TA喜欢/讨厌的列表 */
+.impression-list-item{
+  font-size:14px;
   line-height:1.7;
-  color:rgba(131,147,168,0.85);
+  color:rgba(131,147,168,0.88);
   word-break:break-word;
-  letter-spacing:0.3px;
+  letter-spacing:0.4px;
+  padding:8px 0;
+  border-bottom:1px dashed rgba(131,147,168,0.1);
+}
+.impression-list-item:last-child{
+  border-bottom:none;
+  padding-bottom:0;
 }
 .secret-record-card-body .grudge-item,
 .secret-record-card-body .voice-item,
-.secret-record-card-body .novel-card{
+.secret-record-card-body .impression-section{
   background:rgba(15,26,43,0.2);
 }
 
@@ -2817,11 +2774,11 @@ select.form-input option{background:#202E42;color:var(--text)}
         </div>
         <div class="secret-module-arrow">›</div>
       </div>
-      <div class="secret-module" onclick="openSecretModule('news')">
-        <div class="secret-module-icon">📰</div>
+      <div class="secret-module" onclick="openSecretModule('impression')">
+        <div class="secret-module-icon">🖊️</div>
         <div class="secret-module-info">
-          <div class="secret-module-name">坊间小报</div>
-          <div class="secret-module-desc">坊间大事与流言八卦</div>
+          <div class="secret-module-name">他的印象笔记</div>
+          <div class="secret-module-desc">他对你的了解又加深了一点</div>
         </div>
         <div class="secret-module-arrow">›</div>
       </div>
@@ -2849,11 +2806,11 @@ select.form-input option{background:#202E42;color:var(--text)}
         </div>
         <div class="secret-module-arrow">›</div>
       </div>
-      <div class="secret-module" onclick="openSecretModule('novel')">
-        <div class="secret-module-icon">📖</div>
+      <div class="secret-module" onclick="openSecretModule('news')">
+        <div class="secret-module-icon">📰</div>
         <div class="secret-module-info">
-          <div class="secret-module-name">家产竟是我自己</div>
-          <div class="secret-module-desc">有人把你们写成了小说</div>
+          <div class="secret-module-name">坊间小报</div>
+          <div class="secret-module-desc">坊间大事与流言八卦</div>
         </div>
         <div class="secret-module-arrow">›</div>
       </div>
@@ -3974,8 +3931,10 @@ function buildHistoryMessages(mode) {
     ]).slice(-MAX_PRIMARY);
     const recentChats = state.data.chatHistory.slice(-MAX_CROSS);
     if (recentChats.length > 0) {
+      const _meName = (state.data.characters.me.name || '').trim() || '主控';
+      const _otherName = (state.data.characters.other.name || '').trim() || 'AI角色';
       const chatSummary = recentChats.map(h => {
-        const speaker = h.role === 'user' ? '主控' : 'AI角色';
+        const speaker = h.role === 'user' ? _meName : _otherName;
         return `${speaker}：${h.content || ''}`;
       }).join('\n');
       cross.push({ role: 'user', content: `【近期聊天记录（供你感知当前关系状态和约定，叙事中可自然承接）】\n${chatSummary}` });
@@ -3988,8 +3947,10 @@ function buildHistoryMessages(mode) {
     ]).slice(-MAX_PRIMARY);
     const recentChats = state.data.chatHistory.slice(-MAX_CROSS);
     if (recentChats.length > 0) {
+      const _meName = (state.data.characters.me.name || '').trim() || '主控';
+      const _otherName = (state.data.characters.other.name || '').trim() || 'AI角色';
       const chatSummary = recentChats.map(h => {
-        const speaker = h.role === 'user' ? '主控' : 'AI角色';
+        const speaker = h.role === 'user' ? _meName : _otherName;
         return `${speaker}：${h.content || ''}`;
       }).join('\n');
       cross.push({ role: 'user', content: `【近期聊天记录（供你感知当前关系状态，勿在叙事中复述）】\n${chatSummary}` });
@@ -4017,7 +3978,9 @@ function buildModeInstruction(mode) {
   } else if (mode === 'polish') {
     return '\n【当前模式：润色】\n规则：\n1. 本模式下你不是在扮演AI角色，而是作为第三人称叙事者。叙事视角主体是主控角色。\n2. 玩家输入的是基于主控角色自身角度的剧情愿望、反应或期望的发展。将其润色为以主控为视角焦点的小说风格叙事文段。保留玩家原意的核心。\n3. 严格使用第三人称叙述。玩家输入中的"我"一律替换为主控角色的姓名（或"他/她"），指代AI角色时一律使用AI角色的姓名（或"他/她"）。全文禁止出现"你""你的""你们"等任何第二人称代词。\n4. 润色文本默认应从上条叙事文本或润色文本的结束处自然衔接，延续当前场景和时空。严禁复述或重复上文已出现过的内容。\n5.若有心理活动：小段插入第一人称或自由间接引语呈现角色当下的内心独白、回忆、矛盾、独白塑造情感冲突（如自责与不甘交织、想追问又克制、甜蜜回忆与当下苦涩对比）。\n6.格式要求：心理活动用「」括起来，对话内容用""括起来。段落之间用换行分隔，不要挤在一起。\n7.只输出润色后的文段，不加任何说明。\n';
   } else if (mode === 'memory') {
-    return '\n【当前模式：记忆总结】\n规则：\n1. 根据用户提供的近期聊天记录和事件记录，总结关键信息。\n2. 提取：重要事件、角色关系变化、人物状态演变。尽量保留具体细节，如涉及的人物姓名、具体约定、关键道具、地点、转折点等，不要只写空泛的概括。\n3. 输出格式：一段简洁的摘要，不超过400字。用"你"指代主控角色，用AI角色姓名指代AI角色。\n4. 只记录已发生的事实，不加入推测或评价。\n5. 直接输出摘要正文，不要加任何标题、标记或说明（如"记忆总结"等字样一律不要出现）。\n';
+    const _memMe = (state.data.characters.me.name || '').trim() || '主控';
+    const _memOther = (state.data.characters.other.name || '').trim() || 'AI角色';
+    return '\n【当前模式：记忆总结】\n规则：\n1. 根据用户提供的近期聊天记录和事件记录，总结关键信息。\n2. 提取：重要事件、角色关系变化、人物状态演变。尽量保留具体细节，如涉及的人物姓名、具体约定、关键道具、地点、转折点等，不要只写空泛的概括。\n3. 输出格式：一段简洁的摘要，不超过400字。一律使用人物姓名指代——主控角色用"' + _memMe + '"，AI角色用"' + _memOther + '"，不要使用"你""角色"等模糊代词。\n4. 只记录已发生的事实，不加入推测或评价。\n5. 直接输出摘要正文，不要加任何标题、标记或说明（如"记忆总结"等字样一律不要出现）。\n';
   } else if (mode === 'secret-memo') {
     return '\n【当前模式：备忘录生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意翻看了你手机里的备忘录。\n请以第一人称视角生成你备忘录里此刻真实存在的3-5条内容。\n要求：\n1. 内容必须紧扣你的人设、性格、背景、日常生活和近期经历——不要写空泛的通用备忘录\n2. 至少有一条与你和主控角色之间的关系或近期互动有关\n3. 类型多样：待办事项、心情记录、碎碎念、灵感片段、人际备注、购物清单等\n4. 语气、用词习惯、甚至标点风格都要符合你的性格特征\n5. 每条格式严格为：标题|||正文|||时间\n6. 条目之间用一个空行分隔\n7. 正文可以多行，但正文中不得出现|||字符\n8. 时间用简短格式如"3天前""昨天 22:30""上周五""刚刚"\n9. 只输出备忘录内容，不要加任何说明或解释\n';
   } else if (mode === 'secret-bookmark') {
@@ -4035,7 +3998,13 @@ function buildModeInstruction(mode) {
   } else if (mode === 'secret-friends') {
     return '\n【当前模式：朋友群聊生成】\n你现在是AI角色身边的一群朋友们，你们建了一个没有AI角色和主控角色在场的群聊，正在热烈讨论他们两个人的关系。\n你深知他们之间的一切细节——毕竟朋友们早就看出来了。\n请根据以下AI角色与主控角色近期的真实生活动态，生成一场群聊记录。\n内容要紧扣他们的关系状态和近期经历——不要写空泛的通用内容。\n\n参与者为3-5位NPC朋友，他们可以是AI角色的同事、发小、室友、邻居等，每人有鲜明的性格和说话风格。\n群聊中朋友们你一言我一语，翻出AI角色和主控角色之间的各种细节，讨论他们的关系。\n有人起哄、有人分析、有人爆料、有人吐槽，像真实的群聊一样自然生动。\n\n严格按以下格式输出，每条消息格式为：发言人|||消息内容\n条目之间用一个空行分隔。\n消息内容不得出现|||字符。\n消息内容可以多行，用换行分隔，但每条消息不宜过长（1-5句为宜）。\n\n群聊开头用一行格式为：系统|||群聊名称 来标识群聊标题（群聊名称要有趣，体现朋友们的起哄风格）。\n生成15-25条消息，节奏自然，有来有回。\n可以穿插个别"系统消息"格式：系统|||消息内容（如"XX邀请YY加入了群聊""XX修改群名为XX"等），增加真实感。\n\n发言人的名字要各有特色，符合其身份。\n消息内容要用各自的口吻和语气，体现不同性格。\n讨论的内容要基于近期对话和事件的细节，像朋友们真的在八卦一样具体。\n只输出群聊内容，不要加任何说明。\n';
   } else if (mode === 'secret-forum') {
-    return '\n【当前模式：论坛小号生成】\nAI角色有些事情不好用真实身份讨论，于是开了一个匿名小号在论坛提问。\n请根据以下AI角色近期的真实生活动态，生成他的匿名提问和路人回复。\n内容要紧扣他的内心纠结、人际关系和近期经历——不要写空泛的通用内容。\n\n严格按以下格式输出：\n\n【帖子】\n小号名称|||个性签名|||问题标题|||问题内容|||时间戳\n小号名称要像论坛匿名ID，不要用真实姓名\n个性签名简短有特点，反映角色隐藏的一面\n问题标题要吸引人，体现他想讨论的核心困惑\n问题内容详细描述他的困扰，用第一人称，语气要符合他的性格但更匿名化\n问题内容可以换行分成2-3个自然段落，但不得出现|||字符\n时间戳用"刚刚""x小时前""x天前"等格式\n\n【回复】\n必须生成3-5条路人回复，不能少于3条。\n其中必须有一条是AI角色本人用小号回复的（用帖子的同一个小号名称），回复内容像是回复其他路人的评论，补充自己的情况或回应别人的分析。\n其余回复为不同路人的回复，路人ID要像真实论坛用户名。\n每条格式为：回复者ID|||回复内容|||时间戳\n回复内容不得出现|||字符\n回复内容可以换行分成1-2个自然段落\n路人回复有的认真分析，有的调侃，有的分享类似经历，有的跑题\n时间戳要符合回复顺序（比帖子晚）\n回复之间用一个空行分隔\n\n帖子和回复之间用一个空行分隔。\n只输出论坛内容，不要加任何说明。\n';
+    return '\n【当前模式：论坛小号生成】\n你现在是AI角色本人，正在过你真实的日常生活。有些事情你不好用真实身份讨论，于是你开了一个匿名小号在论坛提问。\n请以第一人称视角生成你的匿名提问和路人回复。\n内容要紧扣你的内心纠结、人际关系和近期经历——不要写空泛的通用内容。\n\n严格按以下格式输出：\n\n【帖子】\n小号名称|||个性签名|||问题标题|||问题内容|||时间戳\n小号名称要像论坛匿名ID，不要用真实姓名\n个性签名简短有特点，反映角色隐藏的一面\n问题标题要吸引人，体现你想讨论的核心困惑\n问题内容详细描述你的困扰，用第一人称，语气要符合你的性格但更匿名化\n问题内容可以换行分成2-3个自然段落，但不得出现|||字符\n时间戳用"刚刚""x小时前""x天前"等格式\n\n【回复】\n必须生成3-5条路人回复，不能少于3条。\n其中必须有一条是AI角色本人用小号回复的（用帖子的同一个小号名称），回复内容像是回复其他路人的评论，补充自己的情况或回应别人的分析。\n其余回复为不同路人的回复，路人ID要像真实论坛用户名。\n每条格式为：回复者ID|||回复内容|||时间戳\n回复内容不得出现|||字符\n回复内容可以换行分成1-2个自然段落\n路人回复有的认真分析，有的调侃，有的分享类似经历，有的跑题\n时间戳要符合回复顺序（比帖子晚）\n回复之间用一个空行分隔\n\n帖子和回复之间用一个空行分隔。\n只输出论坛内容，不要加任何说明。\n';
+  } else if (mode === 'secret-grudge') {
+    return '\n【当前模式：恋爱记仇本生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意翻看了你的"恋爱记仇本"。\n请以第一人称视角生成你记仇本里此刻真实存在的3-5条内容。\n要求：\n1. 每条都是一件让你"记仇"的小事——表面是抱怨，字里行间却全是想念与在意\n2. 内容必须紧扣你的人设、性格、背景、日常生活和与主控角色的近期互动——不要写空泛的通用内容\n3. 罪名是你给这件事起的小标题，记仇经过是你气鼓鼓的描述，真心话是那句暴露你其实只想主控角色的话\n4. 记仇经过和真心话的语气、用词习惯都要符合你的性格特征\n5. 每条格式严格为：罪名|||记仇经过|||真心话|||时间\n6. 条目之间用一个空行分隔\n7. 记仇经过可以多行，但不得出现|||字符\n8. 时间用具体日期时间格式如"7月29日 周三 16:45"\n9. 只输出记仇本内容，不要加任何说明\n';
+  } else if (mode === 'secret-voice') {
+    return '\n【当前模式：语音草稿箱生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意点开了你语音消息的"草稿箱"，那里藏着几条你录好却始终没按下发送的话。\n请以第一人称视角生成你草稿箱里此刻真实存在的3-5条未发送语音。\n要求：\n1. 每条都是你想对主控角色说却没说出口的话，听到最后才知道你真正想让TA明白什么\n2. 内容必须紧扣你的人设、性格、背景、日常生活和与主控角色的近期互动——不要写空泛的通用内容\n3. 语音文字是这段语音转写出的内容，语气、用词习惯都要符合你的性格特征\n4. 每条格式严格为：时长|||语音文字|||时间\n5. 时长形如"0:12"，时间为具体日期时间格式如"8月4日 周一 22:42"\n6. 条目之间用一个空行分隔\n7. 语音文字可以多行，但不得出现|||字符\n8. 只输出语音内容，不要加任何说明\n';
+  } else if (mode === 'secret-impression') {
+    return '\n【当前模式：印象笔记生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意翻看了你的"印象笔记"——那是你偷偷记录的关于主控角色的观察与感受。\n请以第一人称视角生成你此刻的印象笔记，包含三个板块。\n\n严格按以下格式输出：\n\n【我眼中的TA】\n时间|||From名字|||印象内容\n时间用具体日期时间格式如"8月5日 周二 14:30"\nFrom名字填你（AI角色）的名字\n印象内容是你对主控角色的整体印象，一段真诚的描述，体现你随着相处对TA的了解越来越深\n印象内容可以换行分成多个自然段落，但不得出现|||字符\n\n【TA喜欢的】\n你观察到主控角色喜欢的3-5样事物，每条一行\n要具体，基于你们真实的互动细节，不要写空泛的通用内容\n\n【TA讨厌的】\n你观察到主控角色讨厌的3-5样事物，每条一行\n要具体，基于你们真实的互动细节，不要写空泛的通用内容\n\n三个板块之间用一个空行分隔。\n印象内容和你观察到的事物都要紧扣你的人设、性格、背景、日常生活和与主控角色的近期互动。\n语气和用词习惯要符合你的性格特征。\n只输出印象笔记内容，不要加任何说明。\n';
   }
   return '';
 }
@@ -5042,10 +5011,12 @@ async function improveMemory() {
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>';
 
+  const _memMeName = (state.data.characters.me.name || '').trim() || '主控';
+  const _memOtherName = (state.data.characters.other.name || '').trim() || 'AI角色';
   let summary = '请总结以下记录的关键信息：\n\n';
   summary += '【聊天记录】\n';
   recentChats.forEach(h => {
-    summary += `${h.role === 'user' ? '你' : '角色'}：${h.content}\n`;
+    summary += `${h.role === 'user' ? _memMeName : _memOtherName}：${h.content}\n`;
   });
   summary += '\n【事件记录】\n';
   recentEvents.forEach(e => {
@@ -5154,10 +5125,12 @@ async function regenerateMemoryCard(cardId) {
     recentEvents = state.data.eventHistory;
   }
 
+  const _regenMeName = (state.data.characters.me.name || '').trim() || '主控';
+  const _regenOtherName = (state.data.characters.other.name || '').trim() || 'AI角色';
   let summary = '请总结以下记录的关键信息：\n\n';
   summary += '【聊天记录】\n';
   recentChats.forEach(h => {
-    summary += `${h.role === 'user' ? '你' : '角色'}：${h.content}\n`;
+    summary += `${h.role === 'user' ? _regenMeName : _regenOtherName}：${h.content}\n`;
   });
   summary += '\n【事件记录】\n';
   recentEvents.forEach(e => {
@@ -5292,11 +5265,11 @@ function renderSecretHome() {
       </div>
       <div class="secret-module-arrow">›</div>
     </div>
-    <div class="secret-module" onclick="openSecretModule('news')">
-      <div class="secret-module-icon">📰</div>
+    <div class="secret-module" onclick="openSecretModule('impression')">
+      <div class="secret-module-icon">🖊️</div>
       <div class="secret-module-info">
-        <div class="secret-module-name">坊间小报</div>
-        <div class="secret-module-desc">坊间大事与流言八卦</div>
+        <div class="secret-module-name">他的印象笔记</div>
+        <div class="secret-module-desc">他对你的了解又加深了一点</div>
       </div>
       <div class="secret-module-arrow">›</div>
     </div>
@@ -5324,11 +5297,11 @@ function renderSecretHome() {
       </div>
       <div class="secret-module-arrow">›</div>
     </div>
-    <div class="secret-module" onclick="openSecretModule('novel')">
-      <div class="secret-module-icon">📖</div>
+    <div class="secret-module" onclick="openSecretModule('news')">
+      <div class="secret-module-icon">📰</div>
       <div class="secret-module-info">
-        <div class="secret-module-name">家产竟是我自己</div>
-        <div class="secret-module-desc">有人把你们写成了小说</div>
+        <div class="secret-module-name">坊间小报</div>
+        <div class="secret-module-desc">坊间大事与流言八卦</div>
       </div>
       <div class="secret-module-arrow">›</div>
     </div>
@@ -5348,7 +5321,7 @@ const SECRET_TYPE_NAMES = {
   'friends': '朋友们早就看出来了',
   'grudge': '恋爱记仇本',
   'voice': '语音草稿箱',
-  'novel': '家产竟是我自己'
+  'impression': '他的印象笔记'
 };
 
 function formatSecretRecordTime(timestamp) {
@@ -5638,23 +5611,23 @@ function openSecretModule(type) {
     } else {
       generateVoice(charName);
     }
-  } else if (type === 'novel') {
+  } else if (type === 'impression') {
     container.innerHTML = `
       <div class="secret-detail-panel">
         <div class="secret-detail-panel-inner">
           <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
-          <div class="secret-detail-title">家产竟是我自己</div>
+          <div class="secret-detail-title">他的印象笔记</div>
           <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
         </div>
       </div>
     `;
-    if (state.secretCache.novel) {
+    if (state.secretCache.impression) {
       const listEl = document.getElementById('secret-detail-list');
       listEl.className = '';
-      listEl.innerHTML = state.secretCache.novel;
-      showSecretActions('novel', state.secretCache.novel);
+      listEl.innerHTML = state.secretCache.impression;
+      showSecretActions('impression', state.secretCache.impression);
     } else {
-      generateNovel(charName);
+      generateImpression(charName);
     }
   }
 }
@@ -5668,7 +5641,7 @@ function exitSecretModule() {
 function buildSecretContext() {
   let ctx = '';
   const me = state.data.characters.me.name || '主控';
-  const other = state.data.characters.other.name || 'TA';
+  const other = state.data.characters.other.name || 'AI角色';
 
   // Recent conversations - real-time dialogue context
   const recentChats = state.data.chatHistory.slice(-25);
@@ -5813,7 +5786,7 @@ function retrySecretGen(type) {
   else if (type === 'friends') generateFriends(charName);
   else if (type === 'grudge') generateGrudge(charName);
   else if (type === 'voice') generateVoice(charName);
-  else if (type === 'novel') generateNovel(charName);
+  else if (type === 'impression') generateImpression(charName);
   else generateHistory(charName, type); // bookmark
 }
 
@@ -6099,7 +6072,7 @@ async function generatePlan(charName) {
 async function generateForum(charName) {
   const listEl = document.getElementById('secret-detail-list');
   const context = buildSecretContext();
-  const prompt = `有些事情他不好用真实身份讨论，于是开了一个匿名小号在论坛提问。请根据以下角色近期的真实生活动态，生成他的匿名提问和路人回复。\n${context}\n\n请直接输出论坛内容，不要加任何说明。`;
+  const prompt = `有些事情你不好用真实身份讨论，于是你开了一个匿名小号在论坛提问。请根据以下你近期的真实生活动态，生成你的匿名提问和路人回复。\n${context}\n\n请直接输出论坛内容，不要加任何说明。`;
 
   const genId = ++state.secretGenId;
   try {
@@ -6319,7 +6292,7 @@ async function generateFriends(charName) {
 async function generateGrudge(charName) {
   const listEl = document.getElementById('secret-detail-list');
   const context = buildSecretContext();
-  const prompt = `此刻有人偷偷翻开了他的"恋爱记仇本"。\n因为某些事情，他狠狠地记下了一笔。但与其说是记仇，不如说是想你了。\n请根据以下他近期的真实生活动态，生成他记仇本里此刻真实存在的3-5条内容。\n每条都是一件让他"记仇"的小事，表面是抱怨，字里行间却全是想念与在意。\n${context}\n\n每条格式严格为：罪名|||记仇经过|||真心话|||时间\n罪名是他给这件事起的小标题，记仇经过是他气鼓鼓的描述，真心话是那句暴露他其实只想你的话，时间为具体日期时间。\n条目之间用空行分隔。请直接输出内容，不要加任何说明。`;
+  const prompt = `此刻有人偷偷翻开了你的"恋爱记仇本"。\n因为某些事情，你狠狠地记下了一笔。但与其说是记仇，不如说是想主控了。\n请根据以下你近期的真实生活动态，生成你记仇本里此刻真实存在的3-5条内容。\n每条都是一件让你"记仇"的小事，表面是抱怨，字里行间却全是想念与在意。\n${context}\n\n每条格式严格为：罪名|||记仇经过|||真心话|||时间\n罪名是你给这件事起的小标题，记仇经过是你气鼓鼓的描述，真心话是那句暴露你其实只想主控的话，时间为具体日期时间。\n条目之间用空行分隔。请直接输出内容，不要加任何说明。`;
 
   const genId = ++state.secretGenId;
   try {
@@ -6364,7 +6337,7 @@ async function generateGrudge(charName) {
 async function generateVoice(charName) {
   const listEl = document.getElementById('secret-detail-list');
   const context = buildSecretContext();
-  const prompt = `此刻有人偷偷点开了他语音消息的"草稿箱"，那里藏着几条他录好却始终没按下发送的话。\n请根据以下他近期的真实生活动态，生成他草稿箱里此刻真实存在的3-5条未发送语音。\n每条都是他想对你说却没说出口的话，听到最后才知道他真正想让你明白什么。\n${context}\n\n每条格式严格为：时长|||语音文字|||时间\n时长形如"0:12"，语音文字是这段语音转写出的内容，时间为具体日期时间。\n条目之间用空行分隔。请直接输出内容，不要加任何说明。`;
+  const prompt = `此刻有人偷偷点开了你语音消息的"草稿箱"，那里藏着几条你录好却始终没按下发送的话。\n请根据以下你近期的真实生活动态，生成你草稿箱里此刻真实存在的3-5条未发送语音。\n每条都是你想对主控说却没说出口的话，听到最后才知道你真正想让主控明白什么。\n${context}\n\n每条格式严格为：时长|||语音文字|||时间\n时长形如"0:12"，语音文字是这段语音转写出的内容，时间为具体日期时间。\n条目之间用空行分隔。请直接输出内容，不要加任何说明。`;
 
   const genId = ++state.secretGenId;
   try {
@@ -6405,80 +6378,69 @@ async function generateVoice(charName) {
   }
 }
 
-// ========== 家产竟是我自己 ==========
-async function generateNovel(charName) {
+// ========== 他的印象笔记 ==========
+async function generateImpression(charName) {
   const listEl = document.getElementById('secret-detail-list');
   const context = buildSecretContext();
-  const prompt = `有人偷偷把你们的故事写成了连载小说，发在网文平台上，评论区磕疯了。\n请根据以下两位主角近期的真实生活动态，生成一章小说节选和读者评论区。\n小说以第三人称书写你们的关系，读者能从字里行间磕到你们的感情。\n${context}\n\n格式严格如下：\n【小说】\n书名|||作者笔名|||正文节选\n【评论】\n读者ID|||评论内容|||时间\n读者ID|||评论内容|||时间\n（评论3-5条，条目间用空行分隔）\n请直接输出内容，不要加任何说明。`;
+  const meName = state.data.characters.me.name || '主控';
+  const prompt = `此刻有人偷偷翻开了你的"印象笔记"——那是你偷偷记录的关于${meName}的观察与感受。\n请根据以下你近期的真实生活动态，生成你此刻的印象笔记，包含三个板块。\n${context}\n\n格式严格如下：\n【我眼中的TA】\n时间|||From名字|||印象内容\nFrom名字填你的名字，印象内容是你对${meName}的整体印象\n\n【TA喜欢的】\n你观察到${meName}喜欢的3-5样事物，每条一行\n\n【TA讨厌的】\n你观察到${meName}讨厌的3-5样事物，每条一行\n\n三个板块之间用空行分隔。请直接输出内容，不要加任何说明。`;
 
   const genId = ++state.secretGenId;
   try {
-    const result = await callAI(prompt, 'secret-novel');
+    const result = await callAI(prompt, 'secret-impression');
     if (genId !== state.secretGenId) return;
 
-    // 解析【小说】与【评论】两个板块
-    const novelMatch = result.match(/【小说】\s*([\s\S]*?)(?:\n\s*【评论】|$)/);
-    const commentMatch = result.match(/【评论】\s*([\s\S]*?)$/);
+    // 解析三个板块
+    const eyesMatch = result.match(/【我眼中的TA】\s*([\s\S]*?)(?:\n\s*【TA喜欢的】|$)/);
+    const likeMatch = result.match(/【TA喜欢的】\s*([\s\S]*?)(?:\n\s*【TA讨厌的】|$)/);
+    const hateMatch = result.match(/【TA讨厌的】\s*([\s\S]*?)$/);
 
-    let html = '<div class="novel-wrap">';
+    let html = '<div class="impression-wrap">';
 
-    // 小说节选
-    if (novelMatch) {
-      const novelRaw = novelMatch[1].trim();
-      const parts = novelRaw.split('|||').map(s => s.trim());
+    // 我眼中的TA
+    if (eyesMatch) {
+      const eyesRaw = eyesMatch[1].trim();
+      const parts = eyesRaw.split('|||').map(s => s.trim());
       if (parts.length >= 3) {
-        const title = parts[0].replace(/\s+/g, ' ');
-        const author = parts[1].replace(/\s+/g, ' ');
-        const excerpt = parts.slice(2).join('\n').replace(/\s+$/, '');
+        const time = parts[0].replace(/\s+/g, ' ');
+        const fromName = parts[1].replace(/\s+/g, ' ');
+        const content = parts.slice(2).join('\n').replace(/\s+$/, '');
         html += `
-          <div class="novel-card">
-            <div class="novel-card-tag">连载小说 · 节选</div>
-            <div class="novel-card-title">${escapeHtml(title)}</div>
-            <div class="novel-card-author">作者：${escapeHtml(author)}</div>
-            <div class="novel-card-excerpt">${renderParagraphs(excerpt)}</div>
+          <div class="impression-section">
+            <div class="impression-section-label">我眼中的Ta</div>
+            <div class="impression-eyes-meta">
+              <span class="impression-eyes-time">${escapeHtml(time)}</span>
+              <span class="impression-eyes-from">From：${escapeHtml(fromName)}</span>
+            </div>
+            <div class="impression-eyes-text">${renderParagraphs(content)}</div>
           </div>
         `;
       }
     }
 
-    // 评论区
-    if (commentMatch) {
-      const commentBlocks = commentMatch[1].split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
-      const commentColors = [
-        'linear-gradient(135deg,#7B68AE,#9B8AC4)',
-        'linear-gradient(135deg,#5B9BD5,#7BB5E8)',
-        'linear-gradient(135deg,#E07B5A,#F09B7A)',
-        'linear-gradient(135deg,#5DAE8B,#7DC4A8)',
-        'linear-gradient(135deg,#D4A843,#E8C46B)'
-      ];
-      let commentsHtml = '';
-      commentBlocks.forEach((block, idx) => {
-        const parts = block.split('|||').map(s => s.trim());
-        if (parts.length >= 3) {
-          const cName = parts[0].replace(/\s+/g, ' ');
-          const cContent = parts.slice(1, -1).join('\n').replace(/\s+$/, '');
-          const cTime = parts[parts.length - 1].replace(/\s+/g, ' ');
-          const cAvatar = cName.charAt(0) || '匿';
-          const cColor = commentColors[idx % commentColors.length];
-          commentsHtml += `
-            <div class="novel-comment">
-              <div class="novel-comment-avatar" style="background:${cColor};">${escapeHtml(cAvatar)}</div>
-              <div class="novel-comment-content">
-                <div class="novel-comment-header">
-                  <span class="novel-comment-name">${escapeHtml(cName)}</span>
-                  <span class="novel-comment-time">${escapeHtml(cTime)}</span>
-                </div>
-                <div class="novel-comment-text">${renderParagraphs(cContent)}</div>
-              </div>
-            </div>
-          `;
-        }
-      });
-      if (commentsHtml) {
+    // TA喜欢的
+    if (likeMatch) {
+      const likeItems = likeMatch[1].split('\n').map(s => s.trim()).filter(s => s);
+      if (likeItems.length) {
+        let itemsHtml = likeItems.map(item => `<div class="impression-list-item">${escapeHtml(item)}</div>`).join('');
         html += `
-          <div class="novel-comments">
-            <div class="novel-comments-label">读者评论 · 磕疯了</div>
-            ${commentsHtml}
+          <div class="impression-section">
+            <div class="impression-section-label">Ta喜欢的</div>
+            ${itemsHtml}
+          </div>
+        `;
+      }
+    }
+
+    // TA讨厌的
+    if (hateMatch) {
+      const hateItems = hateMatch[1].split('\n').map(s => s.trim()).filter(s => s);
+      if (hateItems.length) {
+        let itemsHtml = hateItems.map(item => `<div class="impression-list-item">${escapeHtml(item)}</div>`).join('');
+        html += `
+          <div class="impression-section">
+            <div class="impression-section-label">Ta讨厌的</div>
+            ${itemsHtml}
           </div>
         `;
       }
@@ -6487,15 +6449,15 @@ async function generateNovel(charName) {
     html += '</div>';
     listEl.className = '';
     listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
-    if (state.secretModuleType === 'novel') {
+    if (state.secretModuleType === 'impression') {
       if (!state.secretCache) state.secretCache = {};
-      state.secretCache.novel = html;
-      if (novelMatch || commentMatch) showSecretActions('novel', html);
+      state.secretCache.impression = html;
+      if (eyesMatch || likeMatch || hateMatch) showSecretActions('impression', html);
     }
   } catch(e) {
     if (genId !== state.secretGenId) return;
     listEl.className = '';
-    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('novel')">重试</button></div>`;
+    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('impression')">重试</button></div>`;
   }
 }
 
