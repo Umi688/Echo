@@ -737,15 +737,17 @@ html:-webkit-full-screen #app{
 .narr-card-body{
   padding:0 14px 12px;
   font-size:14px;
-  line-height:1.8;
+  line-height:1.7;
   color:#3D5878;
   word-break:break-word;
   min-height:40px;
 }
+.narr-card-body p{margin:0;padding:0}
+.narr-card-body p+p{margin-top:10px}
 /* Italic = psychological activity (「」) — lightest */
 .narr-card-body i{
   font-style:italic;
-  color:#6B8DAD;
+  color:#4A6B8A;
   opacity:1;
 }
 /* Bold = quoted dialogue ("") — darkest */
@@ -3806,8 +3808,9 @@ function renderParagraphs(text) {
 function formatNarrativeText(text) {
   if (!text) return '';
   let html = escapeHtml(text);
-  // Paragraph breaks: \n → <br>
-  html = html.replace(/\r?\n/g, '<br>');
+  // Paragraph breaks: \n → <p> tags (段落独立分段，间距由CSS控制)
+  const lines = html.split(/\r?\n/);
+  html = lines.map(line => `<p>${line}</p>`).join('');
   // 「...」 → italic, keep the brackets (心理活动)
   html = html.replace(/「([^」]*)」/g, '<i>「$1」</i>');
   // "..." (Chinese curly quotes U+201C U+201D) → bold, keep the quotes (对话引用)
