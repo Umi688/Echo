@@ -6,40 +6,40 @@
 <title>Echo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@1,700&family=Noto+Serif+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ========== Reset & Base ========== */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  /* 静谧深夜卧室蓝调色卡 */
-  /* 午夜主深蓝 #0F1A2B | 静谧灰蓝 #202E42 | 雾感月光浅蓝 #51637C */
-  /* 极淡霜月蓝 #8393A8 | 极深炭蓝黑 #070C13 | 冷调浅银白 #D0D9E5 */
-  --bg:#0F1A2B;
-  --bg-surface:#202E42;
-  --bg-elevated:#51637C;
-  --bg-warm:#202E42;
-  --text:#8393A8;
-  --text-dim:rgba(131,147,168,0.5);
-  --text-faint:rgba(131,147,168,0.28);
-  --accent:#51637C;
-  --accent-bright:#8393A8;
-  --gold:#D0D9E5;
-  --gold-dim:rgba(208,217,229,0.12);
-  --gold-faint:rgba(208,217,229,0.4);
-  --danger:#8393A8;
-  --border:rgba(48,63,85,0.6);
-  --border-strong:rgba(48,63,85,0.9);
+  /* 天空蓝渐变色卡 — 基于背景图提取 */
+  /* 晨雾白 #EFF4FA | 天际蓝 #E8EEF6 | 薄云灰 #DDE7F1 */
+  /* 粉蓝 #B0C4DB | 矢车菊蓝 #8AA8D0 | 深邃蓝 #3A6FA5 | 墨蓝文字 #1A2B3C */
+  --bg:#E8EEF6;
+  --bg-surface:#EFF4FA;
+  --bg-elevated:#DDE7F1;
+  --bg-warm:#EFF4FA;
+  --text:#1A2B3C;
+  --text-dim:rgba(26,43,60,0.62);
+  --text-faint:rgba(26,43,60,0.4);
+  --accent:#8AA8D0;
+  --accent-bright:#5A82B5;
+  --gold:#3A6FA5;
+  --gold-dim:rgba(58,111,165,0.12);
+  --gold-faint:rgba(58,111,165,0.5);
+  --danger:#A87878;
+  --border:rgba(138,168,208,0.15);
+  --border-strong:rgba(138,168,208,0.25);
   --ease:cubic-bezier(0.4,0,0.2,1);
-  --bg-image:url('https://umi688.github.io/Echo/images/bg1.jpg');
+  --bg-image:url('https://cdn.jsdelivr.net/gh/Umi688/Echo@main/images/BackGround.jpg');
+  --paper-noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
 }
 html,body{height:100%;overflow:hidden}
 body{
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif;
-  background:#0F1A2B;
+  font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong","PingFang SC",Georgia,"Times New Roman",serif;
+  background:var(--bg-image) center/cover no-repeat fixed;
   color:var(--text);
-  text-shadow:0 0 4px rgba(208,217,229,0.15);
   font-size:15px;
-  line-height:1.6;
+  line-height:1.7;
   -webkit-font-smoothing:antialiased;
   display:flex;
   align-items:center;
@@ -51,7 +51,7 @@ body{
 .settings-action-btn,.modal,.form-input,.form-textarea,.api-tab,.save-item,
 .secret-module,.memo-item,.history-item,.mail-item,.secret-record-card,
 #bottom-nav,.chat-avatar{
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.06);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.5);
 }
 #app{
   width:100%;
@@ -60,16 +60,16 @@ body{
   height:100dvh;
   position:relative;
   overflow:hidden;
-  background:var(--bg);
+  background:var(--bg-image) center/cover no-repeat;
 }
 @media(min-width:431px){
-  body{background:#070C13}
+  body{background:var(--bg-image) center/cover no-repeat fixed}
   #app{
     height:92vh;
     max-height:932px;
     border-radius:32px;
-    border:1px solid rgba(131,147,168,0.04);
-    box-shadow:0 20px 80px rgba(0,0,0,0.7);
+    border:1px solid rgba(138,168,208,0.08);
+    box-shadow:0 20px 80px rgba(26,43,60,0.12);
   }
 }
 
@@ -78,7 +78,7 @@ body{
 
 /* ========== Home Screen ========== */
 #home-screen{
-  background:var(--bg);
+  background:var(--bg-image) center/cover no-repeat;
   align-items:center;
   justify-content:center;
   padding:20px 28px;
@@ -86,23 +86,6 @@ body{
   overflow:hidden;
   min-height:100%;
   height:100%;
-}
-#home-screen::before{
-  content:'';
-  position:fixed;
-  top:0;left:0;right:0;bottom:0;
-  background-image:var(--bg-image);
-  background-size:cover;
-  background-position:center;
-  filter:blur(20px) brightness(0.8) saturate(1.3);
-  z-index:0;
-}
-#home-screen::after{
-  content:'';
-  position:fixed;
-  top:0;left:0;right:0;bottom:0;
-  background:linear-gradient(180deg,rgba(15,26,43,0.25) 0%,rgba(15,26,43,0.45) 50%,rgba(15,26,43,0.3) 100%);
-  z-index:0;
 }
 .home-content{
   width:100%;
@@ -121,16 +104,9 @@ body{
   font-weight:700;
   font-style:italic;
   letter-spacing:2px;
-  color:var(--gold);
+  color:var(--text);
   text-align:center;
-  text-shadow:
-    0 1px 0 rgba(255,255,255,0.12),
-    0 2px 4px rgba(0,0,0,0.4),
-    0 0 18px rgba(208,217,229,0.25);
-  background:linear-gradient(180deg,rgba(208,217,229,0.98) 0%,rgba(184,194,208,0.9) 45%,rgba(140,152,170,0.85) 100%);
-  -webkit-background-clip:text;
-  background-clip:text;
-  -webkit-text-fill-color:transparent;
+  text-shadow:0 1px 2px rgba(26,43,60,0.08);
   position:relative;
 }
 .game-title::after{
@@ -139,11 +115,11 @@ body{
   left:50%;bottom:-6px;
   width:60px;height:1px;
   transform:translateX(-50%);
-  background:linear-gradient(90deg,transparent 0%,rgba(208,217,229,0.4) 50%,transparent 100%);
+  background:linear-gradient(90deg,transparent 0%,rgba(26,43,60,0.3) 50%,transparent 100%);
 }
 .game-subtitle{
   font-size:13px;
-  color:rgba(131,147,168,0.7);
+  color:rgba(58,111,165,0.7);
   letter-spacing:6px;
   font-weight:300;
   margin-top:12px;
@@ -152,7 +128,7 @@ body{
 .home-buttons{width:100%;display:flex;flex-direction:column;gap:12px;margin-top:0}
 .home-btn{
   padding:15px 0;
-  background:linear-gradient(135deg,rgba(20,32,48,0.78) 0%,rgba(81,99,124,0.72) 100%);
+  background:linear-gradient(135deg,rgba(239,244,250,0.78) 0%,rgba(138,168,208,0.72) 100%);
   border:none;
   border-radius:2px;
   color:var(--text);
@@ -163,8 +139,8 @@ body{
   text-indent:5px;
   cursor:pointer;
   transition:all 0.3s var(--ease);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
   position:relative;
   overflow:hidden;
 }
@@ -173,18 +149,18 @@ body{
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,rgba(208,217,229,0.15) 0%,rgba(131,147,168,0.06) 40%,transparent 100%);
+  background:linear-gradient(90deg,rgba(26,43,60,0.15) 0%,rgba(58,111,165,0.06) 40%,transparent 100%);
 }
-.home-btn:hover{background:rgba(81,99,124,0.8);color:var(--gold)}
+.home-btn:hover{background:rgba(138,168,208,0.8);color:var(--gold)}
 .home-btn:active{transform:scale(0.98)}
 .home-btn.primary{
-  background:linear-gradient(135deg,rgba(81,99,124,0.72) 0%,rgba(110,128,155,0.72) 100%);
+  background:linear-gradient(135deg,rgba(138,168,208,0.72) 0%,rgba(165,192,224,0.72) 100%);
   color:var(--gold);
 }
 
 /* ========== Echo Select Screen ========== */
 #echo-select-screen{
-  background:var(--bg);
+  background:var(--bg-image) center/cover no-repeat;
   align-items:center;
   justify-content:center;
   padding:20px 28px;
@@ -209,13 +185,13 @@ body{
 .echo-script-card{
   width:100%;
   padding:18px 20px;
-  background:linear-gradient(135deg,rgba(20,32,48,0.78) 0%,rgba(81,99,124,0.72) 100%);
+  background:linear-gradient(135deg,rgba(239,244,250,0.78) 0%,rgba(138,168,208,0.72) 100%);
   border:none;
   border-radius:2px;
   cursor:pointer;
   transition:all 0.3s var(--ease);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
   position:relative;
   overflow:hidden;
   text-align:left;
@@ -225,9 +201,9 @@ body{
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,rgba(208,217,229,0.15) 0%,rgba(131,147,168,0.06) 40%,transparent 100%);
+  background:linear-gradient(90deg,rgba(26,43,60,0.15) 0%,rgba(58,111,165,0.06) 40%,transparent 100%);
 }
-.echo-script-card:hover{background:rgba(81,99,124,0.8);color:var(--gold)}
+.echo-script-card:hover{background:rgba(138,168,208,0.8);color:var(--gold)}
 .echo-script-card:active{transform:scale(0.98)}
 .echo-script-name{
   font-size:16px;
@@ -245,7 +221,7 @@ body{
 
 /* ========== World Loading Screen ========== */
 #world-loading-screen{
-  background:var(--bg);
+  background:var(--bg-image) center/cover no-repeat;
   align-items:center;
   justify-content:center;
 }
@@ -284,14 +260,14 @@ body{
 .world-loading-bar{
   width:200px;
   height:2px;
-  background:rgba(131,147,168,0.15);
+  background:rgba(58,111,165,0.15);
   overflow:hidden;
   border-radius:1px;
 }
 .world-loading-bar-fill{
   height:100%;
   width:0;
-  background:linear-gradient(90deg,rgba(208,217,229,0.3) 0%,var(--gold) 100%);
+  background:linear-gradient(90deg,rgba(26,43,60,0.3) 0%,var(--gold) 100%);
   animation:worldBarFill 2.5s ease-in-out forwards;
 }
 @keyframes worldBarFill{
@@ -318,20 +294,17 @@ body{
   content:'';
   position:absolute;
   inset:0;
-  background-image:var(--bg-image);
-  background-size:cover;
-  background-position:center;
-  filter:brightness(1.8) contrast(1.05) saturate(1.1);
+  background:var(--bg-image) center/cover no-repeat;
   z-index:0;
 }
 .bg-overlay{
   position:absolute;inset:0;
-  background:rgba(15,26,43,0.25);
+  background:rgba(232,238,246,0.25);
   z-index:0;
 }
 /* Chat-specific overlay: match bonds interface style */
 .bg-overlay.chat-mask{
-  background:rgba(15,26,43,0.72);
+  background:rgba(232,238,246,0.3);
 }
 .tab-content > *:not(.bg-overlay){position:relative;z-index:1}
 
@@ -435,8 +408,8 @@ html:-webkit-full-screen #app{
 #bottom-nav{
   display:flex;
   border-top:none;
-  background:rgba(15,26,43,0.7);
-  backdrop-filter:blur(10px);
+  background:rgba(232,238,246,0.7);
+  backdrop-filter:blur(3px);
   flex-shrink:0;
   padding-bottom:env(safe-area-inset-bottom,0px);
   position:relative;
@@ -446,14 +419,14 @@ html:-webkit-full-screen #app{
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,transparent 0%,rgba(131,147,168,0.2) 50%,transparent 100%);
+  background:linear-gradient(90deg,transparent 0%,rgba(58,111,165,0.2) 50%,transparent 100%);
 }
 .nav-btn{
   flex:1;
   padding:18px 0 16px;
   background:none;
   border:none;
-  color:rgba(131,147,168,0.55);
+  color:rgba(58,111,165,0.7);
   font-size:12px;
   font-weight:400;
   letter-spacing:1px;
@@ -507,13 +480,13 @@ html:-webkit-full-screen #app{
   justify-content:center;
   font-size:16px;
   font-weight:300;
-  color:rgba(131,147,168,0.7);
+  color:rgba(58,111,165,0.7);
 }
 .chat-avatar.me{
-  background:linear-gradient(135deg,#51637C 0%,#202E42 100%);
+  background:linear-gradient(135deg,#8AA8D0 0%,#EFF4FA 100%);
 }
 .chat-avatar.ai{
-  background:linear-gradient(135deg,#8393A8 0%,#51637C 100%);
+  background:linear-gradient(135deg,#3A6FA5 0%,#8AA8D0 100%);
 }
 .msg-bubble{
   padding:10px 13px;
@@ -521,14 +494,14 @@ html:-webkit-full-screen #app{
   font-size:14.5px;
   line-height:1.55;
   word-break:break-word;
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(3px);
 }
 .msg-row.ai .msg-bubble{
-  background:rgba(20,32,48,0.75);
+  background:rgba(239,244,250,0.75);
   border-top-left-radius:0;
 }
 .msg-row.me .msg-bubble{
-  background:rgba(81,99,124,0.72);
+  background:rgba(138,168,208,0.72);
   border-top-right-radius:0;
 }
 .typing-indicator{display:flex;gap:4px;align-items:center;padding:3px 0}
@@ -554,8 +527,8 @@ html:-webkit-full-screen #app{
   z-index:300;
   display:flex;
   flex-direction:column;
-  background:rgba(15,26,43,0.9);
-  backdrop-filter:blur(20px);
+  background:rgba(232,238,246,0.9);
+  backdrop-filter:blur(3px);
   border:none;
   border-radius:0;
   overflow:hidden;
@@ -575,9 +548,9 @@ html:-webkit-full-screen #app{
   transition:all 0.2s var(--ease);
   white-space:nowrap;
 }
-.msg-action-item:hover{background:rgba(131,147,168,0.05);color:var(--text)}
+.msg-action-item:hover{background:rgba(58,111,165,0.05);color:var(--text)}
 .msg-action-item.danger{color:var(--danger)}
-.msg-action-item.danger:hover{background:rgba(131,147,168,0.1)}
+.msg-action-item.danger:hover{background:rgba(58,111,165,0.1)}
 .msg-action-item.cancel{color:var(--text-faint);font-size:12px}
 
 /* Quote Bar */
@@ -586,8 +559,8 @@ html:-webkit-full-screen #app{
   align-items:center;
   gap:8px;
   padding:6px 12px;
-  background:rgba(20,32,48,0.75);
-  backdrop-filter:blur(10px);
+  background:rgba(239,244,250,0.75);
+  backdrop-filter:blur(3px);
   border-left:2px solid var(--gold);
   flex-shrink:0;
 }
@@ -615,8 +588,8 @@ html:-webkit-full-screen #app{
   gap:8px;
   padding:8px 12px;
   border-top:none;
-  background:rgba(15,26,43,0.7);
-  backdrop-filter:blur(10px);
+  background:rgba(232,238,246,0.7);
+  backdrop-filter:blur(3px);
   flex-shrink:0;
   position:relative;
 }
@@ -625,12 +598,12 @@ html:-webkit-full-screen #app{
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,transparent 0%,rgba(131,147,168,0.2) 50%,transparent 100%);
+  background:linear-gradient(90deg,transparent 0%,rgba(58,111,165,0.2) 50%,transparent 100%);
 }
 .input-bar input,.input-bar textarea{
   flex:1;
   padding:10px 16px;
-  background:rgba(20,32,48,0.75);
+  background:rgba(239,244,250,0.75);
   border:none;
   border-radius:0;
   color:var(--text);
@@ -639,9 +612,9 @@ html:-webkit-full-screen #app{
   resize:none;
   outline:none;
   transition:background 0.3s var(--ease);
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(3px);
 }
-.input-bar input:focus,.input-bar textarea:focus{background:rgba(81,99,124,0.7)}
+.input-bar input:focus,.input-bar textarea:focus{background:rgba(138,168,208,0.7)}
 .input-bar input::placeholder,.input-bar textarea::placeholder{color:var(--text-faint)}
 /* textarea 自动撑高：初始1行，最高3行 */
 .input-bar textarea{
@@ -652,7 +625,7 @@ html:-webkit-full-screen #app{
 }
 .input-bar button{
   padding:0 18px;
-  background:rgba(81,99,124,0.72);
+  background:rgba(138,168,208,0.72);
   border:none;
   border-radius:0;
   color:var(--text);
@@ -662,14 +635,14 @@ html:-webkit-full-screen #app{
   cursor:pointer;
   transition:all 0.3s var(--ease);
   white-space:nowrap;
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(3px);
 }
-.input-bar button:hover{background:rgba(81,99,124,0.7)}
+.input-bar button:hover{background:rgba(138,168,208,0.7)}
 .input-bar button:active{transform:scale(0.96)}
 .input-bar button:disabled{opacity:0.4;cursor:not-allowed}
 .input-bar button.danger{
   background:transparent;
-  color:rgba(131,147,168,0.8);
+  color:rgba(58,111,165,0.8);
 }
 
 /* ========== Bonds Tab ========== */
@@ -683,7 +656,7 @@ html:-webkit-full-screen #app{
   -webkit-overflow-scrolling:touch;
 }
 #tab-bonds .bg-overlay{
-  background:rgba(15,26,43,0.72);
+  background:rgba(232,238,246,0.3);
 }
 .bonds-idle{
   flex:1;
@@ -697,14 +670,14 @@ html:-webkit-full-screen #app{
 }
 .bonds-idle-text{
   font-size:13px;
-  color:rgba(131,147,168,0.7);
+  color:rgba(58,111,165,0.7);
   text-align:center;
   line-height:2;
   letter-spacing:1px;
 }
 .event-card-btn{
   padding:13px 32px;
-  background:rgba(81,99,124,0.72);
+  background:rgba(138,168,208,0.72);
   border:none;
   border-radius:0;
   color:var(--gold);
@@ -713,7 +686,7 @@ html:-webkit-full-screen #app{
   text-indent:4px;
   cursor:pointer;
   transition:all 0.3s var(--ease);
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(3px);
 }
 .event-card-btn:hover{background:var(--bg-warm)}
 .event-card-btn:active{transform:scale(0.97)}
@@ -728,7 +701,7 @@ html:-webkit-full-screen #app{
 .narr-card{
   border-radius:0;
   overflow:hidden;
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(3px);
   position:relative;
 }
 .narr-card-header{
@@ -752,38 +725,37 @@ html:-webkit-full-screen #app{
   background:transparent;
   border:none;
   border-radius:0;
-  color:rgba(131,147,168,0.75);
+  color:rgba(58,111,165,0.75);
   font-size:10px;
   letter-spacing:1px;
   cursor:pointer;
   transition:all 0.2s var(--ease);
 }
 .narr-card-header-btn:hover{color:var(--gold)}
-.narr-card-header-btn.danger{color:rgba(131,147,168,0.8)}
+.narr-card-header-btn.danger{color:rgba(58,111,165,0.8)}
 .narr-card-header-btn.danger:hover{color:var(--danger)}
 .narr-card-body{
   padding:0 14px 12px;
   font-size:14px;
   line-height:1.8;
-  color:var(--text);
+  color:#3D5878;
   word-break:break-word;
   min-height:40px;
 }
-/* Italic = psychological activity (「」) */
+/* Italic = psychological activity (「」) — lightest */
 .narr-card-body i{
   font-style:italic;
-  color:#A8B8CC;
+  color:#6B8DAD;
   opacity:1;
-  text-shadow:0 0 8px rgba(168,184,204,0.4);
 }
-/* Bold = quoted dialogue ("") */
+/* Bold = quoted dialogue ("") — darkest */
 .narr-card-body b{
   font-weight:600;
-  color:var(--gold);
+  color:#0D1E2E;
 }
 /* Player card - no border, fade left bar, top gradient bar */
 .narr-card.player{
-  background:rgba(81,99,124,0.7);
+  background:rgba(138,168,208,0.7);
   border:none;
   box-shadow:none;
 }
@@ -792,20 +764,20 @@ html:-webkit-full-screen #app{
   position:absolute;
   left:0;top:0;bottom:0;
   width:3px;
-  background:linear-gradient(180deg,transparent 0%,rgba(208,217,229,0.6) 20%,rgba(208,217,229,0.6) 80%,transparent 100%);
+  background:linear-gradient(180deg,transparent 0%,rgba(26,43,60,0.6) 20%,rgba(26,43,60,0.6) 80%,transparent 100%);
 }
 .narr-card.player::after{
   content:'';
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,rgba(208,217,229,0.5) 0%,rgba(208,217,229,0.2) 40%,transparent 100%);
+  background:linear-gradient(90deg,rgba(26,43,60,0.5) 0%,rgba(26,43,60,0.2) 40%,transparent 100%);
 }
 .narr-card.player .narr-card-tag{color:var(--gold-faint);font-size:0}
 .narr-card.player .narr-card-tag::before{content:'/ USER';font-size:10px}
 /* AI card - dark charcoal, no tag shown */
 .narr-card.ai{
-  background:rgba(15,26,43,0.7);
+  background:rgba(232,238,246,0.7);
   border:none;
   box-shadow:none;
 }
@@ -814,7 +786,7 @@ html:-webkit-full-screen #app{
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,rgba(131,147,168,0.15) 0%,rgba(131,147,168,0.05) 40%,transparent 100%);
+  background:linear-gradient(90deg,rgba(58,111,165,0.15) 0%,rgba(58,111,165,0.05) 40%,transparent 100%);
 }
 .narr-card.ai .narr-card-tag{display:none}
 .narr-card.ai .narr-card-header{justify-content:flex-end}
@@ -849,7 +821,7 @@ html:-webkit-full-screen #app{
   line-height:1.8;
   resize:vertical;
   outline:none;
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(3px);
 }
 .bonds-loading{
   text-align:center;
@@ -875,12 +847,12 @@ html:-webkit-full-screen #app{
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,transparent 0%,rgba(131,147,168,0.15) 50%,transparent 100%);
+  background:linear-gradient(90deg,transparent 0%,rgba(58,111,165,0.15) 50%,transparent 100%);
 }
 .memory-action-btn{
   width:100%;
   padding:12px 0;
-  background:rgba(81,99,124,0.72);
+  background:rgba(138,168,208,0.72);
   border:none;
   border-radius:0;
   color:var(--gold);
@@ -889,7 +861,7 @@ html:-webkit-full-screen #app{
   text-indent:4px;
   cursor:pointer;
   transition:all 0.3s var(--ease);
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(3px);
 }
 .memory-action-btn:hover{background:var(--bg-warm)}
 .memory-action-btn:disabled{opacity:0.4;cursor:not-allowed}
@@ -904,7 +876,7 @@ html:-webkit-full-screen #app{
   padding:60px 20px;
   width:100%;
   box-sizing:border-box;
-  color:rgba(131,147,168,0.7);
+  color:rgba(58,111,165,0.7);
   font-size:13px;
   letter-spacing:2px;
   line-height:2.2;
@@ -921,17 +893,17 @@ html:-webkit-full-screen #app{
   top:8px;
   bottom:8px;
   width:1px;
-  background:linear-gradient(180deg,rgba(208,217,229,0.4) 0%,rgba(208,217,229,0.1) 100%);
+  background:linear-gradient(180deg,rgba(26,43,60,0.4) 0%,rgba(26,43,60,0.1) 100%);
 }
 .memory-card{
   position:relative;
-  background:rgba(20,32,48,0.75);
+  background:rgba(239,244,250,0.75);
   border:none;
   border-radius:0;
   padding:14px 16px;
   margin-bottom:12px;
   flex-shrink:0;
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(3px);
 }
 .memory-card::before{
   content:'';
@@ -942,7 +914,7 @@ html:-webkit-full-screen #app{
   height:9px;
   border-radius:50%;
   background:var(--gold);
-  box-shadow:0 0 0 3px rgba(15,26,43,0.8),0 0 8px rgba(208,217,229,0.3);
+  box-shadow:0 0 0 3px rgba(232,238,246,0.8),0 0 8px rgba(26,43,60,0.3);
 }
 .memory-card-header{
   display:flex;
@@ -979,7 +951,7 @@ html:-webkit-full-screen #app{
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,transparent 0%,rgba(131,147,168,0.08) 50%,transparent 100%);
+  background:linear-gradient(90deg,transparent 0%,rgba(58,111,165,0.08) 50%,transparent 100%);
 }
 .mem-action-btn{
   padding:5px 12px;
@@ -1015,8 +987,8 @@ html:-webkit-full-screen #app{
   gap:11px;
   padding:22px 10px 20px;
   text-align:center;
-  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.72) 100%);
-  backdrop-filter:blur(12px);
+  background:linear-gradient(135deg,rgba(239,244,250,0.75) 0%,rgba(138,168,208,0.72) 100%);
+  backdrop-filter:blur(4px);
   border:none;
   border-radius:2px;
   cursor:pointer;
@@ -1028,9 +1000,9 @@ html:-webkit-full-screen #app{
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,rgba(208,217,229,0.2) 0%,rgba(131,147,168,0.08) 40%,transparent 100%);
+  background:linear-gradient(90deg,rgba(26,43,60,0.2) 0%,rgba(58,111,165,0.08) 40%,transparent 100%);
 }
-.secret-module:hover{background:rgba(81,99,124,0.75)}
+.secret-module:hover{background:rgba(138,168,208,0.75)}
 .secret-module:active{transform:scale(0.98)}
 /* 紧凑卡隐藏箭头 */
 .secret-module-arrow{display:none}
@@ -1042,16 +1014,16 @@ html:-webkit-full-screen #app{
   text-align:left;
   gap:14px;
   padding:20px 18px;
-  background:linear-gradient(135deg,rgba(208,217,229,0.85) 0%,rgba(131,147,168,0.7) 50%,rgba(81,99,124,0.65) 100%);
+  background:linear-gradient(135deg,rgba(26,43,60,0.85) 0%,rgba(58,111,165,0.7) 50%,rgba(138,168,208,0.65) 100%);
 }
 .secret-module-records .secret-module-arrow{display:block}
-.secret-module-records:hover{background:linear-gradient(135deg,rgba(208,217,229,0.9) 0%,rgba(131,147,168,0.75) 50%,rgba(81,99,124,0.7) 100%)}
-.secret-module-records .secret-module-name{color:#0F1A2B;font-size:15px;letter-spacing:2.5px}
-.secret-module-records .secret-module-desc{color:rgba(15,26,43,0.6)}
+.secret-module-records:hover{background:linear-gradient(135deg,rgba(26,43,60,0.9) 0%,rgba(58,111,165,0.75) 50%,rgba(138,168,208,0.7) 100%)}
+.secret-module-records .secret-module-name{color:#E8EEF6;font-size:15px;letter-spacing:2.5px}
+.secret-module-records .secret-module-desc{color:rgba(232,238,246,0.6)}
 .secret-module-records .secret-module-info{flex:1;width:auto}
 .secret-module-records .secret-module-icon{
-  background:rgba(15,26,43,0.1);
-  border:1px solid rgba(15,26,43,0.15);
+  background:rgba(232,238,246,0.1);
+  border:1px solid rgba(232,238,246,0.15);
 }
 .secret-module-icon{
   width:44px;
@@ -1060,15 +1032,15 @@ html:-webkit-full-screen #app{
   align-items:center;
   justify-content:center;
   font-size:21px;
-  background:rgba(208,217,229,0.1);
-  border:1px solid rgba(208,217,229,0.18);
+  background:rgba(26,43,60,0.1);
+  border:1px solid rgba(26,43,60,0.18);
   border-radius:4px;
   flex-shrink:0;
 }
 .secret-module-info{width:100%}
 .secret-module-name{
   font-size:14px;
-  color:rgba(131,147,168,0.95);
+  color:rgba(58,111,165,0.95);
   letter-spacing:1.5px;
   text-indent:1px;
   margin-bottom:4px;
@@ -1096,13 +1068,13 @@ html:-webkit-full-screen #app{
   -webkit-overflow-scrolling:touch;
 }
 .secret-detail-panel-inner{
-  background:linear-gradient(160deg,rgba(20,32,48,0.5) 0%,rgba(15,26,43,0.5) 50%,rgba(20,32,48,0.5) 100%);
-  backdrop-filter:blur(16px);
+  background:linear-gradient(160deg,rgba(239,244,250,0.5) 0%,rgba(232,238,246,0.5) 50%,rgba(239,244,250,0.5) 100%);
+  backdrop-filter:blur(6px);
   border-radius:6px;
   padding:4px 16px 20px;
   min-height:100%;
-  box-shadow:0 4px 30px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.06);
-  border:1px solid rgba(131,147,168,0.04);
+  box-shadow:0 4px 30px rgba(26,43,60,0.08),inset 0 1px 0 rgba(255,255,255,0.5);
+  border:1px solid rgba(58,111,165,0.04);
 }
 #secret-detail-list{
   padding:4px 0 8px;
@@ -1139,15 +1111,15 @@ html:-webkit-full-screen #app{
   transition:all 0.3s var(--ease);
 }
 .secret-action-btn.cancel{
-  background:rgba(20,32,48,0.6);
-  color:rgba(131,147,168,0.8);
+  background:rgba(239,244,250,0.6);
+  color:rgba(58,111,165,0.8);
 }
-.secret-action-btn.cancel:hover{background:rgba(81,99,124,0.7);color:var(--text)}
+.secret-action-btn.cancel:hover{background:rgba(138,168,208,0.7);color:var(--text)}
 .secret-action-btn.save{
-  background:rgba(81,99,124,0.8);
+  background:rgba(138,168,208,0.8);
   color:var(--gold);
 }
-.secret-action-btn.save:hover{background:rgba(81,99,124,0.9)}
+.secret-action-btn.save:hover{background:rgba(138,168,208,0.9)}
 .secret-action-btn:active{transform:scale(0.98)}
 .secret-detail-title{
   font-size:14px;
@@ -1159,14 +1131,89 @@ html:-webkit-full-screen #app{
   font-weight:300;
   opacity:0.85;
 }
+/* Full-screen records view */
+.secret-records-fullscreen{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.secret-records-header{
+  flex-shrink:0;
+  padding:0 0 4px;
+}
+.secret-records-body{
+  flex:1;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  padding:4px 0 20px;
+}
+/* Full-screen secret module page (no background frame) */
+.secret-page-fullscreen{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  width:100%;
+}
+.secret-page-header{
+  flex-shrink:0;
+  padding:0 0 4px;
+}
+.secret-page-body{
+  flex:1;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  padding:4px 0 20px;
+}
+.secret-page-confirm{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:24px;
+  padding:80px 20px;
+  text-align:center;
+}
+.secret-page-confirm-text{
+  font-size:13px;
+  color:var(--text-dim);
+  letter-spacing:1px;
+  line-height:1.8;
+}
+.secret-page-confirm-btn{
+  padding:12px 48px;
+  border:none;
+  border-radius:2px;
+  background:rgba(138,168,208,0.8);
+  color:var(--gold);
+  font-size:14px;
+  letter-spacing:3px;
+  text-indent:3px;
+  cursor:pointer;
+  transition:all 0.3s var(--ease);
+}
+.secret-page-confirm-btn:hover{background:rgba(138,168,208,0.9)}
+.secret-page-confirm-btn:active{transform:scale(0.98)}
+.secret-record-view-time{
+  font-size:11px;
+  color:var(--text-dim);
+  letter-spacing:1px;
+  margin-bottom:8px;
+  padding:10px 0 8px;
+  border-bottom:1px solid rgba(58,111,165,0.08);
+}
+.secret-record-view-content{
+  padding:4px 0 8px;
+}
 /* Memo items */
 .memo-item{
-  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.72) 100%);
-  backdrop-filter:blur(12px);
+  background:linear-gradient(135deg,rgba(239,244,250,0.75) 0%,rgba(138,168,208,0.72) 100%);
+  backdrop-filter:blur(4px);
   padding:18px 20px;
   margin-bottom:14px;
   position:relative;
-  border-left:2px solid rgba(208,217,229,0.35);
+  border-left:2px solid rgba(26,43,60,0.35);
   border-radius:0 3px 3px 0;
   overflow:hidden;
 }
@@ -1176,7 +1223,7 @@ html:-webkit-full-screen #app{
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,rgba(208,217,229,0.2) 0%,rgba(131,147,168,0.08) 40%,transparent 100%);
+  background:linear-gradient(90deg,rgba(26,43,60,0.2) 0%,rgba(58,111,165,0.08) 40%,transparent 100%);
 }
 .memo-item::after{
   content:'';
@@ -1184,7 +1231,7 @@ html:-webkit-full-screen #app{
   bottom:0;left:0;
   width:30%;
   height:1px;
-  background:linear-gradient(90deg,rgba(208,217,229,0.1) 0%,transparent 100%);
+  background:linear-gradient(90deg,rgba(26,43,60,0.1) 0%,transparent 100%);
 }
 .memo-item-header{
   display:flex;
@@ -1212,7 +1259,7 @@ html:-webkit-full-screen #app{
 .memo-item-text{
   font-size:14px;
   line-height:1.85;
-  color:rgba(131,147,168,0.92);
+  color:rgba(58,111,165,0.92);
   word-break:break-word;
   overflow-wrap:break-word;
   letter-spacing:0.5px;
@@ -1232,8 +1279,8 @@ html:-webkit-full-screen #app{
   align-items:flex-start;
   justify-content:space-between;
   gap:10px;
-  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.72) 100%);
-  backdrop-filter:blur(12px);
+  background:linear-gradient(135deg,rgba(239,244,250,0.75) 0%,rgba(138,168,208,0.72) 100%);
+  backdrop-filter:blur(4px);
   padding:15px 16px;
   margin-bottom:10px;
   position:relative;
@@ -1242,18 +1289,18 @@ html:-webkit-full-screen #app{
   overflow:hidden;
 }
 .history-item:last-child{margin-bottom:0}
-.history-item:hover{background:rgba(81,99,124,0.7)}
+.history-item:hover{background:rgba(138,168,208,0.7)}
 .history-item::before{
   content:'';
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,rgba(208,217,229,0.15) 0%,rgba(131,147,168,0.08) 40%,transparent 100%);
+  background:linear-gradient(90deg,rgba(26,43,60,0.15) 0%,rgba(58,111,165,0.08) 40%,transparent 100%);
 }
 .history-item-info{flex:1;min-width:0;overflow:hidden}
 .history-item-title{
   font-size:13px;
-  color:rgba(131,147,168,0.95);
+  color:rgba(58,111,165,0.95);
   word-break:break-word;
   margin-bottom:4px;
   letter-spacing:0.5px;
@@ -1262,7 +1309,7 @@ html:-webkit-full-screen #app{
 }
 .history-item-url{
   font-size:10px;
-  color:rgba(208,217,229,0.7);
+  color:rgba(26,43,60,0.7);
   word-break:break-all;
   letter-spacing:0.5px;
   font-family:"SF Mono","Menlo",monospace;
@@ -1279,8 +1326,8 @@ html:-webkit-full-screen #app{
 }
 /* Mailbox items */
 .mail-item{
-  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.72) 100%);
-  backdrop-filter:blur(12px);
+  background:linear-gradient(135deg,rgba(239,244,250,0.75) 0%,rgba(138,168,208,0.72) 100%);
+  backdrop-filter:blur(4px);
   padding:18px 20px;
   margin-bottom:14px;
   position:relative;
@@ -1288,17 +1335,17 @@ html:-webkit-full-screen #app{
 }
 .mail-item:last-child{margin-bottom:0}
 .mail-item.sent{
-  border-left:2px solid rgba(208,217,229,0.45);
+  border-left:2px solid rgba(26,43,60,0.45);
 }
 .mail-item.received{
-  border-left:2px solid rgba(81,99,124,0.72);
+  border-left:2px solid rgba(138,168,208,0.72);
 }
 .mail-item::before{
   content:'';
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,rgba(131,147,168,0.1) 0%,rgba(131,147,168,0.05) 40%,transparent 100%);
+  background:linear-gradient(90deg,rgba(58,111,165,0.1) 0%,rgba(58,111,165,0.05) 40%,transparent 100%);
 }
 .mail-item-header{
   display:flex;
@@ -1316,17 +1363,17 @@ html:-webkit-full-screen #app{
 }
 .mail-item-direction.sent{
   color:var(--gold);
-  background:rgba(208,217,229,0.12);
-  border:1px solid rgba(208,217,229,0.2);
+  background:rgba(26,43,60,0.12);
+  border:1px solid rgba(26,43,60,0.2);
 }
 .mail-item-direction.received{
   color:var(--accent-bright);
-  background:rgba(81,99,124,0.15);
-  border:1px solid rgba(81,99,124,0.3);
+  background:rgba(138,168,208,0.15);
+  border:1px solid rgba(138,168,208,0.3);
 }
 .mail-item-party{
   font-size:12px;
-  color:rgba(131,147,168,0.7);
+  color:rgba(58,111,165,0.7);
   letter-spacing:1px;
   flex:1;
   overflow:hidden;
@@ -1343,7 +1390,7 @@ html:-webkit-full-screen #app{
 .mail-item-text{
   font-size:14px;
   line-height:1.8;
-  color:rgba(131,147,168,0.92);
+  color:rgba(58,111,165,0.92);
   word-break:break-word;
   letter-spacing:0.4px;
 }
@@ -1366,11 +1413,11 @@ html:-webkit-full-screen #app{
 
 /* Secret Record Cards */
 .secret-record-card{
-  background:rgba(20,32,48,0.75);
+  background:rgba(239,244,250,0.75);
   border-radius:2px;
   overflow:hidden;
   margin-bottom:12px;
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(3px);
 }
 .secret-record-card-header{
   display:flex;
@@ -1378,7 +1425,7 @@ html:-webkit-full-screen #app{
   align-items:center;
   gap:16px;
   padding:12px 16px;
-  border-bottom:1px solid rgba(131,147,168,0.06);
+  border-bottom:1px solid rgba(58,111,165,0.06);
 }
 .secret-record-card-title{
   flex:1;
@@ -1397,7 +1444,7 @@ html:-webkit-full-screen #app{
 }
 .secret-record-delete-btn{
   background:none;
-  border:1px solid rgba(131,147,168,0.3);
+  border:1px solid rgba(58,111,165,0.3);
   color:var(--danger);
   font-size:11px;
   padding:4px 10px;
@@ -1408,7 +1455,7 @@ html:-webkit-full-screen #app{
   transition:all 0.3s var(--ease);
 }
 .secret-record-delete-btn:hover{
-  background:rgba(131,147,168,0.1);
+  background:rgba(58,111,165,0.1);
   border-color:var(--danger);
 }
 .secret-record-card-body{
@@ -1418,13 +1465,13 @@ html:-webkit-full-screen #app{
 .secret-record-card-body .history-item,
 .secret-record-card-body .mail-item,
 .secret-record-card-body .cart-section{
-  background:rgba(15,26,43,0.2);
+  background:rgba(232,238,246,0.2);
 }
 
 /* ========== Cart Module ========== */
 .cart-section{
-  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.72) 100%);
-  backdrop-filter:blur(12px);
+  background:linear-gradient(135deg,rgba(239,244,250,0.75) 0%,rgba(138,168,208,0.72) 100%);
+  backdrop-filter:blur(4px);
   margin-bottom:14px;
   border-radius:3px;
   overflow:hidden;
@@ -1439,7 +1486,7 @@ html:-webkit-full-screen #app{
   cursor:pointer;
   transition:background 0.3s var(--ease);
 }
-.cart-section-header:hover{background:rgba(81,99,124,0.5)}
+.cart-section-header:hover{background:rgba(138,168,208,0.5)}
 .cart-section-title{
   font-size:13px;
   color:var(--gold);
@@ -1458,7 +1505,7 @@ html:-webkit-full-screen #app{
 .cart-section.collapsed .cart-section-body{display:none}
 .cart-item{
   padding:12px 0;
-  border-top:1px solid rgba(131,147,168,0.08);
+  border-top:1px solid rgba(58,111,165,0.08);
 }
 .cart-item:first-child{border-top:none}
 /* Cart layout: 商品名 / 商品简介 */
@@ -1487,7 +1534,7 @@ html:-webkit-full-screen #app{
 .cart-status-badge{
   font-size:10px;
   color:var(--gold-faint);
-  border:1px solid rgba(208,217,229,0.25);
+  border:1px solid rgba(26,43,60,0.25);
   padding:2px 8px;
   border-radius:2px;
   white-space:nowrap;
@@ -1498,7 +1545,7 @@ html:-webkit-full-screen #app{
 .cart-timeline-item{
   position:relative;
   padding:12px 0 12px 20px;
-  border-left:2px solid rgba(131,147,168,0.15);
+  border-left:2px solid rgba(58,111,165,0.15);
   margin-left:4px;
 }
 .cart-timeline-item::before{
@@ -1527,12 +1574,12 @@ html:-webkit-full-screen #app{
 
 /* Wish items */
 .wish-item{
-  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.72) 100%);
-  backdrop-filter:blur(12px);
+  background:linear-gradient(135deg,rgba(239,244,250,0.75) 0%,rgba(138,168,208,0.72) 100%);
+  backdrop-filter:blur(4px);
   padding:18px 20px;
   margin-bottom:14px;
   position:relative;
-  border-left:2px solid rgba(208,217,229,0.35);
+  border-left:2px solid rgba(26,43,60,0.35);
   border-radius:0 3px 3px 0;
   overflow:hidden;
 }
@@ -1542,7 +1589,7 @@ html:-webkit-full-screen #app{
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,rgba(208,217,229,0.2) 0%,rgba(131,147,168,0.08) 40%,transparent 100%);
+  background:linear-gradient(90deg,rgba(26,43,60,0.2) 0%,rgba(58,111,165,0.08) 40%,transparent 100%);
 }
 .wish-item-title{
   font-size:13px;
@@ -1557,7 +1604,7 @@ html:-webkit-full-screen #app{
 .wish-item-text{
   font-size:14px;
   line-height:1.85;
-  color:rgba(131,147,168,0.92);
+  color:rgba(58,111,165,0.92);
   word-break:break-word;
   overflow-wrap:break-word;
   letter-spacing:0.5px;
@@ -1568,7 +1615,7 @@ html:-webkit-full-screen #app{
 /* Plan: sticky note + timeline */
 .plan-sticky-note{
   background:linear-gradient(135deg,rgba(255,243,180,0.12) 0%,rgba(255,220,120,0.08) 100%);
-  backdrop-filter:blur(8px);
+  backdrop-filter:blur(3px);
   padding:18px 20px;
   margin-bottom:16px;
   position:relative;
@@ -1614,7 +1661,7 @@ html:-webkit-full-screen #app{
 .plan-timeline-item{
   position:relative;
   padding:10px 0 10px 20px;
-  border-left:2px solid rgba(131,147,168,0.15);
+  border-left:2px solid rgba(58,111,165,0.15);
   margin-left:4px;
   margin-bottom:2px;
 }
@@ -1637,7 +1684,7 @@ html:-webkit-full-screen #app{
 }
 .plan-timeline-action{
   font-size:13px;
-  color:rgba(131,147,168,0.92);
+  color:rgba(58,111,165,0.92);
   word-break:break-word;
   line-height:1.6;
   letter-spacing:0.5px;
@@ -1645,12 +1692,12 @@ html:-webkit-full-screen #app{
 
 /* News: Tabloid items */
 .news-item{
-  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.7) 100%);
-  backdrop-filter:blur(12px);
+  background:linear-gradient(135deg,rgba(239,244,250,0.75) 0%,rgba(138,168,208,0.7) 100%);
+  backdrop-filter:blur(4px);
   padding:20px 22px;
   margin-bottom:14px;
   position:relative;
-  border-left:3px solid rgba(208,217,229,0.35);
+  border-left:3px solid rgba(26,43,60,0.35);
   border-radius:0 4px 4px 0;
   overflow:hidden;
 }
@@ -1660,11 +1707,11 @@ html:-webkit-full-screen #app{
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,rgba(208,217,229,0.2) 0%,rgba(131,147,168,0.08) 40%,transparent 100%);
+  background:linear-gradient(90deg,rgba(26,43,60,0.2) 0%,rgba(58,111,165,0.08) 40%,transparent 100%);
 }
 .news-item-title{
   font-size:15px;
-  color:rgba(208,217,229,0.98);
+  color:rgba(26,43,60,0.98);
   letter-spacing:2px;
   font-weight:500;
   margin-bottom:10px;
@@ -1674,7 +1721,7 @@ html:-webkit-full-screen #app{
 .news-item-text{
   font-size:14px;
   line-height:1.85;
-  color:rgba(131,147,168,0.92);
+  color:rgba(58,111,165,0.92);
   word-break:break-word;
   letter-spacing:0.5px;
   font-family:"Noto Serif SC","STSong","PingFang SC",serif;
@@ -1690,12 +1737,12 @@ html:-webkit-full-screen #app{
 
 /* Forum: Anonymous alt account */
 .forum-post{
-  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.7) 100%);
-  backdrop-filter:blur(12px);
+  background:linear-gradient(135deg,rgba(239,244,250,0.75) 0%,rgba(138,168,208,0.7) 100%);
+  backdrop-filter:blur(4px);
   padding:20px 22px;
   margin-bottom:14px;
   border-radius:0 4px 4px 0;
-  border-left:3px solid rgba(208,217,229,0.35);
+  border-left:3px solid rgba(26,43,60,0.35);
   position:relative;
   overflow:hidden;
 }
@@ -1704,7 +1751,7 @@ html:-webkit-full-screen #app{
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,rgba(208,217,229,0.2) 0%,rgba(131,147,168,0.08) 40%,transparent 100%);
+  background:linear-gradient(90deg,rgba(26,43,60,0.2) 0%,rgba(58,111,165,0.08) 40%,transparent 100%);
 }
 .forum-post-header{
   display:flex;
@@ -1727,7 +1774,7 @@ html:-webkit-full-screen #app{
 .forum-post-userinfo{flex:1;min-width:0}
 .forum-post-username{
   font-size:14px;
-  color:rgba(208,217,229,0.95);
+  color:rgba(26,43,60,0.95);
   letter-spacing:1px;
   font-weight:500;
   margin-bottom:2px;
@@ -1740,12 +1787,12 @@ html:-webkit-full-screen #app{
 }
 .forum-post-time{
   font-size:11px;
-  color:rgba(131,147,168,0.5);
+  color:rgba(58,111,165,0.7);
   flex-shrink:0;
 }
 .forum-post-title{
   font-size:15px;
-  color:rgba(208,217,229,0.98);
+  color:rgba(26,43,60,0.98);
   letter-spacing:1.5px;
   font-weight:500;
   margin-bottom:10px;
@@ -1755,7 +1802,7 @@ html:-webkit-full-screen #app{
 .forum-post-text{
   font-size:14px;
   line-height:1.85;
-  color:rgba(131,147,168,0.92);
+  color:rgba(58,111,165,0.92);
   word-break:break-word;
   letter-spacing:0.5px;
   font-family:"Noto Serif SC","STSong","PingFang SC",serif;
@@ -1768,14 +1815,14 @@ html:-webkit-full-screen #app{
 }
 /* Forum replies */
 .forum-replies{
-  background:linear-gradient(160deg,rgba(20,32,48,0.4) 0%,rgba(15,26,43,0.4) 100%);
-  backdrop-filter:blur(8px);
+  background:linear-gradient(160deg,rgba(239,244,250,0.4) 0%,rgba(232,238,246,0.4) 100%);
+  backdrop-filter:blur(3px);
   border-radius:4px;
   padding:16px 14px;
 }
 .forum-replies-label{
   font-size:10px;
-  color:rgba(131,147,168,0.5);
+  color:rgba(58,111,165,0.7);
   letter-spacing:1.5px;
   margin-bottom:12px;
   text-transform:uppercase;
@@ -1785,7 +1832,7 @@ html:-webkit-full-screen #app{
   gap:10px;
   margin-bottom:14px;
   padding-bottom:14px;
-  border-bottom:1px solid rgba(131,147,168,0.08);
+  border-bottom:1px solid rgba(58,111,165,0.08);
 }
 .forum-reply:last-child{
   margin-bottom:0;
@@ -1813,18 +1860,18 @@ html:-webkit-full-screen #app{
 }
 .forum-reply-name{
   font-size:12px;
-  color:rgba(208,217,229,0.8);
+  color:rgba(26,43,60,0.8);
   letter-spacing:0.5px;
   font-weight:500;
 }
 .forum-reply-time{
   font-size:10px;
-  color:rgba(131,147,168,0.45);
+  color:rgba(58,111,165,0.65);
 }
 .forum-reply-text{
   font-size:13px;
   line-height:1.7;
-  color:rgba(131,147,168,0.85);
+  color:rgba(58,111,165,0.85);
   word-break:break-word;
   letter-spacing:0.3px;
 }
@@ -1836,10 +1883,10 @@ html:-webkit-full-screen #app{
   gap:10px;
   padding:14px 16px;
   margin-bottom:12px;
-  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.7) 100%);
-  backdrop-filter:blur(12px);
+  background:linear-gradient(135deg,rgba(239,244,250,0.75) 0%,rgba(138,168,208,0.7) 100%);
+  backdrop-filter:blur(4px);
   border-radius:0 4px 4px 0;
-  border-left:3px solid rgba(208,217,229,0.35);
+  border-left:3px solid rgba(26,43,60,0.35);
   position:relative;
   overflow:hidden;
 }
@@ -1849,7 +1896,7 @@ html:-webkit-full-screen #app{
 .gchat-header-info{flex:1}
 .gchat-header-name{
   font-size:14px;
-  color:rgba(208,217,229,0.95);
+  color:rgba(26,43,60,0.95);
   letter-spacing:1.5px;
   font-weight:500;
   margin-bottom:2px;
@@ -1860,14 +1907,14 @@ html:-webkit-full-screen #app{
   letter-spacing:1px;
 }
 .gchat-body{
-  background:linear-gradient(160deg,rgba(20,32,48,0.6) 0%,rgba(15,26,43,0.6) 100%);
-  backdrop-filter:blur(10px);
+  background:linear-gradient(160deg,rgba(239,244,250,0.6) 0%,rgba(232,238,246,0.6) 100%);
+  backdrop-filter:blur(3px);
   border-radius:4px;
   padding:4px 14px;
 }
 .gchat-msg{
   padding:14px 0;
-  border-top:1px solid rgba(131,147,168,0.12);
+  border-top:1px solid rgba(58,111,165,0.12);
 }
 .gchat-msg:first-of-type{
   border-top:none;
@@ -1875,7 +1922,7 @@ html:-webkit-full-screen #app{
 }
 .gchat-msg-name{
   font-size:12px;
-  color:rgba(208,217,229,0.7);
+  color:rgba(26,43,60,0.7);
   letter-spacing:1px;
   font-weight:700;
   margin-bottom:6px;
@@ -1883,7 +1930,7 @@ html:-webkit-full-screen #app{
 .gchat-msg-text{
   font-size:13px;
   line-height:1.85;
-  color:rgba(208,217,229,0.88);
+  color:rgba(26,43,60,0.88);
   word-break:break-word;
   letter-spacing:0.3px;
 }
@@ -1896,7 +1943,7 @@ html:-webkit-full-screen #app{
 .gchat-system{
   text-align:center;
   font-size:11px;
-  color:rgba(131,147,168,0.5);
+  color:rgba(58,111,165,0.7);
   letter-spacing:1px;
   padding:8px 0;
   margin-bottom:12px;
@@ -1904,12 +1951,12 @@ html:-webkit-full-screen #app{
 
 /* Grudge Book: 恋爱记仇本 */
 .grudge-item{
-  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.72) 100%);
-  backdrop-filter:blur(12px);
+  background:linear-gradient(135deg,rgba(239,244,250,0.75) 0%,rgba(138,168,208,0.72) 100%);
+  backdrop-filter:blur(4px);
   padding:18px 20px;
   margin-bottom:14px;
   position:relative;
-  border-left:2px solid rgba(208,217,229,0.35);
+  border-left:2px solid rgba(26,43,60,0.35);
   border-radius:0 3px 3px 0;
   overflow:hidden;
 }
@@ -1919,7 +1966,7 @@ html:-webkit-full-screen #app{
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,rgba(208,217,229,0.2) 0%,rgba(131,147,168,0.08) 40%,transparent 100%);
+  background:linear-gradient(90deg,rgba(26,43,60,0.2) 0%,rgba(58,111,165,0.08) 40%,transparent 100%);
 }
 .grudge-item-header{
   margin-bottom:12px;
@@ -1945,7 +1992,7 @@ html:-webkit-full-screen #app{
 .grudge-item-text{
   font-size:14px;
   line-height:1.85;
-  color:rgba(131,147,168,0.92);
+  color:rgba(58,111,165,0.92);
   word-break:break-word;
   overflow-wrap:break-word;
   letter-spacing:0.5px;
@@ -1954,23 +2001,23 @@ html:-webkit-full-screen #app{
 .grudge-item-reveal{
   margin-top:10px;
   padding-top:10px;
-  border-top:1px dashed rgba(208,217,229,0.12);
+  border-top:1px dashed rgba(26,43,60,0.12);
   font-size:12px;
   line-height:1.7;
-  color:rgba(208,217,229,0.62);
+  color:rgba(26,43,60,0.62);
   letter-spacing:0.5px;
   font-style:italic;
 }
 
 /* Voice Drafts: 语音草稿箱 */
 .voice-item{
-  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.72) 100%);
-  backdrop-filter:blur(12px);
+  background:linear-gradient(135deg,rgba(239,244,250,0.75) 0%,rgba(138,168,208,0.72) 100%);
+  backdrop-filter:blur(4px);
   padding:16px 18px;
   margin-bottom:14px;
   position:relative;
   border-radius:0 3px 3px 0;
-  border-left:2px solid rgba(208,217,229,0.4);
+  border-left:2px solid rgba(26,43,60,0.4);
   overflow:hidden;
 }
 .voice-item:last-child{margin-bottom:0}
@@ -1979,7 +2026,7 @@ html:-webkit-full-screen #app{
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,rgba(208,217,229,0.2) 0%,rgba(131,147,168,0.08) 40%,transparent 100%);
+  background:linear-gradient(90deg,rgba(26,43,60,0.2) 0%,rgba(58,111,165,0.08) 40%,transparent 100%);
 }
 /* 时间戳 */
 .voice-item-time{
@@ -1991,7 +2038,7 @@ html:-webkit-full-screen #app{
 /* 直线语音条 */
 .voice-bar{
   height:3px;
-  background:rgba(131,147,168,0.15);
+  background:rgba(58,111,165,0.15);
   border-radius:2px;
   overflow:hidden;
   margin-bottom:14px;
@@ -1999,7 +2046,7 @@ html:-webkit-full-screen #app{
 .voice-bar-fill{
   height:100%;
   width:0;
-  background:linear-gradient(90deg,rgba(208,217,229,0.5) 0%,var(--gold) 100%);
+  background:linear-gradient(90deg,rgba(26,43,60,0.5) 0%,var(--gold) 100%);
   border-radius:2px;
   transition:width 0.3s var(--ease);
 }
@@ -2007,7 +2054,7 @@ html:-webkit-full-screen #app{
 .voice-item-text{
   font-size:14px;
   line-height:1.8;
-  color:rgba(131,147,168,0.92);
+  color:rgba(58,111,165,0.92);
   word-break:break-word;
   letter-spacing:0.4px;
   margin-bottom:12px;
@@ -2021,7 +2068,7 @@ html:-webkit-full-screen #app{
 }
 .voice-item-status{
   font-size:11px;
-  color:rgba(208,217,229,0.5);
+  color:rgba(26,43,60,0.6);
   letter-spacing:1px;
 }
 .voice-item-duration{
@@ -2037,12 +2084,12 @@ html:-webkit-full-screen #app{
   margin-bottom:16px;
 }
 .impression-section{
-  background:linear-gradient(135deg,rgba(20,32,48,0.75) 0%,rgba(81,99,124,0.72) 100%);
-  backdrop-filter:blur(12px);
+  background:linear-gradient(135deg,rgba(239,244,250,0.75) 0%,rgba(138,168,208,0.72) 100%);
+  backdrop-filter:blur(4px);
   padding:18px 20px;
   margin-bottom:14px;
   position:relative;
-  border-left:2px solid rgba(208,217,229,0.35);
+  border-left:2px solid rgba(26,43,60,0.35);
   border-radius:0 3px 3px 0;
   overflow:hidden;
 }
@@ -2052,7 +2099,7 @@ html:-webkit-full-screen #app{
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,rgba(208,217,229,0.2) 0%,rgba(131,147,168,0.08) 40%,transparent 100%);
+  background:linear-gradient(90deg,rgba(26,43,60,0.2) 0%,rgba(58,111,165,0.08) 40%,transparent 100%);
 }
 .impression-section-label{
   font-size:13px;
@@ -2078,14 +2125,14 @@ html:-webkit-full-screen #app{
 }
 .impression-eyes-from{
   font-size:11px;
-  color:rgba(208,217,229,0.5);
+  color:rgba(26,43,60,0.6);
   letter-spacing:1px;
   white-space:nowrap;
 }
 .impression-eyes-text{
   font-size:14px;
   line-height:1.85;
-  color:rgba(131,147,168,0.92);
+  color:rgba(58,111,165,0.92);
   word-break:break-word;
   overflow-wrap:break-word;
   letter-spacing:0.5px;
@@ -2101,11 +2148,11 @@ html:-webkit-full-screen #app{
 .impression-list-item{
   font-size:14px;
   line-height:1.7;
-  color:rgba(131,147,168,0.88);
+  color:rgba(58,111,165,0.88);
   word-break:break-word;
   letter-spacing:0.4px;
   padding:8px 0;
-  border-bottom:1px dashed rgba(131,147,168,0.1);
+  border-bottom:1px dashed rgba(58,111,165,0.1);
 }
 .impression-list-item:last-child{
   border-bottom:none;
@@ -2114,7 +2161,7 @@ html:-webkit-full-screen #app{
 .secret-record-card-body .grudge-item,
 .secret-record-card-body .voice-item,
 .secret-record-card-body .impression-section{
-  background:rgba(15,26,43,0.2);
+  background:rgba(232,238,246,0.2);
 }
 
 /* ========== Settings Tab ========== */
@@ -2144,9 +2191,9 @@ html:-webkit-full-screen #app{
   overflow:hidden;
   cursor:pointer;
   transition:transform 0.3s var(--ease);
-  background:rgba(20,32,48,0.75);
+  background:rgba(239,244,250,0.75);
   flex-shrink:0;
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(3px);
 }
 .char-card:active{transform:scale(0.98)}
 .char-card-bg{
@@ -2155,14 +2202,14 @@ html:-webkit-full-screen #app{
   background-position:center;
 }
 .char-card-bg.me{
-  background:linear-gradient(135deg,#51637C 0%,#202E42 50%,#0F1A2B 100%);
+  background:linear-gradient(135deg,#8AA8D0 0%,#EFF4FA 50%,#E8EEF6 100%);
 }
 .char-card-bg.other{
-  background:linear-gradient(135deg,#8393A8 0%,#51637C 50%,#202E42 100%);
+  background:linear-gradient(135deg,#3A6FA5 0%,#8AA8D0 50%,#EFF4FA 100%);
 }
 .char-card-overlay{
   position:absolute;inset:0;
-  background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,0.7) 100%);
+  background:linear-gradient(180deg,transparent 30%,rgba(26,43,60,0.5) 100%);
 }
 .char-card-watermark{
   position:absolute;
@@ -2170,7 +2217,7 @@ html:-webkit-full-screen #app{
   transform:translate(-50%,-50%);
   font-size:64px;
   font-weight:100;
-  color:rgba(131,147,168,0.1);
+  color:rgba(58,111,165,0.1);
   pointer-events:none;
   letter-spacing:0;
 }
@@ -2183,13 +2230,13 @@ html:-webkit-full-screen #app{
 .char-card-name{
   font-size:16px;
   font-weight:400;
-  color:#8393A8;
+  color:#3A6FA5;
   margin-bottom:2px;
   letter-spacing:1px;
 }
 .char-card-liner{
   font-size:12px;
-  color:rgba(131,147,168,0.6);
+  color:rgba(58,111,165,0.75);
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
@@ -2209,8 +2256,8 @@ html:-webkit-full-screen #app{
   border-radius:4px;
   overflow:hidden;
   border:none;
-  background:rgba(20,32,48,0.75);
-  backdrop-filter:blur(10px);
+  background:rgba(239,244,250,0.75);
+  backdrop-filter:blur(3px);
   cursor:pointer;
   position:relative;
   display:flex;
@@ -2218,7 +2265,7 @@ html:-webkit-full-screen #app{
   justify-content:center;
   transition:background 0.3s var(--ease);
 }
-.avatar-frame:hover{background:rgba(81,99,124,0.7)}
+.avatar-frame:hover{background:rgba(138,168,208,0.7)}
 .avatar-frame img{
   width:100%;height:100%;
   object-fit:cover;
@@ -2232,7 +2279,7 @@ html:-webkit-full-screen #app{
 .avatar-frame-hint{
   position:absolute;
   bottom:0;left:0;right:0;
-  background:rgba(15,26,43,0.7);
+  background:rgba(232,238,246,0.7);
   color:var(--gold);
   font-size:9px;
   text-align:center;
@@ -2243,10 +2290,14 @@ html:-webkit-full-screen #app{
 /* External Rules - collapsible */
 .rules-section{
   border:none;
-  border-radius:2px;
+  border-radius:0;
   overflow:hidden;
   flex-shrink:0;
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(12px) saturate(1.2);
+  -webkit-backdrop-filter:blur(12px) saturate(1.2);
+  background:rgba(232,238,246,0.45);
+  border:1px solid rgba(255,255,255,0.25);
+  box-shadow:0 2px 16px rgba(26,43,60,0.06),inset 0 1px 0 rgba(255,255,255,0.4);
 }
 .rules-header{
   display:flex;
@@ -2255,9 +2306,9 @@ html:-webkit-full-screen #app{
   padding:13px 16px;
   cursor:pointer;
   transition:background 0.3s var(--ease);
-  background:rgba(20,32,48,0.75);
+  background:rgba(255,255,255,0.15);
 }
-.rules-header:hover{background:rgba(81,99,124,0.7)}
+.rules-header:hover{background:rgba(255,255,255,0.25)}
 .rules-title{
   font-size:14px;
   color:var(--text);
@@ -2287,14 +2338,15 @@ html:-webkit-full-screen #app{
   justify-content:space-between;
   align-items:center;
   padding:14px 16px;
-  background:rgba(15,26,43,0.72);
+  background:rgba(255,255,255,0.25);
   border:none;
-  border-radius:2px;
+  border-radius:0;
   cursor:pointer;
   transition:all 0.3s var(--ease);
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
 }
-.rule-card-btn:hover{background:rgba(20,32,48,0.78)}
+.rule-card-btn:hover{background:rgba(255,255,255,0.35)}
 .rule-card-btn:active{transform:scale(0.98)}
 .rule-card-name{
   font-size:13.5px;
@@ -2334,7 +2386,7 @@ html:-webkit-full-screen #app{
   position:absolute;
   left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,transparent 0%,rgba(208,217,229,0.3) 50%,transparent 100%);
+  background:linear-gradient(90deg,transparent 0%,rgba(26,43,60,0.3) 50%,transparent 100%);
 }
 .add-rule-btn::before{top:0}
 .add-rule-btn::after{bottom:0}
@@ -2348,7 +2400,7 @@ html:-webkit-full-screen #app{
 }
 .settings-action-btn{
   padding:13px 0;
-  background:linear-gradient(135deg,rgba(20,32,48,0.78) 0%,rgba(81,99,124,0.72) 100%);
+  background:linear-gradient(135deg,rgba(239,244,250,0.78) 0%,rgba(138,168,208,0.72) 100%);
   border:none;
   border-radius:2px;
   color:var(--text);
@@ -2357,7 +2409,7 @@ html:-webkit-full-screen #app{
   text-indent:3px;
   cursor:pointer;
   transition:all 0.3s var(--ease);
-  backdrop-filter:blur(12px);
+  backdrop-filter:blur(4px);
   text-align:center;
   position:relative;
   overflow:hidden;
@@ -2367,21 +2419,21 @@ html:-webkit-full-screen #app{
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,rgba(208,217,229,0.15) 0%,rgba(131,147,168,0.06) 40%,transparent 100%);
+  background:linear-gradient(90deg,rgba(26,43,60,0.15) 0%,rgba(58,111,165,0.06) 40%,transparent 100%);
 }
-.settings-action-btn:hover{background:rgba(81,99,124,0.8);color:var(--gold)}
+.settings-action-btn:hover{background:rgba(138,168,208,0.8);color:var(--gold)}
 .settings-action-btn.danger{color:var(--danger)}
-.settings-action-btn.danger:hover{color:var(--danger);background:rgba(131,147,168,0.1)}
+.settings-action-btn.danger:hover{background:rgba(138,168,208,0.8);color:var(--danger)}
 
 /* Rule edit area in modal */
 .rule-content-edit{
   width:100%;
   min-height:80px;
   padding:10px 12px;
-  background:rgba(20,32,48,0.75);
+  background:rgba(239,244,250,0.75);
   border:none;
   border-radius:0;
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(3px);
   color:var(--text);
   font-size:14px;
   font-family:inherit;
@@ -2399,7 +2451,7 @@ html:-webkit-full-screen #app{
   display:none;
   align-items:center;
   justify-content:center;
-  background:rgba(15,26,43,0.7);
+  background:rgba(232,238,246,0.7);
   padding:20px;
 }
 #modal-overlay.active{display:flex;animation:fadeIn 0.25s var(--ease)}
@@ -2409,8 +2461,8 @@ html:-webkit-full-screen #app{
   max-width:380px;
   max-height:85vh;
   overflow-y:auto;
-  background:rgba(15,26,43,0.88);
-  backdrop-filter:blur(20px);
+  background:rgba(232,238,246,0.88);
+  backdrop-filter:blur(3px);
   border:none;
   border-radius:2px;
   animation:modalIn 0.3s var(--ease);
@@ -2421,7 +2473,7 @@ html:-webkit-full-screen #app{
   position:absolute;
   top:0;left:0;right:0;
   height:1px;
-  background:linear-gradient(90deg,transparent 0%,rgba(131,147,168,0.2) 50%,transparent 100%);
+  background:linear-gradient(90deg,transparent 0%,rgba(58,111,165,0.2) 50%,transparent 100%);
   z-index:1;
 }
 @keyframes modalIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
@@ -2449,13 +2501,13 @@ html:-webkit-full-screen #app{
   cursor:pointer;
   transition:all 0.3s var(--ease);
   border:none;
-  background:rgba(20,32,48,0.75);
-  backdrop-filter:blur(10px);
+  background:rgba(239,244,250,0.75);
+  backdrop-filter:blur(3px);
   color:var(--text-dim);
 }
-.modal-btn:hover{background:rgba(81,99,124,0.7);color:var(--text)}
+.modal-btn:hover{background:rgba(138,168,208,0.7);color:var(--text)}
 .modal-btn.primary{
-  background:rgba(81,99,124,0.72);
+  background:rgba(138,168,208,0.72);
   color:var(--gold);
 }
 /* Secret record modal: mirrors #secret-detail-list + .secret-detail-panel-inner
@@ -2472,7 +2524,7 @@ html:-webkit-full-screen #app{
   letter-spacing:1px;
   margin-bottom:8px;
   padding:10px 0 8px;
-  border-bottom:1px solid rgba(131,147,168,0.08);
+  border-bottom:1px solid rgba(58,111,165,0.08);
 }
 .secret-record-modal-content{
   padding:4px 0 8px;
@@ -2493,46 +2545,46 @@ html:-webkit-full-screen #app{
 .form-input,.form-textarea{
   width:100%;
   padding:10px 14px;
-  background:rgba(20,32,48,0.75);
+  background:rgba(239,244,250,0.75);
   border:none;
   border-radius:0;
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(3px);
   color:var(--text);
   font-size:14px;
   font-family:inherit;
   outline:none;
   transition:background 0.3s var(--ease);
 }
-.form-input:focus,.form-textarea:focus{background:rgba(81,99,124,0.7)}
+.form-input:focus,.form-textarea:focus{background:rgba(138,168,208,0.7)}
 .form-textarea{min-height:64px;resize:vertical;line-height:1.6}
 .form-input::placeholder,.form-textarea::placeholder{color:var(--text-faint)}
 select.form-input{
   -webkit-appearance:none;
   appearance:none;
-  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23d4a843' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235B89B8' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
   background-repeat:no-repeat;
   background-position:right 14px center;
   padding-right:36px;
   cursor:pointer;
 }
-select.form-input option{background:#202E42;color:var(--text)}
+select.form-input option{background:#EFF4FA;color:var(--text)}
 
 /* API Config */
 .api-tabs{display:flex;gap:8px;margin-bottom:16px}
 .api-tab{
   flex:1;
   padding:10px 0;
-  background:rgba(20,32,48,0.75);
+  background:rgba(239,244,250,0.75);
   border:none;
   border-radius:0;
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(3px);
   color:var(--text-dim);
   font-size:13px;
   letter-spacing:2px;
   cursor:pointer;
   transition:all 0.3s var(--ease);
 }
-.api-tab.active{background:rgba(81,99,124,0.7);color:var(--gold)}
+.api-tab.active{background:rgba(138,168,208,0.7);color:var(--gold)}
 .api-status{
   display:inline-block;
   padding:2px 8px;
@@ -2542,7 +2594,7 @@ select.form-input option{background:#202E42;color:var(--text)}
   margin-left:6px;
 }
 .api-status.on{background:var(--gold-dim);color:var(--gold)}
-.api-status.off{background:rgba(131,147,168,0.08);color:var(--danger)}
+.api-status.off{background:rgba(58,111,165,0.08);color:var(--danger)}
 
 /* Save List */
 .save-list{display:flex;flex-direction:column;gap:8px}
@@ -2551,14 +2603,14 @@ select.form-input option{background:#202E42;color:var(--text)}
   justify-content:space-between;
   align-items:center;
   padding:14px 16px;
-  background:rgba(20,32,48,0.75);
+  background:rgba(239,244,250,0.75);
   border:none;
   border-radius:0;
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(3px);
   cursor:pointer;
   transition:all 0.3s var(--ease);
 }
-.save-item:hover{background:rgba(81,99,124,0.7)}
+.save-item:hover{background:rgba(138,168,208,0.7)}
 .save-item.auto-slot{
   border-left:2px solid var(--gold);
 }
@@ -2572,8 +2624,8 @@ select.form-input option{background:#202E42;color:var(--text)}
 .save-empty{text-align:center;padding:40px 20px;color:var(--text-faint);font-size:13px;letter-spacing:2px}
 .save-name-input{
   width:100%;
-  background:rgba(20,32,48,0.75);
-  border:1px solid rgba(131,147,168,0.1);
+  background:rgba(239,244,250,0.75);
+  border:1px solid rgba(58,111,165,0.1);
   border-radius:2px;
   color:var(--text);
   font-size:14px;
@@ -2599,8 +2651,8 @@ select.form-input option{background:#202E42;color:var(--text)}
 }
 .toast{
   padding:10px 20px;
-  background:rgba(15,26,43,0.85);
-  backdrop-filter:blur(20px);
+  background:rgba(232,238,246,0.85);
+  backdrop-filter:blur(3px);
   border:none;
   border-radius:0;
   color:var(--text);
@@ -2617,7 +2669,7 @@ select.form-input option{background:#202E42;color:var(--text)}
 /* ========== Scrollbar ========== */
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(131,147,168,0.06);border-radius:3px}
+::-webkit-scrollbar-thumb{background:rgba(58,111,165,0.06);border-radius:3px}
 
 /* ========== Misc ========== */
 .spinner{
@@ -2925,7 +2977,7 @@ const SCRIPTS = [
       ],
       memoryCards: [],
       secretRecords: [],
-      bgImage: 'https://umi688.github.io/Echo/images/BackGroundZdx.jpg'
+      bgImage: 'https://cdn.jsdelivr.net/gh/Umi688/Echo@main/images/BackGround.jpg'
     }
   },
   {
@@ -3000,10 +3052,9 @@ let state = {
   currentTab: 'chat',
   rulesExpanded: false,
   quoteContext: null,
-  pendingSecret: null,
   secretGenId: 0,
   secretModuleType: null,
-  secretCache: null
+  secretGenerating: null
 };
 
 /* ========== 持久化 ========== */
@@ -3264,8 +3315,14 @@ async function init() {
 
 // 应用剧本背景图：有自定义则用自定义，否则用默认
 function applyBgImage() {
-  const bg = state.data && state.data.bgImage;
-  document.documentElement.style.setProperty('--bg-image', bg ? `url('${bg}')` : "url('https://umi688.github.io/Echo/images/bg1.jpg')");
+  const DEFAULT_BG = 'https://cdn.jsdelivr.net/gh/Umi688/Echo@main/images/BackGround.jpg';
+  let bg = state.data && state.data.bgImage;
+  // 迁移旧链接 → 新CDN链接
+  if (bg && (bg.includes('umi688.github.io') || bg.includes('BackGroundZdx') || bg.includes('bg1.jpg'))) {
+    bg = DEFAULT_BG;
+    state.data.bgImage = DEFAULT_BG;
+  }
+  document.documentElement.style.setProperty('--bg-image', bg ? `url('${bg}')` : `url('${DEFAULT_BG}')`);
 }
 
 // Emergency cleanup: if storage is full, clear saves to make room
@@ -3510,9 +3567,10 @@ function confirmLoadScript(scriptId) {
     state.eventState = 'idle';
     state.currentChainId = null;
     state.chatSessionId++;
-    state.pendingSecret = null;
     state.secretModuleType = null;
-    state.secretCache = null;
+    state.secretGenerating = null;
+    secretPageHtml = null;
+    showSecretNav();
     saveToStorage();
     applyBgImage();
     // Enter game — force re-render all tabs by resetting currentTab
@@ -3546,9 +3604,10 @@ function returnToTitle() {
   // Save current progress before returning
   if (state.data) saveToStorage();
   // Clear all runtime state
-  state.pendingSecret = null;
   state.secretModuleType = null;
-  state.secretCache = null;
+  state.secretGenerating = null;
+  secretPageHtml = null;
+  showSecretNav();
   state.eventState = 'idle';
   state.currentChainId = null;
   state.quoteContext = null;
@@ -3592,7 +3651,7 @@ function switchTab(tab) {
   } else if (tab === 'memory') {
     renderMemory();
   } else if (tab === 'secret') {
-    // If inside a secret module, keep the panel as-is (no regeneration)
+    // If viewing records panel, keep it; otherwise render secret home
     if (!state.secretModuleType) {
       renderSecretHome();
     }
@@ -4477,7 +4536,7 @@ function editMessage(idx) {
     <div class="modal">
       <div class="modal-header">编辑消息</div>
       <div class="modal-body" style="padding:16px;">
-        <textarea id="edit-msg-area" style="width:100%;min-height:120px;background:rgba(15,26,43,0.75);border:1px solid rgba(131,147,168,0.15);color:var(--text);font-size:14.5px;line-height:1.6;padding:12px;resize:vertical;outline:none;border-radius:0;font-family:inherit;">${escapeHtml(oldContent)}</textarea>
+        <textarea id="edit-msg-area" style="width:100%;min-height:120px;background:rgba(232,238,246,0.75);border:1px solid rgba(58,111,165,0.15);color:var(--text);font-size:14.5px;line-height:1.6;padding:12px;resize:vertical;outline:none;border-radius:0;font-family:inherit;">${escapeHtml(oldContent)}</textarea>
       </div>
       <div class="modal-footer">
         <button class="modal-btn" onclick="closeModal()">取消</button>
@@ -4739,7 +4798,7 @@ function editNarrative(evtId, side) {
     <div class="modal">
       <div class="modal-header">编辑${sideText}</div>
       <div class="modal-body" style="padding:16px;">
-        <textarea id="edit-narr-area" style="width:100%;min-height:200px;background:rgba(15,26,43,0.75);border:1px solid rgba(131,147,168,0.15);color:var(--text);font-size:14px;line-height:1.8;padding:12px;resize:vertical;outline:none;border-radius:0;font-family:inherit;">${escapeHtml(currentText)}</textarea>
+        <textarea id="edit-narr-area" style="width:100%;min-height:200px;background:rgba(232,238,246,0.75);border:1px solid rgba(58,111,165,0.15);color:var(--text);font-size:14px;line-height:1.8;padding:12px;resize:vertical;outline:none;border-radius:0;font-family:inherit;">${escapeHtml(currentText)}</textarea>
       </div>
       <div class="modal-footer">
         <button class="modal-btn" onclick="closeModal()">取消</button>
@@ -4938,7 +4997,7 @@ function renderMemory() {
   const cards = state.data.memoryCards;
 
   if (cards.length === 0) {
-    container.innerHTML = `<div class="memory-empty">暂无记忆卡片<br><span style="font-size:11px;color:rgba(131,147,168,0.55)">点击下方按钮生成记忆摘要</span></div>`;
+    container.innerHTML = `<div class="memory-empty">暂无记忆卡片<br><span style="font-size:11px;color:rgba(58,111,165,0.7)">点击下方按钮生成记忆摘要</span></div>`;
     return;
   }
 
@@ -4981,7 +5040,7 @@ function removeMemoryCard(cardId) {
   // If no cards left, show empty placeholder
   const container = document.getElementById('memory-cards');
   if (container && !container.querySelector('.memory-card')) {
-    container.innerHTML = `<div class="memory-empty">暂无记忆卡片<br><span style="font-size:11px;color:rgba(131,147,168,0.55)">点击下方按钮生成记忆摘要</span></div>`;
+    container.innerHTML = `<div class="memory-empty">暂无记忆卡片<br><span style="font-size:11px;color:rgba(58,111,165,0.7)">点击下方按钮生成记忆摘要</span></div>`;
   }
 }
 
@@ -5074,7 +5133,7 @@ function editMemoryCard(cardId) {
     <div class="modal">
       <div class="modal-header">编辑记忆</div>
       <div class="modal-body" style="padding:16px;">
-        <textarea id="edit-mem-area" style="width:100%;min-height:150px;background:rgba(15,26,43,0.75);border:1px solid rgba(131,147,168,0.15);color:var(--text);font-size:13.5px;line-height:1.8;padding:12px;resize:vertical;outline:none;border-radius:0;font-family:inherit;">${escapeHtml(card.content)}</textarea>
+        <textarea id="edit-mem-area" style="width:100%;min-height:150px;background:rgba(232,238,246,0.75);border:1px solid rgba(58,111,165,0.15);color:var(--text);font-size:13.5px;line-height:1.8;padding:12px;resize:vertical;outline:none;border-radius:0;font-family:inherit;">${escapeHtml(card.content)}</textarea>
       </div>
       <div class="modal-footer">
         <button class="modal-btn" onclick="closeModal()">取消</button>
@@ -5198,6 +5257,51 @@ function confirmDeleteMemory(cardId) {
 }
 
 /* ========== 秘密页 ========== */
+let secretPageHtml = null;  // stores generated HTML for the current module page
+
+function hideSecretNav() {
+  const tab = document.getElementById('tab-secret');
+  if (tab) {
+    const header = tab.querySelector('.tab-header');
+    if (header) header.style.display = 'none';
+  }
+  const nav = document.getElementById('bottom-nav');
+  if (nav) nav.style.display = 'none';
+}
+
+function showSecretNav() {
+  const tab = document.getElementById('tab-secret');
+  if (tab) {
+    const header = tab.querySelector('.tab-header');
+    if (header) header.style.display = '';
+  }
+  const nav = document.getElementById('bottom-nav');
+  if (nav) nav.style.display = '';
+}
+
+function secretModuleCard(type, icon, name, desc) {
+  if (state.secretGenerating === type) {
+    return `
+    <div class="secret-module" style="opacity:0.5;pointer-events:none;">
+      <div class="secret-module-icon">${icon}</div>
+      <div class="secret-module-info">
+        <div class="secret-module-name">${name}</div>
+        <div class="secret-module-desc">生成中…</div>
+      </div>
+      <div class="secret-module-arrow">⟳</div>
+    </div>`;
+  }
+  return `
+    <div class="secret-module" onclick="openSecretModule('${type}')">
+      <div class="secret-module-icon">${icon}</div>
+      <div class="secret-module-info">
+        <div class="secret-module-name">${name}</div>
+        <div class="secret-module-desc">${desc}</div>
+      </div>
+      <div class="secret-module-arrow">›</div>
+    </div>`;
+}
+
 function renderSecretHome() {
   const container = document.getElementById('secret-content');
   container.innerHTML = `
@@ -5209,102 +5313,18 @@ function renderSecretHome() {
       </div>
       <div class="secret-module-arrow">›</div>
     </div>
-    <div class="secret-module" onclick="openSecretModule('memo')">
-      <div class="secret-module-icon">📝</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">他的备忘录</div>
-        <div class="secret-module-desc">窥探他记下的心事</div>
-      </div>
-      <div class="secret-module-arrow">›</div>
-    </div>
-    <div class="secret-module" onclick="openSecretModule('bookmark')">
-      <div class="secret-module-icon">🔖</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">他的收藏网址</div>
-        <div class="secret-module-desc">窥探他收藏的书签</div>
-      </div>
-      <div class="secret-module-arrow">›</div>
-    </div>
-    <div class="secret-module" onclick="openSecretModule('mailbox')">
-      <div class="secret-module-icon">✉</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">他的信箱</div>
-        <div class="secret-module-desc">收发的短信记录</div>
-      </div>
-      <div class="secret-module-arrow">›</div>
-    </div>
-    <div class="secret-module" onclick="openSecretModule('cart')">
-      <div class="secret-module-icon">🛒</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">他的购物车</div>
-        <div class="secret-module-desc">偷偷看一下他买了什么？</div>
-      </div>
-      <div class="secret-module-arrow">›</div>
-    </div>
-    <div class="secret-module" onclick="openSecretModule('wish')">
-      <div class="secret-module-icon">🌠</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">他的心愿</div>
-        <div class="secret-module-desc">窥探他藏在心底的愿望</div>
-      </div>
-      <div class="secret-module-arrow">›</div>
-    </div>
-    <div class="secret-module" onclick="openSecretModule('plan')">
-      <div class="secret-module-icon">🗺️</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">他的秘密计划</div>
-        <div class="secret-module-desc">便利贴与时间轴</div>
-      </div>
-      <div class="secret-module-arrow">›</div>
-    </div>
-    <div class="secret-module" onclick="openSecretModule('forum')">
-      <div class="secret-module-icon">🎴</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">他的论坛小号</div>
-        <div class="secret-module-desc">有些事情需要匿名才敢去问</div>
-      </div>
-      <div class="secret-module-arrow">›</div>
-    </div>
-    <div class="secret-module" onclick="openSecretModule('impression')">
-      <div class="secret-module-icon">🖊️</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">他的印象笔记</div>
-        <div class="secret-module-desc">他对你的了解又加深了一点</div>
-      </div>
-      <div class="secret-module-arrow">›</div>
-    </div>
-    <div class="secret-module" onclick="openSecretModule('voice')">
-      <div class="secret-module-icon">🎙️</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">语音草稿箱</div>
-        <div class="secret-module-desc">草稿箱里没按下发送的话</div>
-      </div>
-      <div class="secret-module-arrow">›</div>
-    </div>
-    <div class="secret-module" onclick="openSecretModule('grudge')">
-      <div class="secret-module-icon">📓</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">恋爱记仇本</div>
-        <div class="secret-module-desc">记下的每一笔，都是想你</div>
-      </div>
-      <div class="secret-module-arrow">›</div>
-    </div>
-    <div class="secret-module" onclick="openSecretModule('friends')">
-      <div class="secret-module-icon">💬</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">朋友们早就看出来了</div>
-        <div class="secret-module-desc">一场群聊翻出所有细节</div>
-      </div>
-      <div class="secret-module-arrow">›</div>
-    </div>
-    <div class="secret-module" onclick="openSecretModule('news')">
-      <div class="secret-module-icon">📰</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">坊间小报</div>
-        <div class="secret-module-desc">坊间大事与流言八卦</div>
-      </div>
-      <div class="secret-module-arrow">›</div>
-    </div>
+    ${secretModuleCard('memo','📝','他的备忘录','窥探他记下的心事')}
+    ${secretModuleCard('bookmark','🔖','他的收藏网址','窥探他收藏的书签')}
+    ${secretModuleCard('mailbox','✉','他的信箱','收发的短信记录')}
+    ${secretModuleCard('cart','🛒','他的购物车','偷偷看一下他买了什么？')}
+    ${secretModuleCard('wish','🌠','他的心愿','窥探他藏在心底的愿望')}
+    ${secretModuleCard('plan','🗺️','他的秘密计划','便利贴与时间轴')}
+    ${secretModuleCard('forum','🎴','他的论坛小号','有些事情需要匿名才敢去问')}
+    ${secretModuleCard('impression','🖊️','他的印象笔记','他对你的了解又加深了一点')}
+    ${secretModuleCard('voice','🎙️','语音草稿箱','草稿箱里没按下发送的话')}
+    ${secretModuleCard('grudge','📓','恋爱记仇本','记下的每一笔，都是想你')}
+    ${secretModuleCard('friends','💬','朋友们早就看出来了','一场群聊翻出所有细节')}
+    ${secretModuleCard('news','📰','坊间小报','坊间大事与流言八卦')}
   `;
 }
 
@@ -5347,12 +5367,17 @@ function buildSecretRecordCardHtml(rec) {
 
 function openSecretRecords() {
   state.secretModuleType = 'records';
+  renderSecretRecords();
+  hideSecretNav();
+}
+
+function renderSecretRecords() {
   const container = document.getElementById('secret-content');
   const records = state.data.secretRecords;
 
   let listHtml = '';
   if (records.length === 0) {
-    listHtml = `<div class="secret-loading" style="padding:40px 0;">暂无查看记录<br><span style="font-size:11px;opacity:0.6">点击下方模块查看秘密后会自动保存</span></div>`;
+    listHtml = `<div class="secret-loading" style="padding:40px 0;">暂无查看记录<br><span style="font-size:11px;opacity:0.6">生成秘密后会自动保存到此处</span></div>`;
   } else {
     const sorted = [...records].sort((a, b) => b.timestamp - a.timestamp);
     sorted.forEach(rec => {
@@ -5361,36 +5386,46 @@ function openSecretRecords() {
   }
 
   container.innerHTML = `
-    <div class="secret-detail-panel">
-      <div class="secret-detail-panel-inner">
-        <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
+    <div class="secret-records-fullscreen">
+      <div class="secret-records-header">
+        <button class="secret-back" onclick="exitSecretRecords()">‹ 返回</button>
         <div class="secret-detail-title">查看记录</div>
+      </div>
+      <div class="secret-records-body">
         <div id="secret-records-list">${listHtml}</div>
       </div>
     </div>
   `;
 }
 
-// Click a record card → open modal showing the full content
-// Modal body mirrors #secret-detail-list + .secret-detail-panel-inner styling
-// so stored HTML renders identically to the original generated view
+// Click a record card → open full-screen page showing the full content
 function viewSecretRecord(recId) {
   const rec = state.data.secretRecords.find(r => r.id === recId);
   if (!rec) return;
   const timeStr = formatSecretRecordTime(rec.timestamp);
   const typeName = SECRET_TYPE_NAMES[rec.type] || rec.type;
-  showModal(`
-    <div class="modal">
-      <div class="modal-header">${escapeHtml(typeName)}</div>
-      <div class="modal-body secret-record-modal-body">
-        <div class="secret-record-modal-time">${escapeHtml(timeStr)}</div>
-        <div class="secret-record-modal-content">${rec.html}</div>
+  state.secretModuleType = 'record-view';
+
+  const container = document.getElementById('secret-content');
+  container.innerHTML = `
+    <div class="secret-page-fullscreen">
+      <div class="secret-page-header">
+        <button class="secret-back" onclick="exitSecretRecordView()">‹ 返回</button>
+        <div class="secret-detail-title">${escapeHtml(typeName)}</div>
       </div>
-      <div class="modal-footer">
-        <button class="modal-btn primary" onclick="closeModal()">关闭</button>
+      <div class="secret-page-body">
+        <div class="secret-record-view-time">${escapeHtml(timeStr)}</div>
+        <div class="secret-record-view-content">${rec.html}</div>
       </div>
     </div>
-  `);
+  `;
+  container.scrollTop = 0;
+}
+
+// Return from record detail view to records list
+function exitSecretRecordView() {
+  state.secretModuleType = 'records';
+  renderSecretRecords();
 }
 
 // Incrementally remove a secret record card from DOM (no full re-render)
@@ -5402,239 +5437,122 @@ function deleteSecretRecord(recId) {
   // If no records left, show empty placeholder
   const listEl = document.getElementById('secret-records-list');
   if (listEl && !listEl.querySelector('.secret-record-card')) {
-    listEl.innerHTML = `<div class="secret-loading" style="padding:40px 0;">暂无查看记录<br><span style="font-size:11px;opacity:0.6">点击下方模块查看秘密后会自动保存</span></div>`;
+    listEl.innerHTML = `<div class="secret-loading" style="padding:40px 0;">暂无查看记录<br><span style="font-size:11px;opacity:0.6">生成秘密后会自动保存到此处</span></div>`;
   }
   showToast('已删除');
 }
 
+// Open a modal to confirm generation; on confirm, jump to full-screen page
 function openSecretModule(type) {
-  const container = document.getElementById('secret-content');
-  const charName = state.data.characters.other.name || '他';
-  state.secretModuleType = type;
-  if (!state.secretCache) state.secretCache = {};
+  if (state.secretGenerating) {
+    showToast('正在生成中，请稍候');
+    return;
+  }
+  const typeName = SECRET_TYPE_NAMES[type] || type;
+  showModal(`
+    <div class="modal">
+      <div class="modal-header">是否生成「${escapeHtml(typeName)}」？</div>
+      <div class="modal-body" style="text-align:center;padding:20px;">
+        <p style="font-size:13px;color:var(--text-dim);margin:0;">生成完成后将自动记入查看记录</p>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn" onclick="closeModal()">取消</button>
+        <button class="modal-btn primary" onclick="closeModal();startSecretGen('${type}')">生成</button>
+      </div>
+    </div>
+  `);
+}
 
-  if (type === 'memo') {
-    container.innerHTML = `
-      <div class="secret-detail-panel">
-        <div class="secret-detail-panel-inner">
-          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
-          <div class="secret-detail-title">他的备忘录</div>
-          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
-        </div>
+// Render the full-screen module page (loading or content only)
+function renderSecretModulePage(type) {
+  const container = document.getElementById('secret-content');
+  const typeName = SECRET_TYPE_NAMES[type] || type;
+
+  let bodyHtml = '';
+  if (state.secretGenerating === type) {
+    // Loading state
+    bodyHtml = `<div class="secret-loading" style="padding:80px 0;">正在生成<span class="dots"><span></span><span></span><span></span></span></div>`;
+  } else if (secretPageHtml) {
+    // Content state — show generated content
+    bodyHtml = secretPageHtml;
+  }
+
+  container.innerHTML = `
+    <div class="secret-page-fullscreen">
+      <div class="secret-page-header">
+        <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
+        <div class="secret-detail-title">${escapeHtml(typeName)}</div>
       </div>
-    `;
-    if (state.secretCache.memo) {
-      const listEl = document.getElementById('secret-detail-list');
-      listEl.className = '';
-      listEl.innerHTML = state.secretCache.memo;
-      showSecretActions('memo', state.secretCache.memo);
-    } else {
-      generateMemo(charName);
-    }
-  } else if (type === 'bookmark') {
-    container.innerHTML = `
-      <div class="secret-detail-panel">
-        <div class="secret-detail-panel-inner">
-          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
-          <div class="secret-detail-title">他的收藏网址</div>
-          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
-        </div>
-      </div>
-    `;
-    if (state.secretCache.bookmark) {
-      const listEl = document.getElementById('secret-detail-list');
-      listEl.className = '';
-      listEl.innerHTML = state.secretCache.bookmark;
-      showSecretActions('bookmark', state.secretCache.bookmark);
-    } else {
-      generateHistory(charName, 'bookmark');
-    }
-  } else if (type === 'mailbox') {
-    container.innerHTML = `
-      <div class="secret-detail-panel">
-        <div class="secret-detail-panel-inner">
-          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
-          <div class="secret-detail-title">他的信箱</div>
-          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
-        </div>
-      </div>
-    `;
-    if (state.secretCache.mailbox) {
-      const listEl = document.getElementById('secret-detail-list');
-      listEl.className = '';
-      listEl.innerHTML = state.secretCache.mailbox;
-      showSecretActions('mailbox', state.secretCache.mailbox);
-    } else {
-      generateMailbox(charName);
-    }
-  } else if (type === 'cart') {
-    container.innerHTML = `
-      <div class="secret-detail-panel">
-        <div class="secret-detail-panel-inner">
-          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
-          <div class="secret-detail-title">他的购物车</div>
-          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
-        </div>
-      </div>
-    `;
-    if (state.secretCache.cart) {
-      const listEl = document.getElementById('secret-detail-list');
-      listEl.className = '';
-      listEl.innerHTML = state.secretCache.cart;
-      showSecretActions('cart', state.secretCache.cart);
-    } else {
-      generateCart(charName);
-    }
-  } else if (type === 'wish') {
-    container.innerHTML = `
-      <div class="secret-detail-panel">
-        <div class="secret-detail-panel-inner">
-          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
-          <div class="secret-detail-title">他的心愿</div>
-          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
-        </div>
-      </div>
-    `;
-    if (state.secretCache.wish) {
-      const listEl = document.getElementById('secret-detail-list');
-      listEl.className = '';
-      listEl.innerHTML = state.secretCache.wish;
-      showSecretActions('wish', state.secretCache.wish);
-    } else {
-      generateWish(charName);
-    }
-  } else if (type === 'plan') {
-    container.innerHTML = `
-      <div class="secret-detail-panel">
-        <div class="secret-detail-panel-inner">
-          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
-          <div class="secret-detail-title">他的秘密计划</div>
-          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
-        </div>
-      </div>
-    `;
-    if (state.secretCache.plan) {
-      const listEl = document.getElementById('secret-detail-list');
-      listEl.className = '';
-      listEl.innerHTML = state.secretCache.plan;
-      showSecretActions('plan', state.secretCache.plan);
-    } else {
-      generatePlan(charName);
-    }
-  } else if (type === 'forum') {
-    container.innerHTML = `
-      <div class="secret-detail-panel">
-        <div class="secret-detail-panel-inner">
-          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
-          <div class="secret-detail-title">他的论坛小号</div>
-          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
-        </div>
-      </div>
-    `;
-    if (state.secretCache.forum) {
-      const listEl = document.getElementById('secret-detail-list');
-      listEl.className = '';
-      listEl.innerHTML = state.secretCache.forum;
-      showSecretActions('forum', state.secretCache.forum);
-    } else {
-      generateForum(charName);
-    }
-  } else if (type === 'news') {
-    container.innerHTML = `
-      <div class="secret-detail-panel">
-        <div class="secret-detail-panel-inner">
-          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
-          <div class="secret-detail-title">坊间小报</div>
-          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
-        </div>
-      </div>
-    `;
-    if (state.secretCache.news) {
-      const listEl = document.getElementById('secret-detail-list');
-      listEl.className = '';
-      listEl.innerHTML = state.secretCache.news;
-      showSecretActions('news', state.secretCache.news);
-    } else {
-      generateNews(charName);
-    }
-  } else if (type === 'friends') {
-    container.innerHTML = `
-      <div class="secret-detail-panel">
-        <div class="secret-detail-panel-inner">
-          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
-          <div class="secret-detail-title">朋友们早就看出来了</div>
-          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
-        </div>
-      </div>
-    `;
-    if (state.secretCache.friends) {
-      const listEl = document.getElementById('secret-detail-list');
-      listEl.className = '';
-      listEl.innerHTML = state.secretCache.friends;
-      showSecretActions('friends', state.secretCache.friends);
-    } else {
-      generateFriends(charName);
-    }
-  } else if (type === 'grudge') {
-    container.innerHTML = `
-      <div class="secret-detail-panel">
-        <div class="secret-detail-panel-inner">
-          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
-          <div class="secret-detail-title">恋爱记仇本</div>
-          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
-        </div>
-      </div>
-    `;
-    if (state.secretCache.grudge) {
-      const listEl = document.getElementById('secret-detail-list');
-      listEl.className = '';
-      listEl.innerHTML = state.secretCache.grudge;
-      showSecretActions('grudge', state.secretCache.grudge);
-    } else {
-      generateGrudge(charName);
-    }
-  } else if (type === 'voice') {
-    container.innerHTML = `
-      <div class="secret-detail-panel">
-        <div class="secret-detail-panel-inner">
-          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
-          <div class="secret-detail-title">语音草稿箱</div>
-          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
-        </div>
-      </div>
-    `;
-    if (state.secretCache.voice) {
-      const listEl = document.getElementById('secret-detail-list');
-      listEl.className = '';
-      listEl.innerHTML = state.secretCache.voice;
-      showSecretActions('voice', state.secretCache.voice);
-    } else {
-      generateVoice(charName);
-    }
-  } else if (type === 'impression') {
-    container.innerHTML = `
-      <div class="secret-detail-panel">
-        <div class="secret-detail-panel-inner">
-          <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
-          <div class="secret-detail-title">他的印象笔记</div>
-          <div id="secret-detail-list" class="secret-loading">正在生成<span class="dots"><span></span><span></span><span></span></span></div>
-        </div>
-      </div>
-    `;
-    if (state.secretCache.impression) {
-      const listEl = document.getElementById('secret-detail-list');
-      listEl.className = '';
-      listEl.innerHTML = state.secretCache.impression;
-      showSecretActions('impression', state.secretCache.impression);
-    } else {
-      generateImpression(charName);
-    }
+      <div class="secret-page-body">${bodyHtml}</div>
+    </div>
+  `;
+  container.scrollTop = 0;
+}
+
+function startSecretGen(type) {
+  const charName = state.data.characters.other.name || '他';
+  state.secretGenerating = type;
+  state.secretModuleType = type;
+  secretPageHtml = null;
+  hideSecretNav();
+  renderSecretModulePage(type);
+  showToast('正在生成…', 1500);
+  if (type === 'memo') generateMemo(charName);
+  else if (type === 'bookmark') generateHistory(charName, 'bookmark');
+  else if (type === 'mailbox') generateMailbox(charName);
+  else if (type === 'cart') generateCart(charName);
+  else if (type === 'wish') generateWish(charName);
+  else if (type === 'plan') generatePlan(charName);
+  else if (type === 'forum') generateForum(charName);
+  else if (type === 'news') generateNews(charName);
+  else if (type === 'friends') generateFriends(charName);
+  else if (type === 'grudge') generateGrudge(charName);
+  else if (type === 'voice') generateVoice(charName);
+  else if (type === 'impression') generateImpression(charName);
+}
+
+function onSecretGenComplete(type, html) {
+  if (state.secretGenerating !== type) return;
+  if (html) {
+    saveSecretRecord(type, html);
+    showToast('生成完成，已记入查看记录');
+  } else {
+    showToast('生成完成，但内容为空');
+  }
+  state.secretGenerating = null;
+  // If still on the module page, show the content
+  if (state.secretModuleType === type) {
+    secretPageHtml = html;
+    renderSecretModulePage(type);
+  } else {
+    // User navigated away — just refresh home
+    renderSecretHome();
   }
 }
 
-// Exit back to secret home — keeps generated content in cache
+function onSecretGenError(type, msg) {
+  if (state.secretGenerating !== type) return;
+  state.secretGenerating = null;
+  if (state.secretModuleType === type) {
+    secretPageHtml = null;
+    renderSecretModulePage(type);
+  } else {
+    renderSecretHome();
+  }
+  showToast('生成失败：' + (msg || '未知错误'));
+}
+
+// Exit from module page back to secret home
 function exitSecretModule() {
   state.secretModuleType = null;
+  secretPageHtml = null;
+  showSecretNav();
+  renderSecretHome();
+}
+
+function exitSecretRecords() {
+  state.secretModuleType = null;
+  showSecretNav();
   renderSecretHome();
 }
 
@@ -5675,7 +5593,6 @@ function buildSecretContext() {
 }
 
 async function generateMemo(charName) {
-  const listEl = document.getElementById('secret-detail-list');
   const context = buildSecretContext();
   const prompt = `此刻你刚放下手机，有人偷偷翻看了你的备忘录。\n请根据以下你近期的真实生活动态，生成你备忘录里此刻真实存在的3-5条内容。\n内容要与近期经历、心情、人际关系紧密相关，像真实生活在继续一样。\n${context}\n\n请直接输出备忘录内容，不要加任何说明。`;
 
@@ -5707,23 +5624,14 @@ async function generateMemo(charName) {
         `;
       }
     }
-    listEl.className = '';
-    listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
-    // Cache the result + show action buttons ONLY after content is ready
-    if (html && state.secretModuleType === 'memo') {
-      if (!state.secretCache) state.secretCache = {};
-      state.secretCache.memo = html;
-      showSecretActions('memo', html);
-    }
+    onSecretGenComplete('memo', html);
   } catch(e) {
     if (genId !== state.secretGenId) return;
-    listEl.className = '';
-    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('memo')">重试</button></div>`;
+    onSecretGenError('memo', e.message);
   }
 }
 
 async function generateHistory(charName, tab) {
-  const listEl = document.getElementById('secret-detail-list');
   const context = buildSecretContext();
   const prompt = `此刻你刚放下手机，有人偷偷查看了你的收藏书签。\n请根据以下你近期的真实生活动态，生成你手机浏览器里此刻真实存在的5-7条收藏书签。\n收藏要反映你的个人喜好和长期关注领域。\n${context}\n\n请直接输出收藏记录，不要加任何说明。`;
 
@@ -5753,45 +5661,18 @@ async function generateHistory(charName, tab) {
         `;
       }
     }
-    const finalHtml = html || '<div class="secret-loading">暂无内容</div>';
-    // Cache the result
-    if (!state.secretCache) state.secretCache = {};
-    state.secretCache[tab] = finalHtml;
-    // Only update display + show buttons if this is the currently active module
-    if (state.secretModuleType === tab && listEl) {
-      listEl.className = '';
-      listEl.innerHTML = finalHtml;
-      if (html) showSecretActions(tab, html);
-    }
+    onSecretGenComplete(tab, html);
   } catch(e) {
     if (genId !== state.secretGenId) return;
-    const errHtml = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('${tab}')">重试</button></div>`;
-    // Don't cache errors — allow retry on next open
-    if (state.secretModuleType === tab && listEl) {
-      listEl.className = '';
-      listEl.innerHTML = errHtml;
-    }
+    onSecretGenError(tab, e.message);
   }
 }
 
 function retrySecretGen(type) {
-  const charName = state.data.characters.other.name || '他';
-  if (type === 'memo') generateMemo(charName);
-  else if (type === 'mailbox') generateMailbox(charName);
-  else if (type === 'cart') generateCart(charName);
-  else if (type === 'wish') generateWish(charName);
-  else if (type === 'plan') generatePlan(charName);
-  else if (type === 'forum') generateForum(charName);
-  else if (type === 'news') generateNews(charName);
-  else if (type === 'friends') generateFriends(charName);
-  else if (type === 'grudge') generateGrudge(charName);
-  else if (type === 'voice') generateVoice(charName);
-  else if (type === 'impression') generateImpression(charName);
-  else generateHistory(charName, type); // bookmark
+  startSecretGen(type);
 }
 
 async function generateMailbox(charName) {
-  const listEl = document.getElementById('secret-detail-list');
   const context = buildSecretContext();
   const prompt = `此刻你刚放下手机，有人偷偷翻看了你的短信信箱。\n请根据以下你近期的真实生活动态，生成你手机短信信箱里此刻真实存在的3-5条短信。\n既有你主动发出的，也有别人发给你的，混合呈现。\n至少有1-2条与主控角色之间的短信，呼应你们近期的关系状态。\n${context}\n\n请直接输出短信内容，不要加任何说明。`;
 
@@ -5823,22 +5704,14 @@ async function generateMailbox(charName) {
         `;
       }
     }
-    listEl.className = '';
-    listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
-    if (html && state.secretModuleType === 'mailbox') {
-      if (!state.secretCache) state.secretCache = {};
-      state.secretCache.mailbox = html;
-      showSecretActions('mailbox', html);
-    }
+    onSecretGenComplete('mailbox', html);
   } catch(e) {
     if (genId !== state.secretGenId) return;
-    listEl.className = '';
-    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('mailbox')">重试</button></div>`;
+    onSecretGenError('mailbox', e.message);
   }
 }
 
 async function generateCart(charName) {
-  const listEl = document.getElementById('secret-detail-list');
   const context = buildSecretContext();
   const prompt = `此刻你刚放下手机，有人偷偷查看了你手机购物APP里的购物车、运输中、寄退和历史订单。\n请根据以下你近期的真实生活动态，生成你此刻真实的购物数据，分为四个板块。\n${context}\n\n请直接输出购物数据，不要加任何说明。`;
 
@@ -5939,17 +5812,10 @@ async function generateCart(charName) {
         </div>`;
     });
 
-    listEl.className = '';
-    listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
-    if (html && state.secretModuleType === 'cart') {
-      if (!state.secretCache) state.secretCache = {};
-      state.secretCache.cart = html;
-      showSecretActions('cart', html);
-    }
+    onSecretGenComplete('cart', html);
   } catch(e) {
     if (genId !== state.secretGenId) return;
-    listEl.className = '';
-    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('cart')">重试</button></div>`;
+    onSecretGenError('cart', e.message);
   }
 }
 
@@ -5959,7 +5825,6 @@ function toggleCartSection(idx) {
 }
 
 async function generateWish(charName) {
-  const listEl = document.getElementById('secret-detail-list');
   const context = buildSecretContext();
   const prompt = `此刻你刚放下手机，有人偷偷看到了你藏在手机备忘录深处的心愿清单。\n请根据以下你近期的真实生活动态，生成你此刻真实存在的3-5条心愿。\n内容要与你近期的生活、心情、人际关系相关。\n${context}\n\n请直接输出心愿内容，不要加任何说明。`;
 
@@ -5984,22 +5849,14 @@ async function generateWish(charName) {
         `;
       }
     }
-    listEl.className = '';
-    listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
-    if (html && state.secretModuleType === 'wish') {
-      if (!state.secretCache) state.secretCache = {};
-      state.secretCache.wish = html;
-      showSecretActions('wish', html);
-    }
+    onSecretGenComplete('wish', html);
   } catch(e) {
     if (genId !== state.secretGenId) return;
-    listEl.className = '';
-    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('wish')">重试</button></div>`;
+    onSecretGenError('wish', e.message);
   }
 }
 
 async function generatePlan(charName) {
-  const listEl = document.getElementById('secret-detail-list');
   const context = buildSecretContext();
   const prompt = `此刻你刚放下手机，有人偷偷看到了你藏在抽屉里的秘密计划本。\n请根据以下你近期的真实生活动态，生成你的秘密计划，包含便利贴和时间轴两部分。\n内容要与你近期的生活、心情、人际关系相关。\n${context}\n\n请直接输出计划内容，不要加任何说明。`;
 
@@ -6055,22 +5912,14 @@ async function generatePlan(charName) {
       }
     }
 
-    listEl.className = '';
-    listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
-    if (html && state.secretModuleType === 'plan') {
-      if (!state.secretCache) state.secretCache = {};
-      state.secretCache.plan = html;
-      showSecretActions('plan', html);
-    }
+    onSecretGenComplete('plan', html);
   } catch(e) {
     if (genId !== state.secretGenId) return;
-    listEl.className = '';
-    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('plan')">重试</button></div>`;
+    onSecretGenError('plan', e.message);
   }
 }
 
 async function generateForum(charName) {
-  const listEl = document.getElementById('secret-detail-list');
   const context = buildSecretContext();
   const prompt = `有些事情你不好用真实身份讨论，于是你开了一个匿名小号在论坛提问。请根据以下你近期的真实生活动态，生成你的匿名提问和路人回复。\n${context}\n\n请直接输出论坛内容，不要加任何说明。`;
 
@@ -6111,7 +5960,7 @@ async function generateForum(charName) {
         html += `
           <div class="forum-post">
             <div class="forum-post-header">
-              <div class="forum-post-avatar" style="background:linear-gradient(135deg,#4A6FA5,#6B8DB8);">${escapeHtml(avatarChar)}</div>
+              <div class="forum-post-avatar" style="background:linear-gradient(135deg,#3A6FA5,#8AA8D0);">${escapeHtml(avatarChar)}</div>
               <div class="forum-post-userinfo">
                 <div class="forum-post-username">${escapeHtml(name)}</div>
                 <div class="forum-post-sig">${escapeHtml(sig)}</div>
@@ -6170,22 +6019,14 @@ async function generateForum(charName) {
       }
     }
 
-    listEl.className = '';
-    listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
-    if (html && state.secretModuleType === 'forum') {
-      if (!state.secretCache) state.secretCache = {};
-      state.secretCache.forum = html;
-      showSecretActions('forum', html);
-    }
+    onSecretGenComplete('forum', html);
   } catch(e) {
     if (genId !== state.secretGenId) return;
-    listEl.className = '';
-    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('forum')">重试</button></div>`;
+    onSecretGenError('forum', e.message);
   }
 }
 
 async function generateNews(charName) {
-  const listEl = document.getElementById('secret-detail-list');
   const context = buildSecretContext();
   const prompt = `有人翻开了今日的坊间小报，想看看这个世界里正在发生什么大事、坊间流传着什么八卦。\n请根据以下角色近期的真实生活动态，生成此刻这个世界里的新闻和八卦。\n${context}\n\n请直接输出内容，不要加任何说明。`;
 
@@ -6210,22 +6051,14 @@ async function generateNews(charName) {
         `;
       }
     }
-    listEl.className = '';
-    listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
-    if (html && state.secretModuleType === 'news') {
-      if (!state.secretCache) state.secretCache = {};
-      state.secretCache.news = html;
-      showSecretActions('news', html);
-    }
+    onSecretGenComplete('news', html);
   } catch(e) {
     if (genId !== state.secretGenId) return;
-    listEl.className = '';
-    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('news')">重试</button></div>`;
+    onSecretGenError('news', e.message);
   }
 }
 
 async function generateFriends(charName) {
-  const listEl = document.getElementById('secret-detail-list');
   const context = buildSecretContext();
   const prompt = `朋友们建了一个没有两位主角在场的群聊，正在热烈讨论他们的关系。请根据以下角色近期的真实生活动态，生成一场群聊记录。\n参与者为NPC朋友们，他们翻出了两位主角之间的各种细节。\n${context}\n\n请直接输出群聊内容，不要加任何说明。`;
 
@@ -6274,23 +6107,15 @@ async function generateFriends(charName) {
     if (groupName) {
       html += `</div>`;
     }
-    listEl.className = '';
-    listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
-    if (html && state.secretModuleType === 'friends') {
-      if (!state.secretCache) state.secretCache = {};
-      state.secretCache.friends = html;
-      showSecretActions('friends', html);
-    }
+    onSecretGenComplete('friends', html);
   } catch(e) {
     if (genId !== state.secretGenId) return;
-    listEl.className = '';
-    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('friends')">重试</button></div>`;
+    onSecretGenError('friends', e.message);
   }
 }
 
 // ========== 恋爱记仇本 ==========
 async function generateGrudge(charName) {
-  const listEl = document.getElementById('secret-detail-list');
   const context = buildSecretContext();
   const prompt = `此刻有人偷偷翻开了你的"恋爱记仇本"。\n因为某些事情，你狠狠地记下了一笔。但与其说是记仇，不如说是想主控了。\n请根据以下你近期的真实生活动态，生成你记仇本里此刻真实存在的3-5条内容。\n每条都是一件让你"记仇"的小事，表面是抱怨，字里行间却全是想念与在意。\n${context}\n\n每条格式严格为：罪名|||记仇经过|||真心话|||时间\n罪名是你给这件事起的小标题，记仇经过是你气鼓鼓的描述，真心话是那句暴露你其实只想主控的话，时间为具体日期时间。\n条目之间用空行分隔。请直接输出内容，不要加任何说明。`;
 
@@ -6319,23 +6144,15 @@ async function generateGrudge(charName) {
         `;
       }
     }
-    listEl.className = '';
-    listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
-    if (html && state.secretModuleType === 'grudge') {
-      if (!state.secretCache) state.secretCache = {};
-      state.secretCache.grudge = html;
-      showSecretActions('grudge', html);
-    }
+    onSecretGenComplete('grudge', html);
   } catch(e) {
     if (genId !== state.secretGenId) return;
-    listEl.className = '';
-    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('grudge')">重试</button></div>`;
+    onSecretGenError('grudge', e.message);
   }
 }
 
 // ========== 语音草稿箱 ==========
 async function generateVoice(charName) {
-  const listEl = document.getElementById('secret-detail-list');
   const context = buildSecretContext();
   const prompt = `此刻有人偷偷点开了你语音消息的"草稿箱"，那里藏着几条你录好却始终没按下发送的话。\n请根据以下你近期的真实生活动态，生成你草稿箱里此刻真实存在的3-5条未发送语音。\n每条都是你想对主控说却没说出口的话，听到最后才知道你真正想让主控明白什么。\n${context}\n\n每条格式严格为：时长|||语音文字|||时间\n时长形如"0:12"，语音文字是这段语音转写出的内容，时间为具体日期时间。\n条目之间用空行分隔。请直接输出内容，不要加任何说明。`;
 
@@ -6364,23 +6181,15 @@ async function generateVoice(charName) {
         `;
       }
     }
-    listEl.className = '';
-    listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
-    if (html && state.secretModuleType === 'voice') {
-      if (!state.secretCache) state.secretCache = {};
-      state.secretCache.voice = html;
-      showSecretActions('voice', html);
-    }
+    onSecretGenComplete('voice', html);
   } catch(e) {
     if (genId !== state.secretGenId) return;
-    listEl.className = '';
-    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('voice')">重试</button></div>`;
+    onSecretGenError('voice', e.message);
   }
 }
 
 // ========== 他的印象笔记 ==========
 async function generateImpression(charName) {
-  const listEl = document.getElementById('secret-detail-list');
   const context = buildSecretContext();
   const meName = state.data.characters.me.name || '主控';
   const prompt = `此刻有人偷偷翻开了你的"印象笔记"——那是你偷偷记录的关于${meName}的观察与感受。\n请根据以下你近期的真实生活动态，生成你此刻的印象笔记，包含三个板块。\n${context}\n\n格式严格如下：\n【我眼中的TA】\n时间|||From名字|||印象内容\nFrom名字填你的名字，印象内容是你对${meName}的整体印象\n\n【TA喜欢的】\n你观察到${meName}喜欢的3-5样事物，每条一行\n\n【TA讨厌的】\n你观察到${meName}讨厌的3-5样事物，每条一行\n\n三个板块之间用空行分隔。请直接输出内容，不要加任何说明。`;
@@ -6447,68 +6256,14 @@ async function generateImpression(charName) {
     }
 
     html += '</div>';
-    listEl.className = '';
-    listEl.innerHTML = html || '<div class="secret-loading">暂无内容</div>';
-    if (state.secretModuleType === 'impression') {
-      if (!state.secretCache) state.secretCache = {};
-      state.secretCache.impression = html;
-      if (eyesMatch || likeMatch || hateMatch) showSecretActions('impression', html);
-    }
+    onSecretGenComplete('impression', html);
   } catch(e) {
     if (genId !== state.secretGenId) return;
-    listEl.className = '';
-    listEl.innerHTML = `<div class="secret-loading">${escapeHtml(e.message || '生成失败，请检查API配置')}<br><button class="settings-action-btn" style="margin-top:12px;width:120px;" onclick="retrySecretGen('impression')">重试</button></div>`;
+    onSecretGenError('impression', e.message);
   }
 }
 
 // Pending secret: stored in state, survives tab switches until user decides
-function removeSecretActions() {
-  const panel = document.querySelector('.secret-detail-panel-inner');
-  if (panel) {
-    const actions = panel.querySelector('.secret-actions');
-    if (actions) actions.remove();
-  }
-}
-
-function showSecretActions(type, html) {
-  state.pendingSecret = { type, html, saved: false };
-  const panel = document.querySelector('.secret-detail-panel-inner');
-  if (!panel) return;
-  // Remove old actions if any
-  removeSecretActions();
-  const actions = document.createElement('div');
-  actions.className = 'secret-actions';
-  actions.innerHTML = `
-    <button class="secret-action-btn cancel" onclick="cancelSecret()">不记入</button>
-    <button class="secret-action-btn save" onclick="confirmSecret()">记入档案</button>
-  `;
-  panel.appendChild(actions);
-}
-
-function confirmSecret() {
-  if (!state.pendingSecret) return;
-  saveSecretRecord(state.pendingSecret.type, state.pendingSecret.html);
-  // Clear the cache entry so next click regenerates
-  if (state.secretCache) {
-    delete state.secretCache[state.pendingSecret.type];
-  }
-  state.pendingSecret = null;
-  removeSecretActions();
-  state.secretModuleType = null;
-  renderSecretHome();
-  showToast('已记入档案');
-}
-
-function cancelSecret() {
-  if (state.pendingSecret && state.secretCache) {
-    delete state.secretCache[state.pendingSecret.type];
-  }
-  state.pendingSecret = null;
-  removeSecretActions();
-  state.secretModuleType = null;
-  renderSecretHome();
-}
-
 // Save a generated secret view to records
 function saveSecretRecord(type, html) {
   const recId = 'sec_' + Date.now();
@@ -6598,7 +6353,7 @@ function renderSettings() {
     <div class="settings-actions">
       <button class="settings-action-btn" onclick="saveGame()">存档</button>
       <button class="settings-action-btn" onclick="showLoadModal(false)">读档</button>
-      <button class="settings-action-btn danger" onclick="confirmReturnTitle()">返回标题</button>
+      <button class="settings-action-btn" onclick="confirmReturnTitle()">返回标题</button>
     </div>
   `;
 
@@ -7199,9 +6954,10 @@ function loadFromSlot(slotId, fromHome) {
   state.eventState = 'idle';
   state.currentChainId = null;
   state.quoteContext = null;
-  state.pendingSecret = null;
   state.secretModuleType = null;
-  state.secretCache = null;
+  state.secretGenerating = null;
+  secretPageHtml = null;
+  showSecretNav();
   state.chatSessionId++;
   state.rulesExpanded = false;
   saveToStorage();
