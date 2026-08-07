@@ -3221,29 +3221,18 @@ function loadFromStorage() {
     const raw = _memCache[STORAGE_KEY] || localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      // 版本不匹配：清除旧数据，但保留并迁移 API 配置
-      if (parsed._version !== APP_VERSION) {
-        console.log('版本不匹配，清除旧数据', parsed._version, '→', APP_VERSION);
-        const savedApiConfig = parsed.apiConfig || null;
-        _memCache[STORAGE_KEY] = null;
-        _memCache[SAVES_KEY] = null;
-        if (_dbReady) {
-          dbDelete(STORAGE_KEY).catch(() => {});
-          dbDelete(SAVES_KEY).catch(() => {});
-        }
-        localStorage.removeItem(STORAGE_KEY);
-        localStorage.removeItem(SAVES_KEY);
-        state.data = structuredClone(DEFAULT_DATA);
-        if (savedApiConfig) {
-          state.data.apiConfig = migrateApiConfig(savedApiConfig);
-          saveToStorage();
-        }
-        return true;
+      const oldVersion = parsed._version;
+      const needsMigration = oldVersion !== APP_VERSION;
+      // 版本不匹配：保留存档数据，用 deepMerge 迁移（补全新字段，保留旧数据）
+      if (needsMigration) {
+        console.log('版本迁移：保留存档数据', oldVersion, '→', APP_VERSION);
       }
       delete parsed._version; // 移除版本标记，不混入 state.data
       state.data = deepMerge(structuredClone(DEFAULT_DATA), parsed);
       // 迁移旧版 apiConfig（{deepseek,gemini,active} → 统一格式）
       state.data.apiConfig = migrateApiConfig(state.data.apiConfig);
+      // 版本迁移后立即保存（写入新版本号，避免重复迁移）
+      if (needsMigration) saveToStorage();
       return true;
     }
   } catch(e) { console.error('加载失败', e); }
