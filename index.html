@@ -3089,6 +3089,7 @@ const DEFAULT_DATA = {
   eventHistory: [],
   memoryCards: [],
   secretRecords: [],
+  storyState: '',  // 当前故事状态摘要（时间节点、场景、角色状态等），由羁绊事件触发更新
   apiConfig: {
     baseUrl: 'https://api.deepseek.com',
     apiKey: '',
@@ -3223,7 +3224,7 @@ let state = {
 /* ========== 持久化 ========== */
 const STORAGE_KEY = 'aitg_current';
 const SAVES_KEY = 'aitg_saves';
-const APP_VERSION = '3.0'; // 版本号，改动时递增可强制清除旧缓存数据
+const APP_VERSION = '3.1'; // 版本号，改动时递增可强制清除旧缓存数据
 
 /* ----- IndexedDB 存储层（替代 localStorage，容量从 5MB 提升到数百 MB）-----
  * 设计原则：
@@ -4236,11 +4237,23 @@ function buildModeInstruction(mode) {
     return '\n【当前模式：语音草稿箱生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意点开了你语音消息的"草稿箱"，那里藏着几条你录好却始终没按下发送的话。\n请以第一人称视角生成你草稿箱里此刻真实存在的3-5条未发送语音。\n要求：\n1. 每条都是你想对主控角色说却没说出口的话，听到最后才知道你真正想让TA明白什么\n2. 内容必须紧扣你的人设、性格、背景、日常生活和与主控角色的近期互动——不要写空泛的通用内容\n3. 语音文字是这段语音转写出的内容，语气、用词习惯都要符合你的性格特征\n4. 每条格式严格为：时长|||语音文字|||时间\n5. 时长形如"0:12"，时间为具体日期时间格式如"8月4日 周一 22:42"\n6. 条目之间用一个空行分隔\n7. 语音文字可以多行，但不得出现|||字符\n8. 只输出语音内容，不要加任何说明\n';
   } else if (mode === 'secret-impression') {
     return '\n【当前模式：印象笔记生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意翻看了你的"印象笔记"——那是你偷偷记录的关于主控角色的观察与感受。\n请以第一人称视角生成你此刻的印象笔记，包含三个板块。\n\n严格按以下格式输出：\n\n【我眼中的TA】\n时间|||From名字|||印象内容\n时间用具体日期时间格式如"8月5日 周二 14:30"\nFrom名字填你（AI角色）的名字\n印象内容是你对主控角色的整体印象，一段真诚的描述，体现你随着相处对TA的了解越来越深\n印象内容可以换行分成多个自然段落，但不得出现|||字符\n\n【TA喜欢的】\n你观察到主控角色喜欢的3-5样事物，每条一行\n要具体，基于你们真实的互动细节，不要写空泛的通用内容\n\n【TA讨厌的】\n你观察到主控角色讨厌的3-5样事物，每条一行\n要具体，基于你们真实的互动细节，不要写空泛的通用内容\n\n三个板块之间用一个空行分隔。\n印象内容和你观察到的事物都要紧扣你的人设、性格、背景、日常生活和与主控角色的近期互动。\n语气和用词习惯要符合你的性格特征。\n只输出印象笔记内容，不要加任何说明。\n';
+  } else if (mode === 'story-state') {
+    const _ssMe = (state.data.characters.me.name || '').trim() || '主控';
+    const _ssOther = (state.data.characters.other.name || '').trim() || 'AI角色';
+    return '\n【当前模式：故事状态总结】\n你是一个叙事助手，请根据提供的近期剧情事件和聊天记录，总结当前故事的状态快照。\n一律使用人物姓名指代——主控角色用"' + _ssMe + '"，AI角色用"' + _ssOther + '"，不要使用"你""角色"等模糊代词。\n\n请输出以下内容，每项一行，格式严格如下：\n\n时间节点：用一句话概括当前故事进展到什么时候（如"初遇后的第三天傍晚""大战结束当夜""雨夜和解之后"等，要具体有画面感）\n当前场景：用一句话概括当前所处的物理场景或处境（如"书房中对峙""城墙上远眺""各自回到住处"等）\n' + _ssMe + '的状态：用一到两句话描述主控角色此刻的情绪、心理、处境\n' + _ssOther + '的状态：用一到两句话描述AI角色此刻的情绪、心理、处境\n关系动态：用一到两句话描述两人关系的当前态势（如"表面决裂但彼此仍在意""刚刚和解，气氛微妙"等）\n近期关键事件：用一到两句话概括最近发生的重要事件\n\n只输出以上内容，不要加任何说明或多余的文字。保持简洁，总字数不超过200字。\n';
   }
   return '';
 }
 
-// 完整 System Prompt 拼装：L1 → L2 → L3 → L4 → L6
+// L4.5 故事状态快照：注入当前故事的时间节点、场景、角色状态等
+// 让对话和事件模块都能感知"故事已经推进到了哪里"
+function buildStoryStatePrompt() {
+  const ss = state.data.storyState;
+  if (!ss || !ss.trim()) return '';
+  return '\n【当前故事状态（时间流动锚点）】\n' + ss.trim() + '\n';
+}
+
+// 完整 System Prompt 拼装：L1 → L2 → L3 → L4 → L4.5 → L6
 // L5（即时上下文）作为 history messages 单独传入，不拼入 system prompt
 // userMessage 透传给 L4 记忆卡片，用于检索旧卡
 function buildSystemPrompt(mode, userMessage) {
@@ -4250,6 +4263,7 @@ function buildSystemPrompt(mode, userMessage) {
   prompt += buildCharacterPrompt();  // L2 人设库
   prompt += buildRulesPrompt();      // L3 外部规则
   prompt += buildMemoryPrompt(userMessage, mode);     // L4 记忆卡片（含检索层）
+  prompt += buildStoryStatePrompt();  // L4.5 故事状态快照
   prompt += buildModeInstruction(mode); // L6 模式指令
   return prompt;
 }
@@ -4932,6 +4946,8 @@ async function sendEventWish() {
       timestamp: Date.now()
     });
     saveToStorage();
+    // 非阻塞更新故事状态快照（让对话模块感知剧情推进）
+    updateStoryState();
     state.eventState = 'active';
     // Incrementally append the new event block (no full re-render)
     appendBondsEvent(evtId);
@@ -4959,6 +4975,43 @@ function exitEvent() {
   updateBondsStateUI();
   renderBondsInput();
   showToast('事件链已结束，历史已保留');
+}
+
+// 故事状态更新：事件完成后自动生成当前故事状态快照
+// 非阻塞调用，失败不影响主流程
+async function updateStoryState() {
+  if (!state.data.apiConfig.apiKey) return; // 无API密钥时跳过
+  try {
+    const recentEvents = state.data.eventHistory.slice(-3);
+    const recentChats = state.data.chatHistory.slice(-10);
+    const meName = (state.data.characters.me.name || '').trim() || '主控';
+    const otherName = (state.data.characters.other.name || '').trim() || 'AI角色';
+
+    let context = '请根据以下近期剧情和聊天记录，总结当前故事状态：\n\n';
+    if (recentEvents.length > 0) {
+      context += '【近期剧情事件】\n';
+      recentEvents.forEach((e, i) => {
+        context += `事件${i+1}：${e.polishedWish || e.wish || ''}\n叙事：${e.aiNarrative || ''}\n\n`;
+      });
+    }
+    if (recentChats.length > 0) {
+      context += '【近期聊天记录】\n';
+      recentChats.forEach(h => {
+        const speaker = h.role === 'user' ? meName : otherName;
+        context += `${speaker}：${h.content || ''}\n`;
+      });
+    }
+    if (recentEvents.length === 0 && recentChats.length === 0) return;
+
+    const result = await callAI(context, 'story-state');
+    const cleanResult = (result || '').trim();
+    if (cleanResult) {
+      state.data.storyState = cleanResult;
+      saveToStorage();
+    }
+  } catch(e) {
+    console.warn('故事状态更新失败（不影响主流程）', e);
+  }
 }
 
 function editNarrative(evtId, side) {
@@ -5059,6 +5112,8 @@ async function doRefreshNarrative(evtId, side) {
     // 恢复当前事件到 eventHistory 原位置
     state.data.eventHistory.splice(evtIdx, 0, evt);
     saveToStorage();
+    // 非阻塞更新故事状态快照
+    updateStoryState();
     // Only update the single card body (no full re-render)
     if (box) {
       const body = side === 'ai' ? evt.aiNarrative : evt.polishedWish;
