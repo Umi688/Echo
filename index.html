@@ -4136,7 +4136,13 @@ function buildHistoryMessages(mode) {
 
   if (mode === 'chat') {
     // 聊天模式：主上下文是聊天记录，跨模块注入近期剧情叙事
-    primary = state.data.chatHistory.slice(-MAX_PRIMARY).map(h => ({
+    // 注意：sendChatMessage 会先把用户消息 push 到 chatHistory，再调用 callAI；
+    // callAI 又会把 userMessage 作为最后一条单独追加。
+    // 如果最后一条是 user 消息，说明是刚 push 进去的，需要排除，否则AI会看到两条相同的消息（误判用户复读）。
+    const chatHist = state.data.chatHistory;
+    const excludeLast = chatHist.length > 0 && chatHist[chatHist.length - 1].role === 'user';
+    const sliceSource = excludeLast ? chatHist.slice(0, -1) : chatHist;
+    primary = sliceSource.slice(-MAX_PRIMARY).map(h => ({
       role: h.role === 'user' ? 'user' : 'assistant',
       content: h.content || ''
     }));
