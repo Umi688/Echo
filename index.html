@@ -2462,7 +2462,8 @@ html:-webkit-full-screen #app{
   width:100%;
   max-width:380px;
   max-height:85vh;
-  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
   background:rgba(232,238,246,0.88);
   backdrop-filter:blur(3px);
   border:none;
@@ -2486,12 +2487,14 @@ html:-webkit-full-screen #app{
   letter-spacing:4px;
   text-indent:4px;
   text-align:center;
+  flex-shrink:0;
 }
-.modal-body{padding:16px 20px}
+.modal-body{padding:16px 20px;overflow-y:auto;flex:1;min-height:0;}
 .modal-footer{
   display:flex;
   gap:10px;
   padding:0 20px 20px;
+  flex-shrink:0;
 }
 .modal-btn{
   flex:1;
@@ -2570,6 +2573,52 @@ select.form-input{
   cursor:pointer;
 }
 select.form-input option{background:#EFF4FA;color:var(--text)}
+/* Range slider — 匹配全局UI配色与毛玻璃风格 */
+input[type="range"].form-input{
+  -webkit-appearance:none;
+  appearance:none;
+  width:100%;
+  height:4px;
+  padding:0;
+  background:rgba(138,168,208,0.25);
+  border:none;
+  border-radius:2px;
+  outline:none;
+  cursor:pointer;
+}
+input[type="range"].form-input::-webkit-slider-runnable-track{
+  height:4px;
+  border-radius:2px;
+}
+input[type="range"].form-input::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  appearance:none;
+  width:18px;
+  height:18px;
+  margin-top:-7px;
+  border-radius:50%;
+  background:var(--gold);
+  border:2px solid rgba(255,255,255,0.6);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.5),0 2px 6px rgba(26,43,60,0.2);
+  transition:background 0.2s var(--ease);
+}
+input[type="range"].form-input::-webkit-slider-thumb:hover{background:var(--accent-bright)}
+input[type="range"].form-input:active::-webkit-slider-thumb{transform:scale(0.92)}
+input[type="range"].form-input::-moz-range-track{
+  height:4px;
+  border-radius:2px;
+  background:rgba(138,168,208,0.25);
+}
+input[type="range"].form-input::-moz-range-thumb{
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:var(--gold);
+  border:2px solid rgba(255,255,255,0.6);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.5),0 2px 6px rgba(26,43,60,0.2);
+  cursor:pointer;
+}
+input[type="range"].form-input::-moz-range-thumb:hover{background:var(--accent-bright)}
 
 /* API Config */
 .api-tabs{display:flex;gap:8px;margin-bottom:16px}
@@ -2673,6 +2722,105 @@ select.form-input option{background:#EFF4FA;color:var(--text)}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(58,111,165,0.06);border-radius:3px}
 
+/* ========== Global Rules Screen ========== */
+.global-rules-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 16px;
+  flex-shrink:0;
+}
+.global-rules-back,.global-rules-add{
+  background:none;
+  border:none;
+  color:var(--text-dim);
+  font-size:14px;
+  letter-spacing:1px;
+  cursor:pointer;
+  padding:6px 4px;
+  transition:color 0.2s var(--ease);
+}
+.global-rules-back:hover,.global-rules-add:hover{color:var(--gold)}
+.global-rules-title{
+  font-size:14px;
+  color:var(--gold);
+  letter-spacing:4px;
+  text-indent:4px;
+  font-weight:300;
+}
+.global-rules-list{
+  flex:1;
+  overflow-y:auto;
+  padding:4px 16px 20px;
+  -webkit-overflow-scrolling:touch;
+}
+.global-rule-card{
+  background:linear-gradient(135deg,rgba(239,244,250,0.75) 0%,rgba(138,168,208,0.72) 100%);
+  backdrop-filter:blur(4px);
+  padding:16px 18px;
+  margin-bottom:12px;
+  border-radius:2px;
+  position:relative;
+  overflow:hidden;
+  transition:opacity 0.3s var(--ease);
+}
+.global-rule-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,rgba(26,43,60,0.2) 0%,rgba(58,111,165,0.08) 40%,transparent 100%);
+}
+.global-rule-card.disabled{opacity:0.45}
+.global-rule-card-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:8px;
+}
+.global-rule-card-name{
+  font-size:14px;
+  color:var(--gold);
+  letter-spacing:2px;
+  font-weight:500;
+  word-break:break-word;
+}
+.global-rule-card-actions{
+  display:flex;
+  gap:6px;
+  flex-shrink:0;
+}
+.global-rule-card-btn{
+  padding:3px 10px;
+  border:none;
+  border-radius:0;
+  background:transparent;
+  color:rgba(58,111,165,0.75);
+  font-size:10px;
+  letter-spacing:1px;
+  cursor:pointer;
+  transition:color 0.2s var(--ease);
+}
+.global-rule-card-btn:hover{color:var(--gold)}
+.global-rule-card-btn.danger:hover{color:var(--danger)}
+.global-rule-card-content{
+  font-size:13px;
+  line-height:1.7;
+  color:rgba(58,111,165,0.85);
+  word-break:break-word;
+  overflow-wrap:break-word;
+  max-height:120px;
+  overflow-y:auto;
+}
+.global-rules-empty{
+  text-align:center;
+  padding:80px 20px;
+  color:var(--text-faint);
+  font-size:13px;
+  letter-spacing:1px;
+  line-height:2;
+}
+
 /* ========== Misc ========== */
 .spinner{
   display:inline-block;
@@ -2699,6 +2847,7 @@ select.form-input option{background:#EFF4FA;color:var(--text)}
       <button class="home-btn primary" onclick="startGame()">开始游戏</button>
       <button class="home-btn" onclick="showLoadModal(true)">加载游戏</button>
       <button class="home-btn" onclick="showApiConfig()">API配置</button>
+      <button class="home-btn" onclick="showGlobalRules()">全局设定</button>
     </div>
   </div>
 </div>
@@ -2713,6 +2862,16 @@ select.form-input option{background:#EFF4FA;color:var(--text)}
     <div id="echo-script-list" class="echo-script-list"></div>
     <button class="home-btn" style="margin-top:24px;width:100%;max-width:340px;" onclick="cancelEchoSelect()">返回</button>
   </div>
+</div>
+
+<!-- ========== Global Rules Screen ========== -->
+<div id="global-rules-screen" class="screen" style="display:none">
+  <div class="global-rules-header">
+    <button class="global-rules-back" onclick="backToHome()">‹ 返回</button>
+    <span class="global-rules-title">全局设定</span>
+    <button class="global-rules-add" onclick="editGlobalRule(null)">+ 新增</button>
+  </div>
+  <div id="global-rules-list" class="global-rules-list"></div>
 </div>
 
 <!-- ========== World Loading Screen ========== -->
@@ -2925,6 +3084,7 @@ const DEFAULT_DATA = {
     }
   },
   rules: [],
+  globalRules: [],  // 全局规则：适用于所有剧本的指令词 [{id, name, content, enabled}]
   chatHistory: [],
   eventHistory: [],
   memoryCards: [],
@@ -2933,7 +3093,8 @@ const DEFAULT_DATA = {
     baseUrl: 'https://api.deepseek.com',
     apiKey: '',
     model: 'deepseek-v4-flash',
-    models: []  // 自动拉取的模型列表，空则手填
+    models: [],  // 自动拉取的模型列表，空则手填
+    temperature: 0.85  // 生成温度：越低越稳定，越高越有创意（0~2）
   },
   lastMemoryUpdate: 0,
   bgImage: ''  // 剧本自定义背景图，空则用默认背景
@@ -3538,10 +3699,12 @@ function confirmLoadScript(scriptId) {
   // After ~2.5s, enter game
   setTimeout(() => {
     // Start a fresh game with this script's data (新开一局，不加载存档)
-    // Preserve API config — it should survive new game / version updates
+    // Preserve API config & global rules — they should survive new game / version updates
     const savedApiConfig = state.data ? structuredClone(state.data.apiConfig) : null;
+    const savedGlobalRules = state.data && state.data.globalRules ? structuredClone(state.data.globalRules) : null;
     state.data = deepMerge(structuredClone(DEFAULT_DATA), structuredClone(script.data));
     if (savedApiConfig) state.data.apiConfig = savedApiConfig;
+    if (savedGlobalRules) state.data.globalRules = savedGlobalRules;
     // Fix timestamps: replace 0 with current time for pre-set messages/events
     const now = Date.now();
     if (state.data.chatHistory) {
@@ -3835,6 +3998,17 @@ function buildBaseAnchor() {
   return prompt;
 }
 
+// L1.5 全局规则：适用于所有剧本的指令词（用户在全局设定中配置）
+function buildGlobalRulesPrompt() {
+  const rules = (state.data.globalRules || []).filter(r => r.enabled && r.content);
+  if (!rules.length) return '';
+  let prompt = '\n【全局指令（适用于所有剧本）】\n';
+  rules.forEach(r => {
+    prompt += `[${r.name || '未命名'}] ${r.content}\n`;
+  });
+  return prompt;
+}
+
 // L2 人设库：characters.me + characters.other
 function buildCharacterPrompt() {
   const c = state.data.characters;
@@ -4066,6 +4240,7 @@ function buildModeInstruction(mode) {
 function buildSystemPrompt(mode, userMessage) {
   let prompt = '';
   prompt += buildBaseAnchor();      // L1 基础锚定
+  prompt += buildGlobalRulesPrompt(); // L1.5 全局规则
   prompt += buildCharacterPrompt();  // L2 人设库
   prompt += buildRulesPrompt();      // L3 外部规则
   prompt += buildMemoryPrompt(userMessage, mode);     // L4 记忆卡片（含检索层）
@@ -4144,7 +4319,7 @@ async function callOpenAICompatible(messages, config, maxTokens) {
   const reqBody = {
     model: config.model,
     messages: messages,
-    temperature: 0.85,
+    temperature: config.temperature != null ? config.temperature : 0.85,
     max_tokens: maxTokens || 2000
   };
   const isGemini = /gemini/i.test(config.model || '') || /generativelanguage\.googleapis\.com/i.test(base);
@@ -6631,6 +6806,10 @@ function showApiConfig() {
           </div>
           <div id="fetch-models-status" style="font-size:11px;color:var(--text-dim);margin-top:6px;min-height:14px;"></div>
         </div>
+        <div class="form-group">
+          <label class="form-label">温度 <span id="temp-value" style="color:var(--gold);">${(cfg.temperature != null ? cfg.temperature : 0.85).toFixed(2)}</span> <span style="font-size:11px;color:var(--text-dim);font-weight:400;">（低=稳定 · 高=创意）</span></label>
+          <input type="range" class="form-input" id="api-temperature" min="0" max="2" step="0.05" value="${cfg.temperature != null ? cfg.temperature : 0.85}" style="padding:0;height:auto;" oninput="document.getElementById('temp-value').textContent=parseFloat(this.value).toFixed(2)">
+        </div>
       </div>
       <div class="modal-footer">
         <button class="modal-btn" onclick="closeModal()">关闭</button>
@@ -6694,15 +6873,121 @@ function saveApiConfig() {
   const keyEl = document.getElementById('api-key');
   const modelEl = document.getElementById('api-model');
   const urlEl = document.getElementById('api-baseurl');
+  const tempEl = document.getElementById('api-temperature');
   if (keyEl) cfg.apiKey = keyEl.value.trim();
   if (modelEl) cfg.model = modelEl.value.trim();
   if (urlEl) cfg.baseUrl = urlEl.value.trim();
+  if (tempEl) cfg.temperature = parseFloat(tempEl.value);
   saveToStorage();
   closeModal();
   showToast('API配置已保存');
 }
 
-/* ========== 存档/读档 ========== */
+/* ========== 全局设定（全局规则） ========== */
+
+// 跳转到全局设定页面
+function showGlobalRules() {
+  document.getElementById('home-screen').style.display = 'none';
+  document.getElementById('global-rules-screen').style.display = 'flex';
+  renderGlobalRules();
+}
+
+// 返回主界面
+function backToHome() {
+  document.getElementById('global-rules-screen').style.display = 'none';
+  document.getElementById('home-screen').style.display = 'flex';
+}
+
+// 渲染规则卡片列表
+function renderGlobalRules() {
+  const container = document.getElementById('global-rules-list');
+  const rules = state.data.globalRules || [];
+  if (!rules.length) {
+    container.innerHTML = `<div class="global-rules-empty">暂无全局规则<br>点击右上角「新增」添加</div>`;
+    return;
+  }
+  container.innerHTML = rules.map(r => `
+    <div class="global-rule-card ${r.enabled ? '' : 'disabled'}">
+      <div class="global-rule-card-header">
+        <div class="global-rule-card-name">${escapeHtml(r.name || '未命名规则')}</div>
+        <div class="global-rule-card-actions">
+          <button class="global-rule-card-btn" onclick="toggleGlobalRule('${r.id}')">${r.enabled ? '停用' : '启用'}</button>
+          <button class="global-rule-card-btn" onclick="editGlobalRule('${r.id}')">编辑</button>
+          <button class="global-rule-card-btn danger" onclick="deleteGlobalRule('${r.id}')">删除</button>
+        </div>
+      </div>
+      <div class="global-rule-card-content">${escapeHtml(r.content || '')}</div>
+    </div>
+  `).join('');
+}
+
+// 启用/停用
+function toggleGlobalRule(id) {
+  const rule = state.data.globalRules.find(r => r.id === id);
+  if (!rule) return;
+  rule.enabled = !rule.enabled;
+  saveToStorage();
+  renderGlobalRules();
+  showToast(rule.enabled ? '已启用' : '已停用');
+}
+
+// 删除
+function deleteGlobalRule(id) {
+  state.data.globalRules = state.data.globalRules.filter(r => r.id !== id);
+  saveToStorage();
+  renderGlobalRules();
+  showToast('已删除');
+}
+
+// 新增/编辑（id 为 null 时新增）
+function editGlobalRule(id) {
+  const isNew = !id;
+  const rule = isNew ? { name: '', content: '' } : state.data.globalRules.find(r => r.id === id);
+  if (!rule) return;
+  showModal(`
+    <div class="modal">
+      <div class="modal-header">${isNew ? '新增规则' : '编辑规则'}</div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">规则名称</label>
+          <input type="text" class="form-input" id="gr-name" value="${escapeHtml(rule.name)}" placeholder="如：写作风格、禁止事项…">
+        </div>
+        <div class="form-group">
+          <label class="form-label">指令内容</label>
+          <textarea class="form-textarea" id="gr-content" style="min-height:200px;" placeholder="输入适用于所有剧本的指令词…">${escapeHtml(rule.content)}</textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn" onclick="closeModal()">取消</button>
+        <button class="modal-btn primary" onclick="saveGlobalRule('${id || ''}')">保存</button>
+      </div>
+    </div>
+  `);
+}
+
+// 保存（新增或更新）
+function saveGlobalRule(id) {
+  const nameEl = document.getElementById('gr-name');
+  const contentEl = document.getElementById('gr-content');
+  const name = nameEl ? nameEl.value.trim() : '';
+  const content = contentEl ? contentEl.value.trim() : '';
+  if (!name) { showToast('请填写规则名称'); return; }
+  if (!content) { showToast('请填写指令内容'); return; }
+  if (!state.data.globalRules) state.data.globalRules = [];
+  if (id) {
+    const rule = state.data.globalRules.find(r => r.id === id);
+    if (rule) { rule.name = name; rule.content = content; }
+  } else {
+    state.data.globalRules.push({
+      id: 'gr_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+      name, content, enabled: true
+    });
+  }
+  saveToStorage();
+  closeModal();
+  renderGlobalRules();
+  showToast('已保存');
+}
 const MANUAL_SLOTS = 9; // 9 manual save slots
 
 // Get all saves (slots) as an object keyed by slot id
@@ -6757,27 +7042,67 @@ function buildSaveSummary(data) {
   return `对话 ${chatCount} / 事件 ${eventCount} / 记忆 ${memCount}`;
 }
 
-// ========== 存档 ==========
-function saveGame() {
+// ========== 存档（动态槽位，无上限） ==========
+
+// 获取下一个可用槽位编号
+function getNextSlotNum() {
   const saves = getAllSaves();
+  let max = 0;
+  Object.keys(saves).forEach(key => {
+    if (key.startsWith('slot_')) {
+      const num = parseInt(key.slice(5));
+      if (!isNaN(num) && num > max) max = num;
+    }
+  });
+  return max + 1;
+}
+
+// 获取所有手动存档（排除自动存档），按编号排序
+function getManualSaves() {
+  const saves = getAllSaves();
+  const list = [];
+  Object.keys(saves).forEach(key => {
+    if (key.startsWith('slot_')) {
+      list.push({ slotId: key, ...saves[key] });
+    }
+  });
+  list.sort((a, b) => {
+    const na = parseInt(a.slotId.slice(5)) || 0;
+    const nb = parseInt(b.slotId.slice(5)) || 0;
+    return na - nb;
+  });
+  return list;
+}
+
+function saveGame() {
+  const manualSaves = getManualSaves();
   let listHtml = '';
-  for (let i = 1; i <= MANUAL_SLOTS; i++) {
-    const slotId = 'slot_' + i;
-    const existing = saves[slotId];
-    const timeStr = existing ? formatSaveTime(existing.timestamp) : '空';
-    const summary = existing ? buildSaveSummary(existing.data) : '';
-    const overwriteHint = existing ? '（覆盖）' : '';
-    const displayName = existing && existing.name ? escapeHtml(existing.name) : '槽位 ' + i;
-    listHtml += `
-      <div class="save-item" onclick="promptSaveName(${i})">
-        <div class="save-info">
-          <div class="save-time">${displayName} ${overwriteHint}</div>
-          <div class="save-detail">${timeStr}${summary ? ' · ' + summary : ''}</div>
+
+  if (manualSaves.length === 0) {
+    listHtml = '<div class="save-empty">暂无存档<br>点击下方「新建存档」开始</div>';
+  } else {
+    manualSaves.forEach(s => {
+      const timeStr = formatSaveTime(s.timestamp);
+      const summary = buildSaveSummary(s.data);
+      const displayName = s.name ? escapeHtml(s.name) : s.slotId.replace('slot_', '槽位 ');
+      listHtml += `
+        <div class="save-item" onclick="promptSaveName('${s.slotId}', ${false})">
+          <div class="save-info">
+            <div class="save-time">${displayName}（覆盖）</div>
+            <div class="save-detail">${timeStr}${summary ? ' · ' + summary : ''}</div>
+          </div>
+          <span style="font-size:11px;color:var(--gold-faint);letter-spacing:2px;">覆盖</span>
         </div>
-        <span style="font-size:11px;color:var(--gold-faint);letter-spacing:2px;">存入</span>
-      </div>
-    `;
+      `;
+    });
   }
+
+  // 新建存档按钮
+  listHtml += `
+    <div class="save-item" style="justify-content:center;border-left:2px solid var(--accent);" onclick="promptSaveName(null, false)">
+      <span style="font-size:14px;color:var(--gold);letter-spacing:3px;">+ 新建存档</span>
+    </div>
+  `;
 
   showModal(`
     <div class="modal">
@@ -6793,21 +7118,23 @@ function saveGame() {
 }
 
 // Prompt user to enter a save name before saving
-function promptSaveName(slotNum) {
+// slotId: 已有槽位ID（覆盖存档），null 表示新建存档
+function promptSaveName(slotId, isOverwrite) {
   const saves = getAllSaves();
-  const slotId = 'slot_' + slotNum;
-  const existing = saves[slotId];
+  const existing = slotId ? saves[slotId] : null;
   const existingName = existing && existing.name ? existing.name : '';
+
+  const headerText = slotId ? (isOverwrite ? '覆盖存档' : '存入存档') : '新建存档';
 
   showModal(`
     <div class="modal">
-      <div class="modal-header">存入槽位 ${slotNum}</div>
+      <div class="modal-header">${headerText}</div>
       <div class="modal-body">
-        <input type="text" id="save-name-input" class="save-name-input" placeholder="输入存档名..." value="${escapeHtml(existingName)}" onkeydown="if(event.key==='Enter')confirmSaveToSlot(${slotNum})">
+        <input type="text" id="save-name-input" class="save-name-input" placeholder="输入存档名..." value="${escapeHtml(existingName)}" onkeydown="if(event.key==='Enter')confirmSaveToSlot('${slotId || ''}')">
       </div>
       <div class="modal-footer">
         <button class="modal-btn" onclick="saveGame()">返回</button>
-        <button class="modal-btn primary" onclick="confirmSaveToSlot(${slotNum})">确认存入</button>
+        <button class="modal-btn primary" onclick="confirmSaveToSlot('${slotId || ''}')">确认存入</button>
       </div>
     </div>
   `);
@@ -6821,16 +7148,17 @@ function promptSaveName(slotNum) {
   }, 100);
 }
 
-function confirmSaveToSlot(slotNum) {
+function confirmSaveToSlot(slotId) {
   const nameInput = document.getElementById('save-name-input');
   const name = nameInput ? nameInput.value.trim() : '';
   const saves = getAllSaves();
-  const slotId = 'slot_' + slotNum;
-  saves[slotId] = buildSaveData(slotId, name);
+  // 如果没传 slotId，分配新编号
+  const targetSlotId = slotId || ('slot_' + getNextSlotNum());
+  saves[targetSlotId] = buildSaveData(targetSlotId, name);
   const ok = writeAllSaves(saves);
   closeModal();
   if (ok) {
-    showToast('已存入「' + (name || '槽位 ' + slotNum) + '」');
+    showToast('已存入「' + (name || targetSlotId.replace('slot_', '槽位 ')) + '」');
   } else {
     showToast('存档失败：存储空间不足');
   }
@@ -6850,41 +7178,44 @@ function autoSave() {
 // ========== 读档 ==========
 function showLoadModal(fromHome) {
   const saves = getAllSaves();
-
-  // Auto slot first
-  const autoSave = saves['slot_auto'];
   let listHtml = '';
 
-  // Auto save slot
-  const autoTime = autoSave ? formatSaveTime(autoSave.timestamp) : '空';
-  const autoSummary = autoSave ? buildSaveSummary(autoSave.data) : '';
-  listHtml += `
-    <div class="save-item auto-slot" onclick="confirmLoadSlot('slot_auto', ${fromHome})">
-      <div class="save-info">
-        <div class="save-time">自动存档</div>
-        <div class="save-detail">${autoTime}${autoSummary ? ' · ' + autoSummary : ''}</div>
-      </div>
-      <span style="font-size:11px;color:var(--gold-faint);letter-spacing:2px;">载入</span>
-    </div>
-  `;
-
-  // Manual slots
-  for (let i = 1; i <= MANUAL_SLOTS; i++) {
-    const slotId = 'slot_' + i;
-    const existing = saves[slotId];
-    const timeStr = existing ? formatSaveTime(existing.timestamp) : '空';
-    const summary = existing ? buildSaveSummary(existing.data) : '';
-    const isEmpty = !existing;
-    const displayName = existing && existing.name ? escapeHtml(existing.name) : '槽位 ' + i;
+  // Auto save slot first
+  const autoSave = saves['slot_auto'];
+  if (autoSave) {
+    const autoTime = formatSaveTime(autoSave.timestamp);
+    const autoSummary = buildSaveSummary(autoSave.data);
     listHtml += `
-      <div class="save-item ${isEmpty ? 'empty-slot' : ''}" ${isEmpty ? '' : `onclick="confirmLoadSlot('${slotId}', ${fromHome})"`}>
+      <div class="save-item auto-slot" onclick="confirmLoadSlot('slot_auto', ${fromHome})">
         <div class="save-info">
-          <div class="save-time">${displayName}</div>
-          <div class="save-detail">${timeStr}${summary ? ' · ' + summary : ''}</div>
+          <div class="save-time">自动存档</div>
+          <div class="save-detail">${autoTime}${autoSummary ? ' · ' + autoSummary : ''}</div>
         </div>
-        ${isEmpty ? '<span style="font-size:11px;color:var(--text-faint);letter-spacing:2px;">空</span>' : '<span style="font-size:11px;color:var(--gold-faint);letter-spacing:2px;">载入</span>'}
       </div>
     `;
+  }
+
+  // Manual saves (only show slots that have data)
+  const manualSaves = getManualSaves();
+  if (manualSaves.length === 0 && !autoSave) {
+    listHtml = '<div class="save-empty">暂无存档</div>';
+  } else {
+    manualSaves.forEach(s => {
+      const timeStr = formatSaveTime(s.timestamp);
+      const summary = buildSaveSummary(s.data);
+      const displayName = s.name ? escapeHtml(s.name) : s.slotId.replace('slot_', '槽位 ');
+      listHtml += `
+        <div class="save-item" onclick="confirmLoadSlot('${s.slotId}', ${fromHome})">
+          <div class="save-info">
+            <div class="save-time">${displayName}</div>
+            <div class="save-detail">${timeStr}${summary ? ' · ' + summary : ''}</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button class="global-rule-card-btn danger" onclick="event.stopPropagation();deleteSaveSlot('${s.slotId}', ${fromHome})">删除</button>
+          </div>
+        </div>
+      `;
+    });
   }
 
   showModal(`
@@ -6924,6 +7255,33 @@ function confirmLoadSlot(slotId, fromHome) {
   `);
 }
 
+// 删除存档
+function deleteSaveSlot(slotId, fromHome) {
+  const saves = getAllSaves();
+  const save = saves[slotId];
+  const displayName = save && save.name ? save.name : slotId.replace('slot_', '槽位 ');
+  showModal(`
+    <div class="modal">
+      <div class="modal-header">删除存档</div>
+      <div class="modal-body" style="text-align:center;color:var(--text-dim);font-size:13px;line-height:1.8;">
+        确定删除「${escapeHtml(displayName)}」吗？<br>此操作不可撤销。
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn" onclick="showLoadModal(${fromHome})">取消</button>
+        <button class="modal-btn primary" style="color:var(--danger);" onclick="confirmDeleteSave('${slotId}', ${fromHome})">确认删除</button>
+      </div>
+    </div>
+  `);
+}
+
+function confirmDeleteSave(slotId, fromHome) {
+  const saves = getAllSaves();
+  delete saves[slotId];
+  writeAllSaves(saves);
+  showToast('已删除');
+  showLoadModal(fromHome);
+}
+
 function loadFromSlot(slotId, fromHome) {
   const saves = getAllSaves();
   const save = saves[slotId];
@@ -6938,10 +7296,12 @@ function loadFromSlot(slotId, fromHome) {
   }
   // Save current progress before loading (prevent data loss)
   if (state.data) saveToStorage();
-  // Preserve API config — it should survive save/load (like confirmLoadScript)
+  // Preserve API config & global rules — they should survive save/load (like confirmLoadScript)
   const savedApiConfig = state.data ? structuredClone(state.data.apiConfig) : null;
+  const savedGlobalRules = state.data && state.data.globalRules ? structuredClone(state.data.globalRules) : null;
   state.data = deepMerge(structuredClone(DEFAULT_DATA), save.data);
   if (savedApiConfig) state.data.apiConfig = savedApiConfig;
+  if (savedGlobalRules) state.data.globalRules = savedGlobalRules;
   // Reset all runtime state to avoid stale leftovers
   state.eventState = 'idle';
   state.currentChainId = null;
