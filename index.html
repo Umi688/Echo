@@ -4150,19 +4150,8 @@ function buildHistoryMessages(mode) {
       role: h.role === 'user' ? 'user' : 'assistant',
       content: h.content || ''
     }));
-    // 跨模块剧情注入：故事状态快照存在时由 L4.5 承担，不重复注入事件全文
-    // 仅当 storyState 为空（旧存档兜底）时，注入最近3条事件全文叙事作为补充
-    const hasStoryState = !!(state.data.storyState && state.data.storyState.trim());
-    if (!hasStoryState) {
-      const recentEvents = state.data.eventHistory.slice(-3);
-      if (recentEvents.length > 0) {
-        const eventSummary = recentEvents.map(e => {
-          const wish = e.polishedWish || e.wish || '';
-          return `愿望：${wish}\n叙事：${e.aiNarrative || ''}`;
-        }).join('\n---\n');
-        cross.push({ role: 'user', content: `【近期剧情进展（这些事件已经真实发生，你的聊天语气和态度必须与之衔接，勿在聊天中复述叙事原文）】\n${eventSummary}` });
-      }
-    }
+    // 跨模块剧情注入：故事状态快照已在 System Prompt 中注入（L4.5），此处不再重复注入事件全文
+    // 避免旧事件叙事干扰AI对当前时间节点的感知
   } else if (mode === 'event') {
     // 剧情模式：主上下文是剧情事件链，跨模块注入近期聊天
     primary = state.data.eventHistory.flatMap(e => [
@@ -4217,7 +4206,7 @@ function buildModeInstruction(mode) {
     const otherName = state.data.characters.other.name || 'AI角色';
     return '\n【当前模式：聊天】\n角色分配：你扮演AI角色"' + otherName + '"，用户扮演主控角色"' + meName + '"。你的每一条回复都必须且只能以"' + otherName + '"的身份、视角和口吻输出，绝对禁止以主控角色"' + meName + '"的视角发言或代替用户说话。\n规则：\n1. 只输出' + otherName + '说的话——纯粹的一句话或几句话，像微信聊天发出去的文字。\n2. 绝对禁止任何括号旁白、动作描写、心理描写、神态描写、环境描写。例如（他笑了笑）、（喉结动了动）、（声音有点哑）这类全部禁止。只输出对话文字本身。\n3. 回复需综合人设、历史记忆和当前故事状态：以初始人设为底色，以近期互动和记忆卡片中记录的"变化"为当前行为依据。若历史中已出现性格偏移，应延续该偏移，而非回退到初始状态。当前故事状态供你内在感知剧情的发展阶段、所处时间节点、空间位置；提供角色此刻的心理和情绪状态，语气和态度应自然地受其影响，像平时发微信一样。\n4. 输出风格：短句、口语化、日常对话，像微信聊天一样自然。\n5. 不主动推进重大剧情，不展开长篇叙述。\n';
   } else if (mode === 'event') {
-    return '\n【当前模式：事件叙事】\n规则：\n1.严格使用第三人称叙述。指代主控角色一律使用主控角色的姓名（或"他/她"），指代AI角色一律使用AI角色的姓名（或"他/她"）。全文禁止出现"你""你的""你们"等任何第二人称代词。\n2. 围绕玩家的愿望展开，不要替玩家做重大决定。\n3. 严禁复述或重复上文已出现过的内容（包括润色文本、历史叙事、聊天记录中的任何句子、段落或场景描写）。叙事必须从已有内容的结束处继续推进，只写新的发展。\n4. 叙事应自然延伸当前状态：综合初始人设 + 记忆卡片中的历史变化。若历史已记录角色状态的偏移，叙事中应延续该偏移，不退回初始状态。\n5.若有心理活动：小段插入第一人称或自由间接引语呈现角色当下的内心独白、回忆、矛盾、独白塑造情感冲突（如自责与不甘交织、想追问又克制、甜蜜回忆与当下苦涩对比）。\n6.格式要求：心理活动用「」括起来，对话内容则用""括起来。段落之间用换行分隔，不要挤在一起。\n7.在叙事正文结束后，另起一行输出分隔符 |||STATE||| ，然后在分隔符后输出一段当前故事状态快照（供后续对话模块感知剧情进展）。请综合你能看到的近期所有事件（不只是当前这一条），概括出当前整体故事状态，格式如下，每项一行：\n时间节点：一句话概括当前故事进展到什么时候\n当前场景：一句话概括当前所处场景\n关系动态：一到两句话描述两人关系的当前态势\n角色状态：一到两句话描述双方此刻的情绪心理\n近期经历：用几句话概括最近几条事件中发生的重要事情\n分隔符和状态快照不会展示给玩家，请务必输出。状态快照总字数不超过200字。\n';
+    return '\n【当前模式：事件叙事】\n规则：\n1.严格使用第三人称叙述。指代主控角色一律使用主控角色的姓名（或"他/她"），指代AI角色一律使用AI角色的姓名（或"他/她"）。全文禁止出现"你""你的""你们"等任何第二人称代词。\n2. 围绕玩家的愿望展开，不要替玩家做重大决定。\n3. 严禁复述或重复上文已出现过的内容（包括润色文本、历史叙事、聊天记录中的任何句子、段落或场景描写）。叙事必须从已有内容的结束处继续推进，只写新的发展。\n4. 叙事应自然延伸当前状态：综合初始人设 + 记忆卡片中的历史变化。若历史已记录角色状态的偏移，叙事中应延续该偏移，不退回初始状态。\n5.若有心理活动：小段插入第一人称或自由间接引语呈现角色当下的内心独白、回忆、矛盾、独白塑造情感冲突（如自责与不甘交织、想追问又克制、甜蜜回忆与当下苦涩对比）。\n6.格式要求：心理活动用「」括起来，对话内容则用""括起来。段落之间用换行分隔，不要挤在一起。\n7.在叙事正文结束后，另起一行输出分隔符 |||STATE||| ，然后在分隔符后输出一段当前故事状态快照（供后续对话模块感知剧情进展）。请综合你能看到的近期所有事件（不只是当前这一条），概括出当前整体故事状态，格式如下，每项一行：\n时间节点：一句话概括当前故事进展到什么时候\n空间位置：一句话概括当前所处的空间位置\n关系动态：一到两句话描述两人关系的当前态势\n情感矛盾：一到两句话描述当前存在的情感张力、未解决的冲突或暗流\n角色状态：一到两句话描述双方此刻的情绪心理\n性格演变：一到两句话描述角色性格相比初始人设发生了哪些偏移或成长\n分隔符和状态快照不会展示给玩家，请务必输出。状态快照总字数不超过400字。\n';
   } else if (mode === 'polish') {
     return '\n【当前模式：润色】\n规则：\n1. 本模式下你不是在扮演AI角色，而是作为第三人称叙事者。叙事视角主体是主控角色。\n2. 玩家输入的是基于主控角色自身角度的剧情愿望、反应或期望的发展。将其润色为以主控为视角焦点的小说风格叙事文段。保留玩家原意的核心。\n3. 严格使用第三人称叙述。玩家输入中的"我"一律替换为主控角色的姓名（或"他/她"），指代AI角色时一律使用AI角色的姓名（或"他/她"）。全文禁止出现"你""你的""你们"等任何第二人称代词。\n4. 润色文本默认应从上条叙事文本或润色文本的结束处自然衔接，延续当前场景和时空。严禁复述或重复上文已出现过的内容。\n5.若有心理活动：小段插入第一人称或自由间接引语呈现角色当下的内心独白、回忆、矛盾、独白塑造情感冲突（如自责与不甘交织、想追问又克制、甜蜜回忆与当下苦涩对比）。\n6.格式要求：心理活动用「」括起来，对话内容用""括起来。段落之间用换行分隔，不要挤在一起。\n7.只输出润色后的文段，不加任何说明。\n';
   } else if (mode === 'memory') {
@@ -4253,40 +4242,14 @@ function buildModeInstruction(mode) {
 }
 
 // L4.5 故事状态快照：注入当前故事的时间节点、场景、角色状态等
-// 快照生成后只在第一次聊天时注入，之后标记为已消费不再注入（避免时间卡住不动）
-// 直到新羁绊事件生成新快照时重置
+// 新事件生成快照后，仅第一轮聊天注入，之后标记已消费不再注入（靠聊天上下文自然延续）
+// 直到下一轮新事件生成新快照时重置。删除已消费快照的聊天消息也会重置。
 function buildStoryStatePrompt() {
-  // AI生成的快照已消费过 → 不再注入，让聊天自身的时间流推进
+  // 快照已消费过 → 不再注入，让聊天上下文自身推进时间流
   if (state.data.storyState && state.data.storyStateConsumed) return '';
-  const ss = getEffectiveStoryState();
+  const ss = state.data.storyState;
   if (!ss || !ss.trim()) return '';
   return '\n【当前故事状态（供你内在感知剧情进展）】\n' + ss.trim() + '\n';
-}
-
-// 获取有效的故事状态：优先用AI生成的 storyState，为空时从最近5条事件叙事中本地提取兜底
-function getEffectiveStoryState() {
-  // 1. 优先使用AI在事件叙事中顺带生成的状态快照
-  if (state.data.storyState && state.data.storyState.trim()) {
-    return state.data.storyState.trim();
-  }
-  // 2. 兜底：从最近5条事件叙事中提取关键信息
-  const events = state.data.eventHistory || [];
-  if (events.length === 0) return '';
-  const recentEvents = events.slice(-5);
-  // 汇总每条事件的愿望标题
-  const wishes = recentEvents.map(e => e.polishedWish || e.wish || '').filter(w => w.trim());
-  // 取最后一条叙事的末尾2-3句作为当前场景
-  const lastNarrative = (recentEvents[recentEvents.length - 1].aiNarrative || '').trim();
-  const sentences = lastNarrative.split(/[。！？\n]/).filter(s => s.trim());
-  const tail = sentences.slice(-3).join('。').trim();
-  let fallback = '';
-  if (wishes.length > 0) {
-    fallback += '近期经历：' + wishes.join('；') + '。\n';
-  }
-  if (tail) {
-    fallback += '当前场景（来自最近叙事结尾）：' + tail + '。';
-  }
-  return fallback;
 }
 
 // 完整 System Prompt 拼装：L1 → L2 → L3 → L4 → L4.5 → L6
@@ -4619,7 +4582,7 @@ async function sendChatMessage() {
           timestamp: Date.now(), sessionId: state.chatSessionId
         });
         appendChatMessage(state.data.chatHistory.length - 1);
-        // 快照已通过本次聊天消费，标记为已用（避免后续聊天重复注入导致时间卡住）
+        // 快照已通过本次聊天消费，标记为已用（下次聊天不再注入，靠上下文延续）
         if (state.data.storyState && !state.data.storyStateConsumed) {
           state.data.storyStateConsumed = true;
         }
@@ -4661,7 +4624,7 @@ async function sendChatMessage() {
         timestamp: Date.now(), sessionId: state.chatSessionId
       });
       appendChatMessage(state.data.chatHistory.length - 1);
-      // 快照已通过本次聊天消费，标记为已用（避免后续聊天重复注入导致时间卡住）
+      // 快照已通过本次聊天消费，标记为已用（下次聊天不再注入，靠上下文延续）
       if (state.data.storyState && !state.data.storyStateConsumed) {
         state.data.storyStateConsumed = true;
       }
@@ -4754,7 +4717,7 @@ function deleteMessage(idx) {
   if (!msg) return;
   closeMsgActions();
   state.data.chatHistory.splice(idx, 1);
-  // 删除消息后重置快照消费标记：用户可能回退到了快照注入之前的状态，需要重新注入
+  // 删除消息后重置快照消费标记：用户可能回退到了快照注入之前的状态，下次聊天将重新注入快照
   if (state.data.storyState) {
     state.data.storyStateConsumed = false;
   }
@@ -4987,8 +4950,8 @@ async function sendEventWish() {
       'event'
     );
 
-    // 解析叙事正文和状态快照（同一AI调用产出，零额外消耗）
-    const parsed = parseNarrativeAndState(narrative);
+    // 解析叙事正文和状态快照；如果AI没输出快照，ensureStoryState 会单独补生成
+    const parsed = await ensureStoryState(narrative);
     narrative = parsed.narrative;
 
     state.data.eventHistory.push({
@@ -4999,11 +4962,9 @@ async function sendEventWish() {
       polishedWish: polished,
       timestamp: Date.now()
     });
-    // 更新故事状态快照（从同一AI响应中提取，无额外调用）
-    if (parsed.state) {
-      state.data.storyState = parsed.state;
-      state.data.storyStateConsumed = false; // 新快照生成，重置消费标记
-    }
+    // 更新故事状态快照
+    state.data.storyState = parsed.state;
+    state.data.storyStateConsumed = false; // 新快照生成，重置消费标记
     saveToStorage();
     state.eventState = 'active';
     // Incrementally append the new event block (no full re-render)
@@ -5042,7 +5003,7 @@ function parseNarrativeAndState(raw) {
   const delimiter = '|||STATE|||';
   const idx = raw.indexOf(delimiter);
   if (idx === -1) {
-    // AI没输出分隔符，尝试兜底：找【状态快照】等变体
+    // AI没输出分隔符，尝试找【状态快照】等变体
     const altIdx = raw.search(/\n【?状态快照】?\n?/);
     if (altIdx !== -1) {
       return {
@@ -5056,6 +5017,56 @@ function parseNarrativeAndState(raw) {
     narrative: raw.slice(0, idx).trim(),
     state: raw.slice(idx + delimiter.length).trim()
   };
+}
+
+// 确保故事状态快照存在：如果AI叙事时没输出状态快照，单独补生成一次
+// 补生成时会注入近期事件上下文，保证快照质量与正常流程一致
+async function ensureStoryState(rawNarrative) {
+  const parsed = parseNarrativeAndState(rawNarrative);
+  if (parsed.state && parsed.state.trim()) {
+    return { narrative: parsed.narrative, state: parsed.state.trim() };
+  }
+  // AI没输出状态快照，单独补生成
+  const config = state.data.apiConfig;
+  if (!config.apiKey) {
+    return { narrative: parsed.narrative, state: '' };
+  }
+  // 收集近期事件上下文（最近5条），让补生成的快照能看到完整故事线
+  const events = state.data.eventHistory || [];
+  const recentEvents = events.slice(-5);
+  let eventContext = '';
+  if (recentEvents.length > 0) {
+    eventContext = recentEvents.map((e, i) => {
+      const wish = e.polishedWish || e.wish || '';
+      const narr = e.aiNarrative || '';
+      return `事件${i + 1}：\n愿望：${wish}\n叙事：${narr}`;
+    }).join('\n---\n');
+  }
+  const statePrompt = `请根据以下近期事件和最新叙事文本，生成当前故事状态快照。格式如下，每项一行：
+时间节点：一句话概括当前故事进展到什么时候
+空间位置：一句话概括当前所处的空间位置
+关系动态：一到两句话描述两人关系的当前态势
+情感矛盾：一到两句话描述当前存在的情感张力、未解决的冲突或暗流
+角色状态：一到两句话描述双方此刻的情绪心理
+性格演变：一到两句话描述角色性格相比初始人设发生了哪些偏移或成长
+总字数不超过400字。只输出状态快照本身，不要加任何说明或标题。
+
+【近期事件】
+${eventContext}
+
+【最新叙事文本】
+${parsed.narrative}`;
+  const messages = [
+    { role: 'system', content: '你是一个故事状态总结助手。请根据叙事文本生成简洁准确的状态快照。' },
+    { role: 'user', content: statePrompt }
+  ];
+  try {
+    const stateResult = await callWithRetry(() => callOpenAICompatible(messages, config, 800), 1);
+    return { narrative: parsed.narrative, state: stateResult.trim() };
+  } catch(e) {
+    console.error('状态快照补生成失败', e);
+    return { narrative: parsed.narrative, state: '' };
+  }
 }
 
 function editNarrative(evtId, side) {
@@ -5148,13 +5159,11 @@ async function doRefreshNarrative(evtId, side) {
         prompt = `【玩家的剧情愿望】\n${wish}\n\n请基于玩家的愿望推进剧情，生成第三人称叙事文段。`;
       }
       evt.aiNarrative = await callAI(prompt, 'event');
-      // 解析叙事正文和状态快照
-      const parsed = parseNarrativeAndState(evt.aiNarrative);
+      // 解析叙事正文和状态快照；如果AI没输出快照，ensureStoryState 会单独补生成
+      const parsed = await ensureStoryState(evt.aiNarrative);
       evt.aiNarrative = parsed.narrative;
-      if (parsed.state) {
-        state.data.storyState = parsed.state;
-        state.data.storyStateConsumed = false; // 新快照生成，重置消费标记
-      }
+      state.data.storyState = parsed.state;
+      state.data.storyStateConsumed = false; // 新快照生成，重置消费标记
     } else {
       // 润色Retry：基于玩家投递的叙事愿望，从上一条未删除的文本之后自然衔接
       const wish = evt.wish || evt.polishedWish || '';
@@ -5221,7 +5230,14 @@ function doDeleteNarrative(evtId, side) {
     const idx = state.data.eventHistory.findIndex(e => e.id === evtId);
     if (idx !== -1) state.data.eventHistory.splice(idx, 1);
     if (blockEl) blockEl.remove();
+    // 删除事件后，如果该事件是最后一条（即生成当前快照的那条），清除陈旧快照
+    if (idx === state.data.eventHistory.length) {
+      state.data.storyState = '';
+      state.data.storyStateConsumed = false;
+    }
     if (state.data.eventHistory.length === 0) {
+      state.data.storyState = '';
+      state.data.storyStateConsumed = false;
       updateBondsStateUI();
     }
   }
