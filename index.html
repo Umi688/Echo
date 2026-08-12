@@ -3620,8 +3620,6 @@ function scrollChatToBottom() {
 function autoResizeInput(el) {
   el.style.height = 'auto';
   el.style.height = el.scrollHeight + 'px';
-  // 保持上方内容跟随滚动到底部
-  scrollChatToBottom();
 }
 
 // 置顶：滚动到第一条
@@ -4249,6 +4247,8 @@ function buildStoryStatePrompt() {
   if (state.data.storyState && state.data.storyStateConsumed) return '';
   const ss = state.data.storyState;
   if (!ss || !ss.trim()) return '';
+  // 安全网：旧格式快照（含"时间节点"或"空间位置"字段）不注入
+  if (ss.includes('时间节点') || ss.includes('空间位置')) return '';
   return '\n【当前故事状态（供你内在感知剧情进展）】\n' + ss.trim() + '\n';
 }
 
@@ -7438,6 +7438,11 @@ function loadFromSlot(slotId, fromHome) {
   state.data = deepMerge(structuredClone(DEFAULT_DATA), save.data);
   if (savedApiConfig) state.data.apiConfig = savedApiConfig;
   if (savedGlobalRules) state.data.globalRules = savedGlobalRules;
+  // 迁移：检测旧格式快照（含"时间节点"或"空间位置"字段），清除后等下次事件重新生成
+  if (state.data.storyState && (state.data.storyState.includes('时间节点') || state.data.storyState.includes('空间位置'))) {
+    state.data.storyState = '';
+    state.data.storyStateConsumed = false;
+  }
   // Reset all runtime state to avoid stale leftovers
   state.eventState = 'idle';
   state.currentChainId = null;
