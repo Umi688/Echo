@@ -3096,7 +3096,9 @@ const DEFAULT_DATA = {
     apiKey: '',
     model: 'deepseek-v4-flash',
     models: [],  // 自动拉取的模型列表，空则手填
-    temperature: 0.85  // 生成温度：越低越稳定，越高越有创意（0~2）
+    temperature: 0.85,  // 生成温度：越低越稳定，越高越有创意（0~2）
+    frequencyPenalty: 0.4,  // 频率惩罚：抑制重复用词（0~2，越高越不重复）
+    presencePenalty: 0.3  // 存在惩罚：鼓励引入新话题（0~2，越高越倾向新内容）
   },
   lastMemoryUpdate: 0,
   bgImage: ''  // 剧本自定义背景图，空则用默认背景
@@ -4374,6 +4376,8 @@ async function callOpenAICompatible(messages, config, maxTokens) {
     model: config.model,
     messages: messages,
     temperature: config.temperature != null ? config.temperature : 0.85,
+    frequency_penalty: config.frequencyPenalty != null ? config.frequencyPenalty : 0.4,
+    presence_penalty: config.presencePenalty != null ? config.presencePenalty : 0.3,
     max_tokens: maxTokens || 2000
   };
   const isGemini = /gemini/i.test(config.model || '') || /generativelanguage\.googleapis\.com/i.test(base);
@@ -6916,6 +6920,14 @@ function showApiConfig() {
           <label class="form-label">温度 <span id="temp-value" style="color:var(--gold);">${(cfg.temperature != null ? cfg.temperature : 0.85).toFixed(2)}</span> <span style="font-size:11px;color:var(--text-dim);font-weight:400;">（低=稳定 · 高=创意）</span></label>
           <input type="range" class="form-input" id="api-temperature" min="0" max="2" step="0.05" value="${cfg.temperature != null ? cfg.temperature : 0.85}" style="padding:0;height:auto;" oninput="document.getElementById('temp-value').textContent=parseFloat(this.value).toFixed(2)">
         </div>
+        <div class="form-group">
+          <label class="form-label">频率惩罚 <span id="freq-value" style="color:var(--gold);">${(cfg.frequencyPenalty != null ? cfg.frequencyPenalty : 0.4).toFixed(2)}</span> <span style="font-size:11px;color:var(--text-dim);font-weight:400;">（抑制重复用词）</span></label>
+          <input type="range" class="form-input" id="api-frequency-penalty" min="0" max="2" step="0.05" value="${cfg.frequencyPenalty != null ? cfg.frequencyPenalty : 0.4}" style="padding:0;height:auto;" oninput="document.getElementById('freq-value').textContent=parseFloat(this.value).toFixed(2)">
+        </div>
+        <div class="form-group">
+          <label class="form-label">存在惩罚 <span id="pres-value" style="color:var(--gold);">${(cfg.presencePenalty != null ? cfg.presencePenalty : 0.3).toFixed(2)}</span> <span style="font-size:11px;color:var(--text-dim);font-weight:400;">（鼓励引入新话题）</span></label>
+          <input type="range" class="form-input" id="api-presence-penalty" min="0" max="2" step="0.05" value="${cfg.presencePenalty != null ? cfg.presencePenalty : 0.3}" style="padding:0;height:auto;" oninput="document.getElementById('pres-value').textContent=parseFloat(this.value).toFixed(2)">
+        </div>
       </div>
       <div class="modal-footer">
         <button class="modal-btn" onclick="closeModal()">关闭</button>
@@ -6980,10 +6992,14 @@ function saveApiConfig() {
   const modelEl = document.getElementById('api-model');
   const urlEl = document.getElementById('api-baseurl');
   const tempEl = document.getElementById('api-temperature');
+  const freqEl = document.getElementById('api-frequency-penalty');
+  const presEl = document.getElementById('api-presence-penalty');
   if (keyEl) cfg.apiKey = keyEl.value.trim();
   if (modelEl) cfg.model = modelEl.value.trim();
   if (urlEl) cfg.baseUrl = urlEl.value.trim();
   if (tempEl) cfg.temperature = parseFloat(tempEl.value);
+  if (freqEl) cfg.frequencyPenalty = parseFloat(freqEl.value);
+  if (presEl) cfg.presencePenalty = parseFloat(presEl.value);
   saveToStorage();
   closeModal();
   showToast('API配置已保存');
