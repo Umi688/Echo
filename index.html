@@ -3090,6 +3090,7 @@ const DEFAULT_DATA = {
   memoryCards: [],
   secretRecords: [],
   storyState: '',  // 当前故事状态摘要（时间节点、场景、角色状态等），由羁绊事件触发更新
+  storyStateConsumed: false,  // 快照是否已被聊天消费过（true=不再注入，直到新事件生成新快照）
   apiConfig: {
     baseUrl: 'https://api.deepseek.com',
     apiKey: '',
@@ -4250,8 +4251,11 @@ function buildModeInstruction(mode) {
 }
 
 // L4.5 故事状态快照：注入当前故事的时间节点、场景、角色状态等
-// 让对话和事件模块都能感知"故事已经推进到了哪里"
+// 快照生成后只在第一次聊天时注入，之后标记为已消费不再注入（避免时间卡住不动）
+// 直到新羁绊事件生成新快照时重置
 function buildStoryStatePrompt() {
+  // AI生成的快照已消费过 → 不再注入，让聊天自身的时间流推进
+  if (state.data.storyState && state.data.storyStateConsumed) return '';
   const ss = getEffectiveStoryState();
   if (!ss || !ss.trim()) return '';
   return '\n【当前故事状态（供你内在感知剧情进展）】\n' + ss.trim() + '\n';
@@ -4611,6 +4615,10 @@ async function sendChatMessage() {
           timestamp: Date.now(), sessionId: state.chatSessionId
         });
         appendChatMessage(state.data.chatHistory.length - 1);
+        // 快照已通过本次聊天消费，标记为已用（避免后续聊天重复注入导致时间卡住）
+        if (state.data.storyState && !state.data.storyStateConsumed) {
+          state.data.storyStateConsumed = true;
+        }
         saveToStorage();
       }
     } catch(e) {
@@ -4649,6 +4657,10 @@ async function sendChatMessage() {
         timestamp: Date.now(), sessionId: state.chatSessionId
       });
       appendChatMessage(state.data.chatHistory.length - 1);
+      // 快照已通过本次聊天消费，标记为已用（避免后续聊天重复注入导致时间卡住）
+      if (state.data.storyState && !state.data.storyStateConsumed) {
+        state.data.storyStateConsumed = true;
+      }
       saveToStorage();
     }
   } catch(e) {
@@ -4738,6 +4750,10 @@ function deleteMessage(idx) {
   if (!msg) return;
   closeMsgActions();
   state.data.chatHistory.splice(idx, 1);
+  // 删除消息后重置快照消费标记：用户可能回退到了快照注入之前的状态，需要重新注入
+  if (state.data.storyState) {
+    state.data.storyStateConsumed = false;
+  }
   saveToStorage();
   renderChat();
   showToast('已删除');
@@ -4982,6 +4998,7 @@ async function sendEventWish() {
     // 更新故事状态快照（从同一AI响应中提取，无额外调用）
     if (parsed.state) {
       state.data.storyState = parsed.state;
+      state.data.storyStateConsumed = false; // 新快照生成，重置消费标记
     }
     saveToStorage();
     state.eventState = 'active';
@@ -5130,7 +5147,10 @@ async function doRefreshNarrative(evtId, side) {
       // 解析叙事正文和状态快照
       const parsed = parseNarrativeAndState(evt.aiNarrative);
       evt.aiNarrative = parsed.narrative;
-      if (parsed.state) state.data.storyState = parsed.state;
+      if (parsed.state) {
+        state.data.storyState = parsed.state;
+        state.data.storyStateConsumed = false; // 新快照生成，重置消费标记
+      }
     } else {
       // 润色Retry：基于玩家投递的叙事愿望，从上一条未删除的文本之后自然衔接
       const wish = evt.wish || evt.polishedWish || '';
