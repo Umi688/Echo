@@ -4570,14 +4570,23 @@ async function sendChatMessage() {
     if (quoteBar) quoteBar.style.display = 'none';
   }
 
-  // Empty text + no quote = "continue" prompt: ask AI to say one more line
+  // Empty text + no quote = "continue" prompt
   if (!text && !hasQuote) {
-    // Don't add a user message, just prompt AI to continue
+    const chatHist = state.data.chatHistory;
+    const lastIsUser = chatHist.length > 0 && chatHist[chatHist.length - 1].role === 'user';
     state.isLoading = true;
     btn.disabled = true;
     showTypingIndicator();
     try {
-      const reply = await callAI('（系统提示：对方没有回复，你紧接着又会说一句话。请直接输出这句话，不要加任何说明或引号，不要重复已经说过的话，内容要自然衔接上一句。）', 'chat');
+      let reply;
+      if (lastIsUser) {
+        // 上一条是主控的消息 → AI回复主控的话（用主控的最后一条消息作为输入，走标准流程）
+        const lastUserMsg = chatHist[chatHist.length - 1].content;
+        reply = await callAI(lastUserMsg, 'chat');
+      } else {
+        // 上一条是AI的消息 → 主控沉默，AI继续说
+        reply = await callAI('（系统提示：对方没有回复，你紧接着又会说一句话。请直接输出这句话，不要加任何说明或引号，不要重复已经说过的话，内容要自然衔接上一句。）', 'chat');
+      }
       removeTypingIndicator();
       const cleanReply = reply.trim();
       if (cleanReply) {
