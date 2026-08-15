@@ -6,7 +6,7 @@
 <title>Echo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@1,700&family=Noto+Serif+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@1,700&family=Noto+Serif+SC:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400&display=swap" rel="stylesheet">
 <style>
 /* ========== Reset & Base ========== */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -29,6 +29,7 @@
   --danger:#A87878;
   --border:rgba(138,168,208,0.15);
   --border-strong:rgba(138,168,208,0.25);
+  --card-bg:rgba(239,244,250,0.75);
   --ease:cubic-bezier(0.4,0,0.2,1);
   --bg-image:url('https://cdn.jsdelivr.net/gh/Umi688/Echo@main/images/BackGround.jpg');
   --paper-noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
@@ -45,6 +46,10 @@ body{
   align-items:center;
   justify-content:center;
 }
+/* 字体层次：标题用粗衬线、正文用细衬线、时间戳/小字用无衬线 */
+.font-title{font-family:"Cormorant","Noto Serif SC","Source Han Serif SC",serif;font-weight:600}
+.font-body{font-family:"Noto Serif SC","Source Han Serif SC","Songti SC",serif;font-weight:300}
+.font-meta{font-family:"Noto Sans SC",-apple-system,"PingFang SC","Helvetica Neue",sans-serif;font-weight:300}
 /* 卡片细微内阴影：顶部高光强化轮廓分层 */
 .home-btn,.msg-bubble,.input-bar input,.input-bar textarea,.input-bar button,
 .narr-card,.char-card,.avatar-frame,.rules-header,.rule-card-btn,.rule-card-content,
@@ -123,6 +128,7 @@ body{
   letter-spacing:6px;
   font-weight:300;
   margin-top:12px;
+  font-family:"Noto Sans SC",-apple-system,"PingFang SC","Helvetica Neue",sans-serif;
   text-align:center;
 }
 .home-buttons{width:100%;display:flex;flex-direction:column;gap:12px;margin-top:0}
@@ -460,6 +466,9 @@ html:-webkit-full-screen #app{
   font-size:11px;
   color:var(--text-faint);
   margin:6px 0 2px;
+  font-family:"Noto Sans SC",-apple-system,"PingFang SC","Helvetica Neue",sans-serif;
+  font-weight:300;
+  letter-spacing:0.5px;
 }
 .msg-row{
   display:flex;
@@ -467,7 +476,8 @@ html:-webkit-full-screen #app{
   max-width:82%;
 }
 .msg-row.me{align-self:flex-end;flex-direction:row-reverse}
-@keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes msgSlideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg-row.msg-new{animation:msgSlideIn 0.4s ease-out}
 .chat-avatar{
   width:42px;height:42px;
   border-radius:3px;
@@ -490,19 +500,21 @@ html:-webkit-full-screen #app{
 }
 .msg-bubble{
   padding:10px 13px;
-  border-radius:0;
+  border-radius:12px 12px 12px 2px;
   font-size:14.5px;
   line-height:1.55;
   word-break:break-word;
   backdrop-filter:blur(3px);
+  font-family:"Noto Serif SC","Source Han Serif SC","Songti SC",serif;
+  font-weight:300;
 }
 .msg-row.ai .msg-bubble{
   background:rgba(239,244,250,0.75);
-  border-top-left-radius:0;
+  border-radius:2px 12px 12px 12px;
 }
 .msg-row.me .msg-bubble{
   background:rgba(138,168,208,0.72);
-  border-top-right-radius:0;
+  border-radius:12px 2px 12px 12px;
 }
 .typing-indicator{display:flex;gap:4px;align-items:center;padding:3px 0}
 .typing-indicator span{
@@ -892,10 +904,12 @@ html:-webkit-full-screen #app{
   content:'';
   position:absolute;
   left:7px;
-  top:8px;
-  bottom:8px;
+  top:12px;
+  bottom:12px;
   width:1px;
-  background:linear-gradient(180deg,rgba(26,43,60,0.4) 0%,rgba(26,43,60,0.1) 100%);
+  background-image:linear-gradient(180deg,rgba(58,111,165,0.3) 50%,transparent 50%);
+  background-size:1px 6px;
+  background-repeat:repeat-y;
 }
 .memory-card{
   position:relative;
@@ -916,7 +930,19 @@ html:-webkit-full-screen #app{
   height:9px;
   border-radius:50%;
   background:var(--gold);
-  box-shadow:0 0 0 3px rgba(232,238,246,0.8),0 0 8px rgba(26,43,60,0.3);
+  box-shadow:0 0 0 3px rgba(232,238,246,0.9),0 0 6px rgba(58,111,165,0.4);
+  z-index:1;
+}
+.memory-card::after{
+  content:'';
+  position:absolute;
+  left:-31px;
+  top:16px;
+  width:13px;
+  height:13px;
+  border-radius:50%;
+  border:1px solid rgba(58,111,165,0.15);
+  z-index:0;
 }
 .memory-card-header{
   display:flex;
@@ -928,11 +954,14 @@ html:-webkit-full-screen #app{
   font-size:11px;
   color:var(--gold-faint);
   letter-spacing:1px;
+  font-family:"Noto Sans SC",-apple-system,"PingFang SC","Helvetica Neue",sans-serif;
+  font-weight:300;
 }
 .memory-card-source{
   font-size:10px;
   color:var(--text-faint);
   letter-spacing:0.5px;
+  font-family:"Noto Sans SC",-apple-system,"PingFang SC","Helvetica Neue",sans-serif;
 }
 .memory-card-text{
   font-size:13.5px;
@@ -978,6 +1007,14 @@ html:-webkit-full-screen #app{
   flex-wrap:wrap;
   gap:10px;
   -webkit-overflow-scrolling:touch;
+}
+/* Trace 模式：贴合顶部和两侧，无任何间距 */
+#secret-content.trace-mode{
+  padding:0 !important;
+  gap:0 !important;
+  overflow:hidden !important;
+  flex-wrap:nowrap !important;
+  min-height:0;
 }
 /* 子模块卡片：默认为竖向紧凑卡，每排2个 */
 .secret-module{
@@ -1133,6 +1170,46 @@ html:-webkit-full-screen #app{
   font-weight:300;
   opacity:0.85;
 }
+.secret-detail-title.trace-title{
+  flex:1;
+  text-align:center;
+  letter-spacing:0;
+  text-indent:0;
+  font-size:13px;
+  font-weight:500;
+  opacity:1;
+  color:var(--text);
+  padding:0;
+  line-height:1.5;
+}
+.secret-page-header.trace-header{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  margin:0;
+  background:rgba(255,255,255,0.88);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(138,168,208,0.2);
+  border-radius:0;
+  box-shadow:0 1px 3px rgba(26,43,60,0.06);
+  position:sticky;
+  top:0;
+  z-index:10;
+  line-height:1.5;
+}
+.secret-page-header.trace-header .secret-back{
+  padding:0;
+  font-size:13px;
+  color:var(--text);
+  font-weight:400;
+}
+.trace-back-icon{
+  width:18px;
+  height:18px;
+  display:block;
+}
 /* Full-screen records view */
 .secret-records-fullscreen{
   flex:1;
@@ -1157,6 +1234,9 @@ html:-webkit-full-screen #app{
   flex-direction:column;
   overflow:hidden;
   width:100%;
+  margin:0;
+  padding:0;
+  min-height:0;
 }
 .secret-page-header{
   flex-shrink:0;
@@ -1167,6 +1247,10 @@ html:-webkit-full-screen #app{
   overflow-y:auto;
   -webkit-overflow-scrolling:touch;
   padding:4px 0 20px;
+  min-height:0;
+}
+.secret-page-body.trace-body{
+  padding:4px 16px 20px;
 }
 .secret-page-confirm{
   display:flex;
@@ -1692,35 +1776,88 @@ html:-webkit-full-screen #app{
   letter-spacing:0.5px;
 }
 
-/* News: Tabloid items */
-.news-item{
-  background:linear-gradient(135deg,rgba(239,244,250,0.75) 0%,rgba(138,168,208,0.7) 100%);
-  backdrop-filter:blur(4px);
-  padding:20px 22px;
-  margin-bottom:14px;
-  position:relative;
-  border-left:3px solid rgba(26,43,60,0.35);
-  border-radius:0 4px 4px 0;
-  overflow:hidden;
+/* News: Tabloid with tabs */
+.news-container{padding:4px 0}
+.news-paper-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  padding:6px 2px 10px;
+  border-bottom:2px solid rgba(26,43,60,0.3);
+  margin-bottom:0;
 }
-.news-item:last-child{margin-bottom:0}
-.news-item::before{
+.news-paper-title{
+  font-size:18px;
+  font-weight:700;
+  color:rgba(26,43,60,0.95);
+  letter-spacing:4px;
+  font-family:"Noto Serif SC","STSong","PingFang SC",serif;
+  flex:1;
+  text-align:left;
+}
+.news-paper-meta{
+  font-size:11px;
+  color:rgba(26,43,60,0.4);
+  letter-spacing:1px;
+}
+.news-tabs{
+  display:flex;
+  border-bottom:1px solid rgba(26,43,60,0.15);
+  margin-bottom:14px;
+}
+.news-tab{
+  flex:1;
+  text-align:center;
+  padding:10px 0;
+  font-size:13px;
+  color:rgba(26,43,60,0.45);
+  cursor:pointer;
+  position:relative;
+  transition:color 0.2s;
+  letter-spacing:1px;
+}
+.news-tab.active{
+  color:rgba(26,43,60,0.9);
+  font-weight:500;
+}
+.news-tab.active::after{
   content:'';
   position:absolute;
-  top:0;left:0;right:0;
-  height:1px;
-  background:linear-gradient(90deg,rgba(26,43,60,0.2) 0%,rgba(58,111,165,0.08) 40%,transparent 100%);
+  bottom:-1px;
+  left:20%;
+  right:20%;
+  height:2px;
+  background:rgba(26,43,60,0.7);
 }
-.news-item-title{
-  font-size:15px;
+.news-tab-content{display:block}
+.news-article{
+  background:linear-gradient(135deg,rgba(239,244,250,0.75) 0%,rgba(138,168,208,0.5) 100%);
+  padding:18px 20px;
+  margin-bottom:14px;
+  border-left:3px solid rgba(26,43,60,0.3);
+  border-radius:0 4px 4px 0;
+  position:relative;
+  overflow:hidden;
+}
+.news-article:last-child{margin-bottom:0}
+.news-article-meta{
+  font-size:11px;
+  color:rgba(26,43,60,0.4);
+  margin-bottom:8px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.news-article-title{
+  font-size:16px;
   color:rgba(26,43,60,0.98);
   letter-spacing:2px;
-  font-weight:500;
-  margin-bottom:10px;
+  font-weight:600;
+  margin-bottom:12px;
   word-break:break-word;
   line-height:1.5;
 }
-.news-item-text{
+.news-article-body{
   font-size:14px;
   line-height:1.85;
   color:rgba(58,111,165,0.92);
@@ -1728,13 +1865,44 @@ html:-webkit-full-screen #app{
   letter-spacing:0.5px;
   font-family:"Noto Serif SC","STSong","PingFang SC",serif;
 }
-
-/* Paragraph spacing inside news text */
-.news-item-text p{
-  margin:0 0 10px 0;
+.news-article-body p{margin:0 0 10px 0}
+.news-article-body p:last-child{margin-bottom:0}
+.news-article-divider{
+  height:1px;
+  background:linear-gradient(90deg,transparent 0%,rgba(26,43,60,0.2) 50%,transparent 100%);
+  margin:14px 0;
 }
-.news-item-text p:last-child{
-  margin-bottom:0;
+.news-article-comments{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.news-comment{
+  font-size:13px;
+  line-height:1.6;
+  word-break:break-word;
+}
+.news-comment-author{
+  color:rgba(26,43,60,0.6);
+  font-weight:500;
+}
+.news-comment-author::after{content:'：'}
+.news-comment-text{
+  color:rgba(26,43,60,0.75);
+}
+.news-comment.ai-comment .news-comment-author{
+  color:rgba(58,111,165,1);
+  font-weight:600;
+}
+.news-comment.ai-comment .news-comment-text{
+  color:rgba(42,82,120,1);
+  font-weight:500;
+}
+.news-empty{
+  text-align:center;
+  padding:40px 0;
+  color:rgba(26,43,60,0.3);
+  font-size:14px;
 }
 
 /* Forum: Anonymous alt account */
@@ -2163,6 +2331,284 @@ html:-webkit-full-screen #app{
 .secret-record-card-body .grudge-item,
 .secret-record-card-body .voice-item,
 .secret-record-card-body .impression-section{
+  background:rgba(232,238,246,0.2);
+}
+
+/* Trace: 行动痕迹 */
+.trace-wrap{padding:4px 0}
+.trace-section{
+  margin-bottom:20px;
+  background:rgba(232,238,246,0.35);
+  border-radius:8px;
+  padding:16px 14px;
+  border-left:3px solid rgba(58,111,165,0.4);
+}
+.trace-section:last-child{margin-bottom:0}
+.trace-section-label{
+  font-size:12px;
+  color:rgba(26,43,60,0.5);
+  letter-spacing:3px;
+  margin-bottom:14px;
+  font-weight:500;
+}
+.trace-track-item{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  margin-bottom:14px;
+  position:relative;
+}
+.trace-track-item:last-child{margin-bottom:0}
+.trace-track-time{
+  font-size:12px;
+  color:rgba(26,43,60,0.45);
+  min-width:40px;
+  padding-top:2px;
+  font-variant-numeric:tabular-nums;
+}
+.trace-track-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:rgba(58,111,165,0.6);
+  margin-top:6px;
+  flex-shrink:0;
+  position:relative;
+}
+.trace-track-item:not(:last-child) .trace-track-dot::after{
+  content:'';
+  position:absolute;
+  top:10px;
+  left:50%;
+  transform:translateX(-50%);
+  width:2px;
+  height:calc(100% + 6px);
+  background:rgba(58,111,165,0.2);
+}
+.trace-track-content{flex:1;min-width:0}
+.trace-track-place{
+  font-size:14px;
+  color:rgba(26,43,60,0.9);
+  font-weight:500;
+  margin-bottom:2px;
+}
+.trace-track-action{
+  font-size:13px;
+  color:rgba(26,43,60,0.55);
+  line-height:1.5;
+  word-break:break-word;
+}
+.trace-alt-item{
+  margin-bottom:14px;
+  padding:12px 14px;
+  background:rgba(255,255,255,0.5);
+  border-radius:6px;
+}
+.trace-alt-item:last-child{margin-bottom:0}
+.trace-alt-time{
+  font-size:11px;
+  color:rgba(26,43,60,0.4);
+  margin-bottom:6px;
+}
+.trace-alt-content{
+  font-size:14px;
+  color:rgba(26,43,60,0.85);
+  line-height:1.6;
+  word-break:break-word;
+}
+.trace-chat-item{
+  margin-bottom:12px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.trace-chat-item:last-child{margin-bottom:0}
+.trace-chat-item.sent{align-items:flex-end}
+.trace-chat-item.received{align-items:flex-start}
+.trace-chat-meta{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  font-size:11px;
+  color:rgba(26,43,60,0.4);
+}
+.trace-chat-bubble{
+  max-width:80%;
+  padding:8px 12px;
+  border-radius:10px;
+  font-size:13px;
+  line-height:1.5;
+  word-break:break-word;
+}
+.trace-chat-item.sent .trace-chat-bubble{
+  background:rgba(58,111,165,0.15);
+  color:rgba(26,43,60,0.9);
+  border-bottom-right-radius:2px;
+}
+.trace-chat-item.received .trace-chat-bubble{
+  background:rgba(255,255,255,0.6);
+  color:rgba(26,43,60,0.85);
+  border-bottom-left-radius:2px;
+}
+
+/* Trace: 私聊对话 */
+.trace-chat-wrap{
+  padding:4px 0;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.trace-chat-timestamp{
+  text-align:center;
+  font-size:11px;
+  color:var(--text-faint);
+  margin:6px 0 2px;
+}
+.trace-msg-row{
+  display:flex;
+  gap:8px;
+  max-width:78%;
+}
+.trace-msg-row.me{align-self:flex-end;flex-direction:row-reverse}
+.trace-msg-avatar{
+  width:38px;height:38px;
+  border-radius:3px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:15px;
+  font-weight:300;
+  color:rgba(58,111,165,0.7);
+}
+.trace-msg-avatar.me{
+  background:linear-gradient(135deg,#8AA8D0 0%,#EFF4FA 100%);
+}
+.trace-msg-avatar.other{
+  background:linear-gradient(135deg,#3A6FA5 0%,#8AA8D0 100%);
+  color:rgba(255,255,255,0.85);
+}
+.trace-msg-body{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  min-width:0;
+}
+.trace-msg-row.me .trace-msg-body{align-items:flex-end}
+.trace-msg-row.other .trace-msg-body{align-items:flex-start}
+.trace-msg-meta{
+  display:flex;
+  gap:6px;
+  align-items:center;
+  font-size:11px;
+  color:rgba(26,43,60,0.4);
+}
+.trace-msg-name{font-weight:500}
+.trace-msg-bubble{
+  padding:10px 13px;
+  border-radius:0;
+  font-size:14px;
+  line-height:1.55;
+  word-break:break-word;
+}
+.trace-msg-row.me .trace-msg-bubble{
+  background:rgba(138,168,208,0.72);
+  border-top-right-radius:0;
+  color:rgba(26,43,60,0.9);
+}
+.trace-msg-row.other .trace-msg-bubble{
+  background:rgba(239,244,250,0.75);
+  border-top-left-radius:0;
+  color:rgba(26,43,60,0.85);
+}
+
+/* Mind: 精神角落 */
+.mind-wrap{padding:4px 0}
+.mind-section{
+  margin-bottom:20px;
+  background:linear-gradient(135deg,rgba(30,35,55,0.06) 0%,rgba(58,111,165,0.08) 100%);
+  border-radius:8px;
+  padding:16px 14px;
+  border-left:3px solid rgba(58,111,165,0.35);
+}
+.mind-section:last-child{margin-bottom:0}
+.mind-section-label{
+  font-size:12px;
+  color:rgba(26,43,60,0.5);
+  letter-spacing:3px;
+  margin-bottom:14px;
+  font-weight:500;
+}
+.mind-book-item{
+  margin-bottom:16px;
+  padding-bottom:16px;
+  border-bottom:1px solid rgba(58,111,165,0.12);
+}
+.mind-book-item:last-child{margin-bottom:0;border-bottom:none;padding-bottom:0}
+.mind-book-title{
+  font-size:15px;
+  color:rgba(26,43,60,0.9);
+  font-weight:500;
+  margin-bottom:4px;
+  letter-spacing:0.5px;
+}
+.mind-book-author{
+  font-size:12px;
+  color:rgba(26,43,60,0.45);
+  margin-bottom:8px;
+  letter-spacing:0.5px;
+}
+.mind-book-excerpt{
+  font-size:13px;
+  color:rgba(26,43,60,0.55);
+  font-style:italic;
+  line-height:1.6;
+  margin-bottom:10px;
+  padding-left:10px;
+  border-left:2px solid rgba(58,111,165,0.2);
+  word-break:break-word;
+}
+.mind-book-excerpt p{margin:0 0 6px 0}
+.mind-book-excerpt p:last-child{margin-bottom:0}
+.mind-book-thoughts{
+  font-size:14px;
+  color:rgba(26,43,60,0.8);
+  line-height:1.7;
+  word-break:break-word;
+}
+.mind-song-item{
+  display:flex;
+  gap:18px;
+  margin-bottom:14px;
+  padding-bottom:14px;
+  border-bottom:1px solid rgba(58,111,165,0.12);
+}
+.mind-song-item:last-child{margin-bottom:0;border-bottom:none;padding-bottom:0}
+.mind-song-info{
+  flex-shrink:0;
+}
+.mind-song-name{
+  font-size:14px;
+  color:rgba(26,43,60,0.9);
+  font-weight:500;
+  margin-bottom:2px;
+}
+.mind-song-artist{
+  font-size:12px;
+  color:rgba(26,43,60,0.45);
+}
+.mind-song-mood{
+  font-size:13px;
+  color:rgba(26,43,60,0.7);
+  line-height:1.6;
+  flex:1;
+  min-width:0;
+  word-break:break-word;
+}
+
+/* Record cards compact mode */
+.secret-record-card-body .trace-section,
+.secret-record-card-body .mind-section{
   background:rgba(232,238,246,0.2);
 }
 
@@ -2844,10 +3290,11 @@ input[type="range"].form-input::-moz-range-thumb:hover{background:var(--accent-b
       <p class="game-subtitle">即时 ｜ 回响</p>
     </div>
     <div class="home-buttons">
-      <button class="home-btn primary" onclick="startGame()">开始游戏</button>
+      <button class="home-btn" onclick="startGame()">开始游戏</button>
       <button class="home-btn" onclick="showLoadModal(true)">加载游戏</button>
       <button class="home-btn" onclick="showApiConfig()">API配置</button>
       <button class="home-btn" onclick="showGlobalRules()">全局设定</button>
+      <button class="home-btn" onclick="showBackupModal()">数据备份</button>
     </div>
   </div>
 </div>
@@ -2948,7 +3395,7 @@ input[type="range"].form-input::-moz-range-thumb:hover{background:var(--accent-b
         <div class="secret-module-arrow">›</div>
       </div>
       <div class="secret-module" onclick="openSecretModule('mailbox')">
-        <div class="secret-module-icon">✉</div>
+        <div class="secret-module-icon">📫</div>
         <div class="secret-module-info">
           <div class="secret-module-name">他的信箱</div>
           <div class="secret-module-desc">收发的短信记录</div>
@@ -3089,8 +3536,8 @@ const DEFAULT_DATA = {
   eventHistory: [],
   memoryCards: [],
   secretRecords: [],
-  storyState: '',  // 当前故事状态摘要（时间节点、场景、角色状态等），由羁绊事件触发更新
-  storyStateConsumed: false,  // 快照是否已被聊天消费过（true=不再注入，直到新事件生成新快照）
+  storyState: '',  // 当前故事状态快照（缓存，由聊天模块首次发送时提炼）
+  storyStateStale: false,  // 快照是否过期（true=需在下次文字聊天时重新提炼）
   apiConfig: {
     baseUrl: 'https://api.deepseek.com',
     apiKey: '',
@@ -3219,9 +3666,9 @@ let state = {
   currentTab: 'chat',
   rulesExpanded: false,
   quoteContext: null,
-  secretGenId: 0,
+  secretGenIds: {},
   secretModuleType: null,
-  secretGenerating: null
+  secretGenerating: new Set()
 };
 
 /* ========== 持久化 ========== */
@@ -3724,7 +4171,7 @@ function confirmLoadScript(scriptId) {
     state.currentChainId = null;
     state.chatSessionId++;
     state.secretModuleType = null;
-    state.secretGenerating = null;
+    state.secretGenerating.clear();
     secretPageHtml = null;
     showSecretNav();
     saveToStorage();
@@ -3761,7 +4208,7 @@ function returnToTitle() {
   if (state.data) saveToStorage();
   // Clear all runtime state
   state.secretModuleType = null;
-  state.secretGenerating = null;
+  state.secretGenerating.clear();
   secretPageHtml = null;
   showSecretNav();
   state.eventState = 'idle';
@@ -3799,8 +4246,6 @@ function switchTab(tab) {
 
   // Render target content BEFORE showing it (prevents flash during DOM rebuild)
   if (tab === 'chat') {
-    state.chatSessionId++;
-    state.chatSessionStartTime = Date.now();
     renderChat();
   } else if (tab === 'bonds') {
     renderBonds();
@@ -4204,9 +4649,9 @@ function buildModeInstruction(mode) {
   if (mode === 'chat') {
     const meName = state.data.characters.me.name || '主控角色';
     const otherName = state.data.characters.other.name || 'AI角色';
-    return '\n【当前模式：聊天】\n角色分配：你扮演AI角色"' + otherName + '"，用户扮演主控角色"' + meName + '"。你的每一条回复都必须且只能以"' + otherName + '"的身份、视角和口吻输出，绝对禁止以主控角色"' + meName + '"的视角发言或代替用户说话。\n规则：\n1. 绝对禁止任何括号旁白、动作描写、心理描写、神态描写、环境描写。例如（他笑了笑）、（喉结动了动）、（声音有点哑）这类全部禁止。只输出对话文字本身。\n2. 回复需综合人设、历史记忆和当前故事状态：以初始人设为底色，以近期互动和记忆卡片中记录的"变化"为当前行为依据。若历史中已出现性格偏移，应延续该偏移，而非回退到初始状态。当前故事状态供你内在感知剧情的发展阶段和近期经历；提供角色此刻的心理和情绪状态，语气和态度应自然地受其影响，像平时发微信一样。\n3. 输出风格：短句、口语化、日常对话，像微信聊天一样自然。\n4. 不主动推进重大剧情，不展开长篇叙述。\n5. 聊天与事件处于同一时间线，当前时刻以故事状态为准。聊天中提及近期事件时，应使用与事件一致的时间指代，不要擅自推移时间。\n';
+    return '\n【当前模式：聊天】\n角色分配：你扮演AI角色"' + otherName + '"，用户扮演主控角色"' + meName + '"。你的每一条回复都必须且只能以"' + otherName + '"的身份、视角和口吻输出，绝对禁止以主控角色"' + meName + '"的视角发言或代替用户说话。\n规则：\n1. 绝对禁止任何括号旁白、动作描写、心理描写、神态描写、环境描写。例如（他笑了笑）、（喉结动了动）、（声音有点哑）这类全部禁止。只输出对话文字本身。\n2. 回复需综合人设、历史记忆和当前故事状态：以初始人设为底色，以近期互动和记忆卡片中记录的"变化"为当前行为依据。若历史中已出现性格偏移，应延续该偏移，而非回退到初始状态。当前故事状态供你内在感知剧情的发展阶段和近期经历；提供角色此刻的心理和情绪状态，语气和态度应自然地受其影响，像平时发微信一样。\n3. 输出风格：短句、口语化、日常对话，像微信聊天一样自然。\n4. 不主动推进重大剧情，不展开长篇叙述。\n5. 事件叙事和聊天发生在同一时间线上。当前聊天的时刻，就是最近事件叙事结束的那一段。你在聊天中提及事件里的事时，时间表述应与事件叙事保持一致，不要自行推移时间。\n';
   } else if (mode === 'event') {
-    return '\n【当前模式：事件叙事】\n规则：\n1.严格使用第三人称叙述。指代主控角色一律使用主控角色的姓名（或"他/她"），指代AI角色一律使用AI角色的姓名（或"他/她"）。全文禁止出现"你""你的""你们"等任何第二人称代词。\n2. 围绕玩家的愿望展开，不要替玩家做重大决定。\n3. 严禁复述或重复上文已出现过的内容（包括润色文本、历史叙事、聊天记录中的任何句子、段落或场景描写）。叙事必须从已有内容的结束处继续推进，只写新的发展。\n4. 叙事应自然延伸当前状态：综合初始人设 + 记忆卡片中的历史变化。若历史已记录角色状态的偏移，叙事中应延续该偏移，不退回初始状态。\n5.若有心理活动：小段插入第一人称或自由间接引语呈现角色当下的内心独白、回忆、矛盾、独白塑造情感冲突（如自责与不甘交织、想追问又克制、甜蜜回忆与当下苦涩对比）。\n6.格式要求：心理活动用「」括起来，对话内容则用""括起来。段落之间用换行分隔，不要挤在一起。\n7.在叙事正文结束后，另起一行输出分隔符 |||STATE||| ，然后在分隔符后输出一段当前故事状态快照（供后续对话模块感知剧情进展）。请综合你能看到的近期所有事件（不只是当前这一条），概括出当前整体故事状态，格式如下，每项一行：\n近期经历：笼统概括最近发生了什么，包含大致的时间段和场景，但不要写成具体的时间戳或固定地点，应像回忆般自然。如果事件时间跨度较大，需体现从先前到现在的变化脉络\n关系动态：描述两人关系的当前态势\n情感矛盾：描述当前存在的情感张力、未解决的冲突或暗流\n角色状态：描述双方此刻的情绪心理，以及相比初始人设发生了哪些性格偏移或成长\n整体简洁概括，控制在300字以内。\n分隔符和状态快照不会展示给玩家，请务必输出。\n';
+    return '\n【当前模式：事件叙事】\n规则：\n1.严格使用第三人称叙述。指代主控角色一律使用主控角色的姓名（或"他/她"），指代AI角色一律使用AI角色的姓名（或"他/她"）。全文禁止出现"你""你的""你们"等任何第二人称代词。\n2. 围绕玩家的愿望展开，不要替玩家做重大决定。\n3. 严禁复述或重复上文已出现过的内容（包括润色文本、历史叙事、聊天记录中的任何句子、段落或场景描写）。叙事必须从已有内容的结束处继续推进，只写新的发展。\n4. 叙事应自然延伸当前状态：综合初始人设 + 记忆卡片中的历史变化。若历史已记录角色状态的偏移，叙事中应延续该偏移，不退回初始状态。\n5.若有心理活动：小段插入第一人称或自由间接引语呈现角色当下的内心独白、回忆、矛盾、独白塑造情感冲突（如自责与不甘交织、想追问又克制、甜蜜回忆与当下苦涩对比）。\n6.格式要求：心理活动用「」括起来，对话内容则用""括起来。段落之间用换行分隔，不要挤在一起。\n';
   } else if (mode === 'polish') {
     return '\n【当前模式：润色】\n规则：\n1. 本模式下你不是在扮演AI角色，而是作为第三人称叙事者。叙事视角主体是主控角色。\n2. 玩家输入的是基于主控角色自身角度的剧情愿望、反应或期望的发展。将其润色为以主控为视角焦点的小说风格叙事文段。保留玩家原意的核心。\n3. 严格使用第三人称叙述。玩家输入中的"我"一律替换为主控角色的姓名（或"他/她"），指代AI角色时一律使用AI角色的姓名（或"他/她"）。全文禁止出现"你""你的""你们"等任何第二人称代词。\n4. 润色文本默认应从上条叙事文本或润色文本的结束处自然衔接，延续当前场景和时空。严禁复述或重复上文已出现过的内容。\n5.若有心理活动：小段插入第一人称或自由间接引语呈现角色当下的内心独白、回忆、矛盾、独白塑造情感冲突（如自责与不甘交织、想追问又克制、甜蜜回忆与当下苦涩对比）。\n6.格式要求：心理活动用「」括起来，对话内容用""括起来。段落之间用换行分隔，不要挤在一起。\n7.只输出润色后的文段，不加任何说明。\n';
   } else if (mode === 'memory') {
@@ -4226,7 +4671,7 @@ function buildModeInstruction(mode) {
   } else if (mode === 'secret-plan') {
     return '\n【当前模式：秘密计划生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意看到了你藏在抽屉里的秘密计划本。\n请以第一人称视角生成你的秘密计划，包含两个部分。\n\n严格按以下格式输出：\n\n【便利贴】\n你在制定这个秘密计划时贴在墙上的便利贴，记录AI角色当时的内心想法、动机、纠结。\n直接写出便利贴上的文字内容，像真实的手写便利贴一样随意、真实、碎片化。\n可以是一段话，也可以是几个零散的短句。\n\n【时间轴】\n你规划的一天内从早到晚的行动安排，按时间顺序排列。\n每条格式严格为：时间|||行动内容\n时间用时分格式如"07:30""12:00""18:45""22:00"\n行动内容简明扼要，说明这个时间点要做什么。\n生成5-8条时间安排，覆盖从早到晚。\n\n两部分之间用一个空行分隔。\n内容要紧扣你的人设、性格、近期经历和与主控角色的关系状态。\n计划内容要真实合理，符合你的日常生活节奏。\n只输出计划内容，不要加任何说明。\n';
   } else if (mode === 'secret-news') {
-    return '\n【当前模式：坊间小报生成】\n你现在是这个世界里的一个旁观者，你熟知这个世界正在发生的大小事件和坊间流传的八卦。\n请根据以下AI角色与主控角色近期的真实生活动态，生成此刻这个世界里的新闻和八卦。\n内容要紧扣他们的世界设定、近期经历和人际关系——不要写空泛的通用新闻。\n\n生成3-5条新闻或八卦，每条格式严格为：标题|||内容\n条目之间用一个空行分隔。\n内容不得出现|||字符。\n每条内容写成300-400字的完整文章，不要少于300字，不要截断，用换行分成2-3个自然段落，不要挤成一团。\n\n新闻类型可以多样：\n- 重大事件：世界发生的变故、大事\n- 坊间传闻：关于某个角色的流言、街头巷尾的闲话\n- 花边八卦：茶余饭后的谈资、有趣的小道消息\n- 突发快讯：最新消息、突发事件\n\n新闻和八卦要与角色所处的世界设定（历史背景、社会环境）相符合。\n可以涉及角色本人或他们身边的人，也可以是更广阔世界中的事件。\n只输出新闻内容，不要加任何说明。\n';
+    return '\n【当前模式：坊间小报生成】\n你现在是这个世界里的一个旁观者，你熟知这个世界正在发生的大小事件和坊间流传的八卦。\n请根据以下AI角色与主控角色近期的真实生活动态，生成此刻这个世界里的坊间小报。\n内容要紧扣他们的世界设定、近期经历和人际关系——不要写空泛的通用新闻。\n\n小报分为三个版块，每个版块用【】标记开头。每个版块只生成1条文章。\n\n每条文章占一个区块，文章之间用一个空行分隔。每条文章格式严格如下：\n标题|||来源人|||来源地|||正文|||评论1发言人|||评论1内容|||评论2发言人|||评论2内容|||评论3发言人|||评论3内容\n\n字段说明：\n- 标题：文章标题\n- 来源人/来源地：头条要闻和社会百态填记者姓名和发自地点；八卦流言填消息来源和地点\n- 正文：300-400字的完整文章，用换行分成2-3个自然段落（正文中不得出现|||字符，正文内段落之间不要留空行）\n- 评论1：必须是AI角色本人的评论（用AI角色的名字），评论内容要符合AI角色的性格\n- 评论2、评论3：两位不同路人的评论，路人ID要像真实网友，评论内容有的认真、有的调侃、有的吃瓜\n- 每条评论内容简短（1-3句），不得出现|||字符\n\n各版块要求：\n【头条要闻】世界发生的重大事件、变故。来源人填记者姓名，来源地填发自地点\n【社会百态】社会新闻、民生事件。来源人填记者姓名，来源地填发自地点\n【八卦流言】坊间传闻、花边八卦，可以涉及角色本人或他们身边的人。来源人填消息来源，来源地填地点\n\n新闻和八卦要与角色所处的世界设定（历史背景、社会环境）相符合。\n只输出新闻内容，不要加任何说明。\n';
   } else if (mode === 'secret-friends') {
     return '\n【当前模式：朋友群聊生成】\n你现在是AI角色身边的一群朋友们，你们建了一个没有AI角色和主控角色在场的群聊，正在热烈讨论他们两个人的关系。\n你深知他们之间的一切细节——毕竟朋友们早就看出来了。\n请根据以下AI角色与主控角色近期的真实生活动态，生成一场群聊记录。\n内容要紧扣他们的关系状态和近期经历——不要写空泛的通用内容。\n\n参与者为3-5位NPC朋友，他们可以是AI角色的同事、发小、室友、邻居等，每人有鲜明的性格和说话风格。\n群聊中朋友们你一言我一语，翻出AI角色和主控角色之间的各种细节，讨论他们的关系。\n有人起哄、有人分析、有人爆料、有人吐槽，像真实的群聊一样自然生动。\n\n严格按以下格式输出，每条消息格式为：发言人|||消息内容\n条目之间用一个空行分隔。\n消息内容不得出现|||字符。\n消息内容可以多行，用换行分隔，但每条消息不宜过长（1-5句为宜）。\n\n群聊开头用一行格式为：系统|||群聊名称 来标识群聊标题（群聊名称要有趣，体现朋友们的起哄风格）。\n生成15-25条消息，节奏自然，有来有回。\n可以穿插个别"系统消息"格式：系统|||消息内容（如"XX邀请YY加入了群聊""XX修改群名为XX"等），增加真实感。\n\n发言人的名字要各有特色，符合其身份。\n消息内容要用各自的口吻和语气，体现不同性格。\n讨论的内容要基于近期对话和事件的细节，像朋友们真的在八卦一样具体。\n只输出群聊内容，不要加任何说明。\n';
   } else if (mode === 'secret-forum') {
@@ -4237,16 +4682,18 @@ function buildModeInstruction(mode) {
     return '\n【当前模式：语音草稿箱生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意点开了你语音消息的"草稿箱"，那里藏着几条你录好却始终没按下发送的话。\n请以第一人称视角生成你草稿箱里此刻真实存在的3-5条未发送语音。\n要求：\n1. 每条都是你想对主控角色说却没说出口的话，听到最后才知道你真正想让TA明白什么\n2. 内容必须紧扣你的人设、性格、背景、日常生活和与主控角色的近期互动——不要写空泛的通用内容\n3. 语音文字是这段语音转写出的内容，语气、用词习惯都要符合你的性格特征\n4. 每条格式严格为：时长|||语音文字|||时间\n5. 时长形如"0:12"，时间为具体日期时间格式如"8月4日 周一 22:42"\n6. 条目之间用一个空行分隔\n7. 语音文字可以多行，但不得出现|||字符\n8. 只输出语音内容，不要加任何说明\n';
   } else if (mode === 'secret-impression') {
     return '\n【当前模式：印象笔记生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意翻看了你的"印象笔记"——那是你偷偷记录的关于主控角色的观察与感受。\n请以第一人称视角生成你此刻的印象笔记，包含三个板块。\n\n严格按以下格式输出：\n\n【我眼中的TA】\n时间|||From名字|||印象内容\n时间用具体日期时间格式如"8月5日 周二 14:30"\nFrom名字填你（AI角色）的名字\n印象内容是你对主控角色的整体印象，一段真诚的描述，体现你随着相处对TA的了解越来越深\n印象内容可以换行分成多个自然段落，但不得出现|||字符\n\n【TA喜欢的】\n你观察到主控角色喜欢的3-5样事物，每条一行\n要具体，基于你们真实的互动细节，不要写空泛的通用内容\n\n【TA讨厌的】\n你观察到主控角色讨厌的3-5样事物，每条一行\n要具体，基于你们真实的互动细节，不要写空泛的通用内容\n\n三个板块之间用一个空行分隔。\n印象内容和你观察到的事物都要紧扣你的人设、性格、背景、日常生活和与主控角色的近期互动。\n语气和用词习惯要符合你的性格特征。\n只输出印象笔记内容，不要加任何说明。\n';
+  } else if (mode === 'secret-trace') {
+    return '\n【当前模式：社交账号生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意查看了你手机里和别人（非主控角色）的私聊记录。\n请以第一人称视角生成你此刻真实的私聊记录，只包含一个板块。\n\n严格按以下格式输出：\n\n【他和别人的私聊】\n你和某一位npc（非主控角色）的私聊记录，5-8条消息，混合发送和接收。\n对方可以是朋友、同事、家人、前任、网友等其中之一，但不能出现多个人。\n每条格式严格为：方向|||对方|||聊天内容|||时间\n方向用"发出"或"收到"标记\n对方填对方的名字或昵称（所有消息的对方必须是同一个名字）\n时间用简短格式如"10分钟前""今天 15:00""昨天"\n聊天内容要符合你的性格和与对方的关系\n聊天内容不得出现|||字符\n至少有2条聊天内容间接提及主控角色或与主控角色有关的事（但不要过于明显）\n\n所有内容必须紧扣你的人设、性格、背景、日常生活和近期经历，不要写空泛的通用内容。\n只输出私聊内容，不要加任何说明。\n';
+  } else if (mode === 'secret-mind') {
+    return '\n【当前模式：精神角落生成】\n你现在是AI角色本人，正在过你真实的日常生活。有人趁你不注意翻看了你藏在手机深处的精神角落——你的私密书单和深夜歌单。\n请以第一人称视角生成你此刻真实的精神角落，包含两个板块。\n\n严格按以下格式输出：\n\n【深夜歌单】\n你深夜独自一人时循环播放的歌单，这些歌藏着你不愿对人说的情绪。\n只生成1首歌，但内容要详尽深入。\n格式严格为：歌名|||歌手|||听这首歌时的心情\n歌名和歌手要具体真实\n听这首歌时的心情是你的个人感受，要详细写出你听到这首歌时的情绪、联想和内心活动，像写给自己的私密日记，100字左右\n心情可以多行，但不得出现|||字符\n心情要间接与主控角色或你们的近期经历有关\n\n【书单】\n你最近在读或读过的书，以及你的书摘和书评。\n只生成1本书，但内容要详尽深入。\n格式严格为：书名|||作者｜出版商|||段落摘要|||书评\n书名要具体真实，符合你的性格和审美取向\n作者｜出版商：写出该书的作者和出版社，用｜分隔\n段落摘要：你从书中摘抄的句子或段落，可以是多句，要像真实的读书笔记\n书评：你读完后的个人感悟和评价，250字左右，要详细、深入，写出你真实的思考和情感反应。语气要符合你的性格特征。\n书评可以多行，但不得出现|||字符\n书评要间接与主控角色或你们的近期经历有关\n\n两个板块之间用一个空行分隔。\n所有内容必须紧扣你的人设、性格、背景、日常生活和近期经历。不要写空泛的通用内容。\n语气和用词习惯要符合你的性格特征。\n只输出精神角落内容，不要加任何说明。\n';
   }
   return '';
 }
 
-// L4.5 故事状态快照：注入当前故事的时间节点、场景、角色状态等
-// 新事件生成快照后，仅第一轮聊天注入，之后标记已消费不再注入（靠聊天上下文自然延续）
-// 直到下一轮新事件生成新快照时重置。删除已消费快照的聊天消息也会重置。
+// L4.5 故事状态快照：注入缓存的当前故事状态
+// 快照在首次文字聊天时提炼并缓存，后续聊天持续注入（不消费、不删除）
+// 新事件生成时标记过期，下次文字聊天重新提炼
 function buildStoryStatePrompt() {
-  // 快照已消费过 → 不再注入，让聊天上下文自身推进时间流
-  if (state.data.storyState && state.data.storyStateConsumed) return '';
   const ss = state.data.storyState;
   if (!ss || !ss.trim()) return '';
   // 安全网：旧格式快照（含"时间节点"或"空间位置"字段）不注入
@@ -4293,6 +4740,7 @@ async function callAI(userMessage, mode) {
 
   try {
     const maxTokens = mode === 'secret-news' ? 8000
+      : mode === 'secret-mind' ? 6000
       : mode.startsWith('secret-') ? 4000
       : 2000;
     // 自动重试：网络/超时类错误重试 1 次，内容审查类不重试
@@ -4517,6 +4965,12 @@ function appendChatMessage(idx) {
   }
 
   container.insertAdjacentHTML('beforeend', buildMessageHtml(msg, idx));
+  // 给新消息添加滑入动画
+  const newMsg = container.querySelector(`.msg-row[data-idx="${idx}"]`);
+  if (newMsg) {
+    newMsg.classList.add('msg-new');
+    newMsg.addEventListener('animationend', function() { newMsg.classList.remove('msg-new'); }, { once: true });
+  }
   container.scrollTop = container.scrollHeight;
 }
 
@@ -4581,7 +5035,20 @@ async function sendChatMessage() {
     showTypingIndicator();
     try {
       let reply;
-      if (lastIsUser) {
+      if (state.data.storyStateStale) {
+        // 新事件后首次空发送 → AI角色主动发消息（触发快照提炼，开新会话）
+        state.chatSessionId++;
+        state.chatSessionStartTime = Date.now();
+        try {
+          const snapshot = await generateStoryStateSnapshot();
+          if (snapshot) state.data.storyState = snapshot;
+        } catch(e) {
+          console.error('快照提炼失败，使用旧快照', e);
+        }
+        state.data.storyStateStale = false;
+        saveToStorage();
+        reply = await callAI('（系统提示：刚刚发生了一些事，你主动给主控角色发了一条消息。请直接输出这条消息，不要加任何说明或引号，内容要贴合近期事件和你的性格，像平时发微信一样自然。）', 'chat');
+      } else if (lastIsUser) {
         // 上一条是主控的消息 → AI回复主控的话（用主控的最后一条消息作为输入，走标准流程）
         const lastUserMsg = chatHist[chatHist.length - 1].content;
         reply = await callAI(lastUserMsg, 'chat');
@@ -4597,10 +5064,6 @@ async function sendChatMessage() {
           timestamp: Date.now(), sessionId: state.chatSessionId
         });
         appendChatMessage(state.data.chatHistory.length - 1);
-        // 快照已通过本次聊天消费，标记为已用（下次聊天不再注入，靠上下文延续）
-        if (state.data.storyState && !state.data.storyStateConsumed) {
-          state.data.storyStateConsumed = true;
-        }
         saveToStorage();
       }
     } catch(e) {
@@ -4612,6 +5075,12 @@ async function sendChatMessage() {
       input.focus();
     }
     return;
+  }
+
+  // 文字发送：如果快照过期，先提炼快照（以快照为新会话边界）
+  if (state.data.storyStateStale) {
+    state.chatSessionId++;
+    state.chatSessionStartTime = Date.now();
   }
 
   // Normal send: add user message, AI replies once
@@ -4629,6 +5098,17 @@ async function sendChatMessage() {
 
   try {
     showTypingIndicator();
+    // 快照过期时，先提炼快照（花费一次API调用），后续聊天复用缓存
+    if (state.data.storyStateStale) {
+      try {
+        const snapshot = await generateStoryStateSnapshot();
+        if (snapshot) state.data.storyState = snapshot;
+      } catch(e) {
+        console.error('快照提炼失败，使用旧快照', e);
+      }
+      state.data.storyStateStale = false;
+      saveToStorage();
+    }
     const reply = await callAI(finalText, 'chat');
     removeTypingIndicator();
 
@@ -4639,10 +5119,6 @@ async function sendChatMessage() {
         timestamp: Date.now(), sessionId: state.chatSessionId
       });
       appendChatMessage(state.data.chatHistory.length - 1);
-      // 快照已通过本次聊天消费，标记为已用（下次聊天不再注入，靠上下文延续）
-      if (state.data.storyState && !state.data.storyStateConsumed) {
-        state.data.storyStateConsumed = true;
-      }
       saveToStorage();
     }
   } catch(e) {
@@ -4674,8 +5150,12 @@ function showMsgActions(idx) {
   const menu = document.createElement('div');
   menu.id = 'msg-action-menu';
   menu.className = 'msg-action-menu';
+  // AI消息增加"重新生成"选项
+  const regenBtn = !isMe
+    ? `<button class="msg-action-item" onclick="regenerateMessage(${idx})">重新生成</button>`
+    : '';
   menu.innerHTML = `
-    <button class="msg-action-item" onclick="quoteMessage(${idx})">引用</button>
+    ${regenBtn}
     <button class="msg-action-item" onclick="editMessage(${idx})">编辑</button>
     <button class="msg-action-item" onclick="deleteMessage(${idx})">删除</button>
   `;
@@ -4732,13 +5212,71 @@ function deleteMessage(idx) {
   if (!msg) return;
   closeMsgActions();
   state.data.chatHistory.splice(idx, 1);
-  // 删除消息后重置快照消费标记：用户可能回退到了快照注入之前的状态，下次聊天将重新注入快照
-  if (state.data.storyState) {
-    state.data.storyStateConsumed = false;
-  }
   saveToStorage();
   renderChat();
   showToast('已删除');
+}
+
+// 重新生成AI回复：移除该AI消息，找到上一条用户消息，重新调用AI
+async function regenerateMessage(idx) {
+  const msg = state.data.chatHistory[idx];
+  if (!msg || msg.role !== 'assistant') return;
+  closeMsgActions();
+
+  // 找到这条AI回复对应的上一条用户消息
+  let userInput = '';
+  let userInputIdx = -1;
+  for (let i = idx - 1; i >= 0; i--) {
+    if (state.data.chatHistory[i].role === 'user') {
+      userInput = state.data.chatHistory[i].content;
+      userInputIdx = i;
+      break;
+    }
+  }
+
+  // 没有上一条用户消息 → 说明这是AI主动发的消息（如空发送触发）
+  // 移除该AI消息后，用空发送的逻辑重新生成
+  const isAiInitiated = userInputIdx === -1;
+
+  // 从聊天记录中移除这条AI回复
+  state.data.chatHistory.splice(idx, 1);
+  saveToStorage();
+  renderChat();
+
+  // 显示typing并重新生成
+  const input = document.getElementById('chat-input');
+  const btn = document.getElementById('chat-send-btn');
+  state.isLoading = true;
+  btn.disabled = true;
+  showTypingIndicator();
+
+  try {
+    let reply;
+    if (isAiInitiated) {
+      // AI主动发的消息 → 重新让AI主动发一条
+      reply = await callAI('（系统提示：刚刚发生了一些事，你主动给主控角色发了一条消息。请直接输出这条消息，不要加任何说明或引号，内容要贴合近期事件和你的性格，像平时发微信一样自然。）', 'chat');
+    } else {
+      // 用上一条用户消息重新调用AI
+      reply = await callAI(userInput, 'chat');
+    }
+    removeTypingIndicator();
+    const cleanReply = reply.trim();
+    if (cleanReply) {
+      state.data.chatHistory.push({
+        role: 'assistant', content: cleanReply,
+        timestamp: Date.now(), sessionId: state.chatSessionId
+      });
+      appendChatMessage(state.data.chatHistory.length - 1);
+      saveToStorage();
+    }
+  } catch(e) {
+    removeTypingIndicator();
+    showToast('重新生成失败：' + (e.message || '未知错误'));
+  } finally {
+    state.isLoading = false;
+    btn.disabled = false;
+    input.focus();
+  }
 }
 
 function editMessage(idx) {
@@ -4965,8 +5503,8 @@ async function sendEventWish() {
       'event'
     );
 
-    // 解析叙事正文和状态快照；如果AI没输出快照，ensureStoryState 会单独补生成
-    const parsed = await ensureStoryState(narrative);
+    // 清洗叙事文本（防止AI残留 |||STATE||| 等标记）
+    const parsed = parseNarrativeAndState(narrative);
     narrative = parsed.narrative;
 
     state.data.eventHistory.push({
@@ -4977,9 +5515,8 @@ async function sendEventWish() {
       polishedWish: polished,
       timestamp: Date.now()
     });
-    // 更新故事状态快照
-    state.data.storyState = parsed.state;
-    state.data.storyStateConsumed = false; // 新快照生成，重置消费标记
+    // 标记快照过期：下次文字聊天时重新提炼（不在事件生成时花钱提炼）
+    state.data.storyStateStale = true;
     saveToStorage();
     state.eventState = 'active';
     // Incrementally append the new event block (no full re-render)
@@ -5034,31 +5571,22 @@ function parseNarrativeAndState(raw) {
   };
 }
 
-// 确保故事状态快照存在：如果AI叙事时没输出状态快照，单独补生成一次
-// 补生成时会注入近期事件上下文，保证快照质量与正常流程一致
-async function ensureStoryState(rawNarrative) {
-  const parsed = parseNarrativeAndState(rawNarrative);
-  if (parsed.state && parsed.state.trim()) {
-    return { narrative: parsed.narrative, state: parsed.state.trim() };
-  }
-  // AI没输出状态快照，单独补生成
+// 生成故事状态快照：独立的API调用，基于近期事件提炼当前故事状态
+// 在用户首次文字聊天时触发（空发送不触发），结果缓存到 storyState 供后续聊天复用
+async function generateStoryStateSnapshot() {
   const config = state.data.apiConfig;
-  if (!config.apiKey) {
-    return { narrative: parsed.narrative, state: '' };
-  }
-  // 收集近期事件上下文（最近5条），让补生成的快照能看到完整故事线
+  if (!config.apiKey) return '';
+  // 收集近期事件上下文（最近10条），让快照能看到完整故事线
   const events = state.data.eventHistory || [];
-  const recentEvents = events.slice(-5);
-  let eventContext = '';
-  if (recentEvents.length > 0) {
-    eventContext = recentEvents.map((e, i) => {
-      const wish = e.polishedWish || e.wish || '';
-      const narr = e.aiNarrative || '';
-      return `事件${i + 1}：\n愿望：${wish}\n叙事：${narr}`;
-    }).join('\n---\n');
-  }
-  const statePrompt = `请根据以下近期事件和最新叙事文本，生成当前故事状态快照。格式如下，每项一行：
-近期经历：笼统概括最近发生了什么，包含大致的时间段和场景，但不要写成具体的时间戳或固定地点，应像回忆般自然。如果事件时间跨度较大，需体现从先前到现在的变化脉络
+  const recentEvents = events.slice(-10);
+  if (recentEvents.length === 0) return '';
+  let eventContext = recentEvents.map((e, i) => {
+    const wish = e.polishedWish || e.wish || '';
+    const narr = e.aiNarrative || '';
+    return `事件${i + 1}：\n愿望：${wish}\n叙事：${narr}`;
+  }).join('\n---\n');
+  const statePrompt = `请根据以下近期事件，生成当前故事状态快照。格式如下，每项一行：
+近期经历：概括最近发生了什么，包含大致的时间段和场景。可以用"今天下午""昨晚""刚刚"等故事内的相对时间表达。如果事件时间跨度较大，需体现从先前到现在的变化脉络
 关系动态：描述两人关系的当前态势
 情感矛盾：描述当前存在的情感张力、未解决的冲突或暗流
 角色状态：描述双方此刻的情绪心理，以及相比初始人设发生了哪些性格偏移或成长
@@ -5066,20 +5594,17 @@ async function ensureStoryState(rawNarrative) {
 只输出状态快照本身，不要加任何说明或标题。
 
 【近期事件】
-${eventContext}
-
-【最新叙事文本】
-${parsed.narrative}`;
+${eventContext}`;
   const messages = [
     { role: 'system', content: '你是一个故事状态总结助手。请根据叙事文本生成简洁准确的状态快照。' },
     { role: 'user', content: statePrompt }
   ];
   try {
-    const stateResult = await callWithRetry(() => callOpenAICompatible(messages, config, 800), 1);
-    return { narrative: parsed.narrative, state: stateResult.trim() };
+    const result = await callWithRetry(() => callOpenAICompatible(messages, config, 800), 1);
+    return result.trim();
   } catch(e) {
-    console.error('状态快照补生成失败', e);
-    return { narrative: parsed.narrative, state: '' };
+    console.error('快照生成失败', e);
+    return '';
   }
 }
 
@@ -5173,11 +5698,11 @@ async function doRefreshNarrative(evtId, side) {
         prompt = `【玩家的剧情愿望】\n${wish}\n\n请基于玩家的愿望推进剧情，生成第三人称叙事文段。`;
       }
       evt.aiNarrative = await callAI(prompt, 'event');
-      // 解析叙事正文和状态快照；如果AI没输出快照，ensureStoryState 会单独补生成
-      const parsed = await ensureStoryState(evt.aiNarrative);
+      // 清洗叙事文本（防止AI残留 |||STATE||| 等标记）
+      const parsed = parseNarrativeAndState(evt.aiNarrative);
       evt.aiNarrative = parsed.narrative;
-      state.data.storyState = parsed.state;
-      state.data.storyStateConsumed = false; // 新快照生成，重置消费标记
+      // 标记快照过期：下次文字聊天时重新提炼
+      state.data.storyStateStale = true;
     } else {
       // 润色Retry：基于玩家投递的叙事愿望，从上一条未删除的文本之后自然衔接
       const wish = evt.wish || evt.polishedWish || '';
@@ -5244,14 +5769,14 @@ function doDeleteNarrative(evtId, side) {
     const idx = state.data.eventHistory.findIndex(e => e.id === evtId);
     if (idx !== -1) state.data.eventHistory.splice(idx, 1);
     if (blockEl) blockEl.remove();
-    // 删除事件后，如果该事件是最后一条（即生成当前快照的那条），清除陈旧快照
+    // 删除事件后，如果该事件是最后一条，清除缓存的快照
     if (idx === state.data.eventHistory.length) {
       state.data.storyState = '';
-      state.data.storyStateConsumed = false;
+      state.data.storyStateStale = false;
     }
     if (state.data.eventHistory.length === 0) {
       state.data.storyState = '';
-      state.data.storyStateConsumed = false;
+      state.data.storyStateStale = false;
       updateBondsStateUI();
     }
   }
@@ -5587,30 +6112,24 @@ function showSecretNav() {
 }
 
 function secretModuleCard(type, icon, name, desc) {
-  if (state.secretGenerating === type) {
-    return `
-    <div class="secret-module" style="opacity:0.5;pointer-events:none;">
-      <div class="secret-module-icon">${icon}</div>
-      <div class="secret-module-info">
-        <div class="secret-module-name">${name}</div>
-        <div class="secret-module-desc">生成中…</div>
-      </div>
-      <div class="secret-module-arrow">⟳</div>
-    </div>`;
-  }
+  const isGenerating = state.secretGenerating.has(type);
+  const arrow = isGenerating ? '⟳' : '›';
+  const descText = isGenerating ? '生成中…' : desc;
+  const opacity = isGenerating ? 'opacity:0.5;' : '';
   return `
-    <div class="secret-module" onclick="openSecretModule('${type}')">
+    <div class="secret-module" style="${opacity}" onclick="openSecretModule('${type}')">
       <div class="secret-module-icon">${icon}</div>
       <div class="secret-module-info">
         <div class="secret-module-name">${name}</div>
-        <div class="secret-module-desc">${desc}</div>
+        <div class="secret-module-desc">${descText}</div>
       </div>
-      <div class="secret-module-arrow">›</div>
+      <div class="secret-module-arrow">${arrow}</div>
     </div>`;
 }
 
 function renderSecretHome() {
   const container = document.getElementById('secret-content');
+  container.classList.remove('trace-mode');
   container.innerHTML = `
     <div class="secret-module secret-module-records" onclick="openSecretRecords()">
       <div class="secret-module-icon">📋</div>
@@ -5621,13 +6140,15 @@ function renderSecretHome() {
       <div class="secret-module-arrow">›</div>
     </div>
     ${secretModuleCard('memo','📝','他的备忘录','窥探他记下的心事')}
-    ${secretModuleCard('bookmark','🔖','他的收藏网址','窥探他收藏的书签')}
-    ${secretModuleCard('mailbox','✉','他的信箱','收发的短信记录')}
-    ${secretModuleCard('cart','🛒','他的购物车','偷偷看一下他买了什么？')}
     ${secretModuleCard('wish','🌠','他的心愿','窥探他藏在心底的愿望')}
-    ${secretModuleCard('plan','🗺️','他的秘密计划','便利贴与时间轴')}
+    ${secretModuleCard('mailbox','📫','他的信箱','收发的短信记录')}
+    ${secretModuleCard('trace','📱','他的社交账号','朋友圈动态与私聊记录')}
     ${secretModuleCard('forum','🎴','他的论坛小号','有些事情需要匿名才敢去问')}
     ${secretModuleCard('impression','🖊️','他的印象笔记','他对你的了解又加深了一点')}
+    ${secretModuleCard('plan','🗺️','他的秘密计划','便利贴与时间轴')}
+    ${secretModuleCard('mind','🌙','他的精神角落','书单与深夜歌单')}
+    ${secretModuleCard('bookmark','🔖','他的收藏网址','窥探他收藏的书签')}
+    ${secretModuleCard('cart','🛒','他的购物车','偷偷看一下他买了什么？')}
     ${secretModuleCard('voice','🎙️','语音草稿箱','草稿箱里没按下发送的话')}
     ${secretModuleCard('grudge','📓','恋爱记仇本','记下的每一笔，都是想你')}
     ${secretModuleCard('friends','💬','朋友们早就看出来了','一场群聊翻出所有细节')}
@@ -5648,7 +6169,9 @@ const SECRET_TYPE_NAMES = {
   'friends': '朋友们早就看出来了',
   'grudge': '恋爱记仇本',
   'voice': '语音草稿箱',
-  'impression': '他的印象笔记'
+  'impression': '他的印象笔记',
+  'trace': '他的社交账号',
+  'mind': '他的精神角落'
 };
 
 function formatSecretRecordTime(timestamp) {
@@ -5680,6 +6203,7 @@ function openSecretRecords() {
 
 function renderSecretRecords() {
   const container = document.getElementById('secret-content');
+  container.classList.remove('trace-mode');
   const records = state.data.secretRecords;
 
   let listHtml = '';
@@ -5709,19 +6233,32 @@ function renderSecretRecords() {
 function viewSecretRecord(recId) {
   const rec = state.data.secretRecords.find(r => r.id === recId);
   if (!rec) return;
-  const timeStr = formatSecretRecordTime(rec.timestamp);
   const typeName = SECRET_TYPE_NAMES[rec.type] || rec.type;
   state.secretModuleType = 'record-view';
+  hideSecretNav();
 
   const container = document.getElementById('secret-content');
+  // trace 类型不在顶部显示模块名，从保存内容中提取对方名字
+  const isTrace = rec.type === 'trace';
+  const headerClass = isTrace ? 'secret-page-header trace-header' : 'secret-page-header';
+  const titleClass = isTrace ? 'secret-detail-title trace-title' : 'secret-detail-title';
+  let traceName = '';
+  if (isTrace) {
+    const m = rec.html.match(/data-first-person="([^"]*)"/);
+    if (m) traceName = m[1];
+  }
+  if (isTrace) {
+    container.classList.add('trace-mode');
+  } else {
+    container.classList.remove('trace-mode');
+  }
   container.innerHTML = `
     <div class="secret-page-fullscreen">
-      <div class="secret-page-header">
-        <button class="secret-back" onclick="exitSecretRecordView()">‹ 返回</button>
-        <div class="secret-detail-title">${escapeHtml(typeName)}</div>
+      <div class="${headerClass}">
+        <button class="secret-back" onclick="exitSecretRecordView()">${isTrace ? '<svg class="trace-back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>' : '‹ 返回'}</button>
+        <div class="${titleClass}">${isTrace ? escapeHtml(traceName) : escapeHtml(typeName)}</div>
       </div>
-      <div class="secret-page-body">
-        <div class="secret-record-view-time">${escapeHtml(timeStr)}</div>
+      <div class="secret-page-body${isTrace ? ' trace-body' : ''}">
         <div class="secret-record-view-content">${rec.html}</div>
       </div>
     </div>
@@ -5751,11 +6288,12 @@ function deleteSecretRecord(recId) {
 
 // Open a modal to confirm generation; on confirm, jump to full-screen page
 function openSecretModule(type) {
-  if (state.secretGenerating) {
-    showToast('正在生成中，请稍候');
+  const typeName = SECRET_TYPE_NAMES[type] || type;
+  // 正在生成中的模块，弹窗提醒
+  if (state.secretGenerating.has(type)) {
+    showToast('「' + typeName + '」正在生成中，请稍候', 2000);
     return;
   }
-  const typeName = SECRET_TYPE_NAMES[type] || type;
   showModal(`
     <div class="modal">
       <div class="modal-header">是否生成「${escapeHtml(typeName)}」？</div>
@@ -5776,7 +6314,8 @@ function renderSecretModulePage(type) {
   const typeName = SECRET_TYPE_NAMES[type] || type;
 
   let bodyHtml = '';
-  if (state.secretGenerating === type) {
+  const isLoading = state.secretGenerating.has(type);
+  if (isLoading) {
     // Loading state
     bodyHtml = `<div class="secret-loading" style="padding:80px 0;">正在生成<span class="dots"><span></span><span></span><span></span></span></div>`;
   } else if (secretPageHtml) {
@@ -5784,13 +6323,30 @@ function renderSecretModulePage(type) {
     bodyHtml = secretPageHtml;
   }
 
+  // trace 类型不在顶部显示模块名，由内容自己控制标题
+  const isTrace = type === 'trace';
+  // 生成中不显示导航栏
+  const showHeader = isTrace && !isLoading;
+  const headerClass = isTrace ? 'secret-page-header trace-header' : 'secret-page-header';
+  const titleHtml = isTrace
+    ? '<div class="secret-detail-title trace-title"></div>'
+    : `<div class="secret-detail-title">${escapeHtml(typeName)}</div>`;
+
+  if (isTrace) {
+    container.classList.add('trace-mode');
+  } else {
+    container.classList.remove('trace-mode');
+  }
   container.innerHTML = `
     <div class="secret-page-fullscreen">
-      <div class="secret-page-header">
+      ${showHeader ? `<div class="${headerClass}">
+        <button class="secret-back" onclick="exitSecretModule()"><svg class="trace-back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+        ${titleHtml}
+      </div>` : !isTrace ? `<div class="${headerClass}">
         <button class="secret-back" onclick="exitSecretModule()">‹ 返回</button>
-        <div class="secret-detail-title">${escapeHtml(typeName)}</div>
-      </div>
-      <div class="secret-page-body">${bodyHtml}</div>
+        ${titleHtml}
+      </div>` : ''}
+      <div class="secret-page-body${isTrace ? ' trace-body' : ''}">${bodyHtml}</div>
     </div>
   `;
   container.scrollTop = 0;
@@ -5798,12 +6354,12 @@ function renderSecretModulePage(type) {
 
 function startSecretGen(type) {
   const charName = state.data.characters.other.name || '他';
-  state.secretGenerating = type;
-  state.secretModuleType = type;
+  state.secretGenerating.add(type);
+  state.secretGenIds[type] = (state.secretGenIds[type] || 0) + 1;
   secretPageHtml = null;
-  hideSecretNav();
-  renderSecretModulePage(type);
-  showToast('正在生成…', 1500);
+  // 不跳转界面，留在当前页面，更新卡片状态显示生成中
+  renderSecretHome();
+  showToast('「' + (SECRET_TYPE_NAMES[type] || type) + '」正在生成…', 2000);
   if (type === 'memo') generateMemo(charName);
   else if (type === 'bookmark') generateHistory(charName, 'bookmark');
   else if (type === 'mailbox') generateMailbox(charName);
@@ -5816,34 +6372,37 @@ function startSecretGen(type) {
   else if (type === 'grudge') generateGrudge(charName);
   else if (type === 'voice') generateVoice(charName);
   else if (type === 'impression') generateImpression(charName);
+  else if (type === 'trace') generateTrace(charName);
+  else if (type === 'mind') generateMind(charName);
 }
 
 function onSecretGenComplete(type, html) {
-  if (state.secretGenerating !== type) return;
+  if (!state.secretGenerating.has(type)) return;
   if (html) {
     saveSecretRecord(type, html);
     showToast('生成完成，已记入查看记录');
   } else {
     showToast('生成完成，但内容为空');
   }
-  state.secretGenerating = null;
-  // If still on the module page, show the content
+  state.secretGenerating.delete(type);
+  // If still on this module's page, show the content
   if (state.secretModuleType === type) {
     secretPageHtml = html;
     renderSecretModulePage(type);
-  } else {
-    // User navigated away — just refresh home
+  } else if (state.secretModuleType === null) {
+    // On home page — refresh to update card status
     renderSecretHome();
   }
+  // else: user is viewing another module, don't disrupt — toast already shown
 }
 
 function onSecretGenError(type, msg) {
-  if (state.secretGenerating !== type) return;
-  state.secretGenerating = null;
+  if (!state.secretGenerating.has(type)) return;
+  state.secretGenerating.delete(type);
   if (state.secretModuleType === type) {
     secretPageHtml = null;
     renderSecretModulePage(type);
-  } else {
+  } else if (state.secretModuleType === null) {
     renderSecretHome();
   }
   showToast('生成失败：' + (msg || '未知错误'));
@@ -5903,11 +6462,11 @@ async function generateMemo(charName) {
   const context = buildSecretContext();
   const prompt = `此刻你刚放下手机，有人偷偷翻看了你的备忘录。\n请根据以下你近期的真实生活动态，生成你备忘录里此刻真实存在的3-5条内容。\n内容要与近期经历、心情、人际关系紧密相关，像真实生活在继续一样。\n${context}\n\n请直接输出备忘录内容，不要加任何说明。`;
 
-  const genId = ++state.secretGenId;
+  state.secretGenIds['memo'] = (state.secretGenIds['memo'] || 0) + 1; const genId = state.secretGenIds['memo'];
   try {
     const result = await callAI(prompt, 'secret-memo');
     // Stale check: if a newer generation started, ignore this result
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['memo']) return;
     // Split by blank lines to get individual memo items (body may be multi-line)
     const rawItems = result.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
     let html = '';
@@ -5933,7 +6492,7 @@ async function generateMemo(charName) {
     }
     onSecretGenComplete('memo', html);
   } catch(e) {
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['memo']) return;
     onSecretGenError('memo', e.message);
   }
 }
@@ -5942,11 +6501,11 @@ async function generateHistory(charName, tab) {
   const context = buildSecretContext();
   const prompt = `此刻你刚放下手机，有人偷偷查看了你的收藏书签。\n请根据以下你近期的真实生活动态，生成你手机浏览器里此刻真实存在的5-7条收藏书签。\n收藏要反映你的个人喜好和长期关注领域。\n${context}\n\n请直接输出收藏记录，不要加任何说明。`;
 
-  const genId = ++state.secretGenId;
+  state.secretGenIds['bookmark'] = (state.secretGenIds['bookmark'] || 0) + 1; const genId = state.secretGenIds['bookmark'];
   try {
     const result = await callAI(prompt, 'secret-bookmark');
     // Stale check: if a newer generation started, ignore this result
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['bookmark']) return;
     // Split by blank lines to get individual items
     const rawItems = result.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
     let html = '';
@@ -5970,7 +6529,7 @@ async function generateHistory(charName, tab) {
     }
     onSecretGenComplete(tab, html);
   } catch(e) {
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['bookmark']) return;
     onSecretGenError(tab, e.message);
   }
 }
@@ -5983,10 +6542,10 @@ async function generateMailbox(charName) {
   const context = buildSecretContext();
   const prompt = `此刻你刚放下手机，有人偷偷翻看了你的短信信箱。\n请根据以下你近期的真实生活动态，生成你手机短信信箱里此刻真实存在的3-5条短信。\n既有你主动发出的，也有别人发给你的，混合呈现。\n至少有1-2条与主控角色之间的短信，呼应你们近期的关系状态。\n${context}\n\n请直接输出短信内容，不要加任何说明。`;
 
-  const genId = ++state.secretGenId;
+  state.secretGenIds['mailbox'] = (state.secretGenIds['mailbox'] || 0) + 1; const genId = state.secretGenIds['mailbox'];
   try {
     const result = await callAI(prompt, 'secret-mail');
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['mailbox']) return;
     // Split by blank lines to get individual mail items
     const rawItems = result.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
     let html = '';
@@ -6013,7 +6572,7 @@ async function generateMailbox(charName) {
     }
     onSecretGenComplete('mailbox', html);
   } catch(e) {
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['mailbox']) return;
     onSecretGenError('mailbox', e.message);
   }
 }
@@ -6022,10 +6581,10 @@ async function generateCart(charName) {
   const context = buildSecretContext();
   const prompt = `此刻你刚放下手机，有人偷偷查看了你手机购物APP里的购物车、运输中、寄退和历史订单。\n请根据以下你近期的真实生活动态，生成你此刻真实的购物数据，分为四个板块。\n${context}\n\n请直接输出购物数据，不要加任何说明。`;
 
-  const genId = ++state.secretGenId;
+  state.secretGenIds['cart'] = (state.secretGenIds['cart'] || 0) + 1; const genId = state.secretGenIds['cart'];
   try {
     const result = await callAI(prompt, 'secret-cart');
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['cart']) return;
 
     // 稳健解析：在原始文本上用正则提取各板块，与 generatePlan/generateForum 一致。
     // 不再做"换行→|||"归一化——那会把字段分隔符和行分隔符混为一谈，
@@ -6121,7 +6680,7 @@ async function generateCart(charName) {
 
     onSecretGenComplete('cart', html);
   } catch(e) {
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['cart']) return;
     onSecretGenError('cart', e.message);
   }
 }
@@ -6135,10 +6694,10 @@ async function generateWish(charName) {
   const context = buildSecretContext();
   const prompt = `此刻你刚放下手机，有人偷偷看到了你藏在手机备忘录深处的心愿清单。\n请根据以下你近期的真实生活动态，生成你此刻真实存在的3-5条心愿。\n内容要与你近期的生活、心情、人际关系相关。\n${context}\n\n请直接输出心愿内容，不要加任何说明。`;
 
-  const genId = ++state.secretGenId;
+  state.secretGenIds['wish'] = (state.secretGenIds['wish'] || 0) + 1; const genId = state.secretGenIds['wish'];
   try {
     const result = await callAI(prompt, 'secret-wish');
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['wish']) return;
     // Split by blank lines to get individual wish items
     const rawItems = result.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
     let html = '';
@@ -6158,7 +6717,7 @@ async function generateWish(charName) {
     }
     onSecretGenComplete('wish', html);
   } catch(e) {
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['wish']) return;
     onSecretGenError('wish', e.message);
   }
 }
@@ -6167,10 +6726,10 @@ async function generatePlan(charName) {
   const context = buildSecretContext();
   const prompt = `此刻你刚放下手机，有人偷偷看到了你藏在抽屉里的秘密计划本。\n请根据以下你近期的真实生活动态，生成你的秘密计划，包含便利贴和时间轴两部分。\n内容要与你近期的生活、心情、人际关系相关。\n${context}\n\n请直接输出计划内容，不要加任何说明。`;
 
-  const genId = ++state.secretGenId;
+  state.secretGenIds['plan'] = (state.secretGenIds['plan'] || 0) + 1; const genId = state.secretGenIds['plan'];
   try {
     const result = await callAI(prompt, 'secret-plan');
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['plan']) return;
 
     // Parse sections: 【便利贴】 and 【时间轴】
     const sections = {};
@@ -6221,7 +6780,7 @@ async function generatePlan(charName) {
 
     onSecretGenComplete('plan', html);
   } catch(e) {
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['plan']) return;
     onSecretGenError('plan', e.message);
   }
 }
@@ -6230,10 +6789,10 @@ async function generateForum(charName) {
   const context = buildSecretContext();
   const prompt = `有些事情你不好用真实身份讨论，于是你开了一个匿名小号在论坛提问。请根据以下你近期的真实生活动态，生成你的匿名提问和路人回复。\n${context}\n\n请直接输出论坛内容，不要加任何说明。`;
 
-  const genId = ++state.secretGenId;
+  state.secretGenIds['forum'] = (state.secretGenIds['forum'] || 0) + 1; const genId = state.secretGenIds['forum'];
   try {
     const result = await callAI(prompt, 'secret-forum');
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['forum']) return;
 
     // Parse the response: split into post section and reply section
     let postRaw = '';
@@ -6328,51 +6887,129 @@ async function generateForum(charName) {
 
     onSecretGenComplete('forum', html);
   } catch(e) {
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['forum']) return;
     onSecretGenError('forum', e.message);
   }
 }
 
 async function generateNews(charName) {
   const context = buildSecretContext();
-  const prompt = `有人翻开了今日的坊间小报，想看看这个世界里正在发生什么大事、坊间流传着什么八卦。\n请根据以下角色近期的真实生活动态，生成此刻这个世界里的新闻和八卦。\n${context}\n\n请直接输出内容，不要加任何说明。`;
+  const prompt = `有人翻开了今日的坊间小报，想看看这个世界里正在发生什么大事、坊间流传着什么八卦。\n请根据以下角色近期的真实生活动态，生成此刻这个世界里的坊间小报。\n小报分为「头条要闻」「社会百态」「八卦流言」三个版块，每个版块只生成1条文章。\n每条文章含标题、来源（记者/消息来源）、正文和3条评论（第一条是AI角色"${charName}"本人的评论）。\n${context}\n\n请直接输出内容，不要加任何说明。`;
 
-  const genId = ++state.secretGenId;
+  state.secretGenIds['news'] = (state.secretGenIds['news'] || 0) + 1; const genId = state.secretGenIds['news'];
   try {
     const result = await callAI(prompt, 'secret-news');
-    if (genId !== state.secretGenId) return;
-    // Split by blank lines to get individual news items
-    const rawItems = result.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
-    let html = '';
-    for (const rawItem of rawItems) {
-      // Each item format: title|||content
-      const parts = rawItem.split('|||').map(s => s.trim()).filter(s => s);
-      if (parts.length >= 2) {
-        const title = parts[0].replace(/\s+/g, ' ');
-        const content = parts.slice(1).join('\n').replace(/\s+$/, '');
-        html += `
-          <div class="news-item">
-            <div class="news-item-title">${escapeHtml(title)}</div>
-            <div class="news-item-text">${renderParagraphs(content)}</div>
-          </div>
-        `;
-      }
+    if (genId !== state.secretGenIds['news']) return;
+
+    // 解析三个版块
+    const sectionMap = {};
+    const sectionRegex = /【(头条要闻|社会百态|八卦流言)】\s*([\s\S]*?)(?=【(?:头条要闻|社会百态|八卦流言)】|$)/g;
+    let secMatch;
+    while ((secMatch = sectionRegex.exec(result)) !== null) {
+      sectionMap[secMatch[1]] = secMatch[2].trim();
     }
+
+    const tabs = [
+      { key: 'headline', label: '头条要闻', sectionName: '头条要闻', isGossip: false },
+      { key: 'society', label: '社会百态', sectionName: '社会百态', isGossip: false },
+      { key: 'gossip', label: '八卦流言', sectionName: '八卦流言', isGossip: true }
+    ];
+
+    // 随机报刊名
+    const paperNames = ['城市晨声','夜半风声','街角晚报','茶馆快报','弄堂消息','城南纪事','坊间速递','巷子口日报','街谈巷语','茶余饭后报','弄堂风','城市耳语','城南旧事报','街灯晚报','邻里速报'];
+    const paperName = paperNames[Math.floor(Math.random() * paperNames.length)];
+
+    // 日期 xx年xx月xx日
+    const now = new Date();
+    const dateStr = `${now.getFullYear()}年${String(now.getMonth() + 1).padStart(2, '0')}月${String(now.getDate()).padStart(2, '0')}日`;
+
+    // 报头
+    let html = '<div class="news-container">';
+    html += `
+      <div class="news-paper-header">
+        <span class="news-paper-title">${escapeHtml(paperName)}</span>
+        <span class="news-paper-meta">${escapeHtml(dateStr)}｜内部传阅</span>
+      </div>
+      <div class="news-tabs">
+    `;
+    tabs.forEach((tab, i) => {
+      html += `<div class="news-tab${i === 0 ? ' active' : ''}" data-tab="${tab.key}" onclick="switchNewsTab(this,'${tab.key}')">${tab.label}</div>`;
+    });
+    html += '</div>';
+
+    // 各版块内容
+    tabs.forEach((tab, i) => {
+      const sectionText = sectionMap[tab.sectionName] || '';
+      // 按空行分割文章
+      const articles = sectionText.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
+      let bodyHtml = '';
+
+      for (const article of articles) {
+        const fields = article.split('|||').map(s => s.trim());
+        if (fields.length >= 10) {
+          const title = fields[0].replace(/\s+/g, ' ');
+          const sourcePerson = fields[1].replace(/\s+/g, ' ');
+          const sourcePlace = fields[2].replace(/\s+/g, ' ');
+          const body = fields[3].replace(/\s+$/, '');
+          const c1Author = fields[4].replace(/\s+/g, ' ');
+          const c1Content = fields[5].replace(/\s+/g, ' ');
+          const c2Author = fields[6].replace(/\s+/g, ' ');
+          const c2Content = fields[7].replace(/\s+/g, ' ');
+          const c3Author = fields[8].replace(/\s+/g, ' ');
+          const c3Content = fields[9].replace(/\s+/g, ' ');
+
+          const personLabel = tab.isGossip ? '消息来源' : '记者';
+          const placeLabel = tab.isGossip ? '地点' : '发自';
+
+          bodyHtml += `
+            <div class="news-article">
+              <div class="news-article-meta">
+                <span>${escapeHtml(personLabel)}：${escapeHtml(sourcePerson)}｜${escapeHtml(placeLabel)}：${escapeHtml(sourcePlace)}</span>
+              </div>
+              <div class="news-article-title">${escapeHtml(title)}</div>
+              <div class="news-article-body">${renderParagraphs(body)}</div>
+              <div class="news-article-divider"></div>
+              <div class="news-article-comments">
+                <div class="news-comment${c1Author === charName ? ' ai-comment' : ''}"><span class="news-comment-author">${escapeHtml(c1Author)}</span><span class="news-comment-text">${escapeHtml(c1Content)}</span></div>
+                <div class="news-comment${c2Author === charName ? ' ai-comment' : ''}"><span class="news-comment-author">${escapeHtml(c2Author)}</span><span class="news-comment-text">${escapeHtml(c2Content)}</span></div>
+                <div class="news-comment${c3Author === charName ? ' ai-comment' : ''}"><span class="news-comment-author">${escapeHtml(c3Author)}</span><span class="news-comment-text">${escapeHtml(c3Content)}</span></div>
+              </div>
+            </div>`;
+        }
+      }
+
+      if (!bodyHtml) bodyHtml = '<div class="news-empty">暂无内容</div>';
+
+      html += `<div class="news-tab-content" data-tab-content="${tab.key}"${i === 0 ? '' : ' style="display:none"'}>${bodyHtml}</div>`;
+    });
+
+    html += '</div>';
     onSecretGenComplete('news', html);
   } catch(e) {
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['news']) return;
     onSecretGenError('news', e.message);
   }
+}
+
+function switchNewsTab(btn, tabKey) {
+  const container = btn.closest('.news-container');
+  if (!container) return;
+  container.querySelectorAll('.news-tab').forEach(t => t.classList.remove('active'));
+  container.querySelectorAll('.news-tab-content').forEach(c => c.style.display = 'none');
+  const tab = container.querySelector(`.news-tab[data-tab="${tabKey}"]`);
+  const content = container.querySelector(`.news-tab-content[data-tab-content="${tabKey}"]`);
+  if (tab) tab.classList.add('active');
+  if (content) content.style.display = '';
 }
 
 async function generateFriends(charName) {
   const context = buildSecretContext();
   const prompt = `朋友们建了一个没有两位主角在场的群聊，正在热烈讨论他们的关系。请根据以下角色近期的真实生活动态，生成一场群聊记录。\n参与者为NPC朋友们，他们翻出了两位主角之间的各种细节。\n${context}\n\n请直接输出群聊内容，不要加任何说明。`;
 
-  const genId = ++state.secretGenId;
+  state.secretGenIds['friends'] = (state.secretGenIds['friends'] || 0) + 1; const genId = state.secretGenIds['friends'];
   try {
     const result = await callAI(prompt, 'secret-friends');
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['friends']) return;
     // Split by blank lines to get individual messages
     const rawItems = result.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
     let html = '';
@@ -6416,7 +7053,7 @@ async function generateFriends(charName) {
     }
     onSecretGenComplete('friends', html);
   } catch(e) {
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['friends']) return;
     onSecretGenError('friends', e.message);
   }
 }
@@ -6426,10 +7063,10 @@ async function generateGrudge(charName) {
   const context = buildSecretContext();
   const prompt = `此刻有人偷偷翻开了你的"恋爱记仇本"。\n因为某些事情，你狠狠地记下了一笔。但与其说是记仇，不如说是想主控了。\n请根据以下你近期的真实生活动态，生成你记仇本里此刻真实存在的3-5条内容。\n每条都是一件让你"记仇"的小事，表面是抱怨，字里行间却全是想念与在意。\n${context}\n\n每条格式严格为：罪名|||记仇经过|||真心话|||时间\n罪名是你给这件事起的小标题，记仇经过是你气鼓鼓的描述，真心话是那句暴露你其实只想主控的话，时间为具体日期时间。\n条目之间用空行分隔。请直接输出内容，不要加任何说明。`;
 
-  const genId = ++state.secretGenId;
+  state.secretGenIds['grudge'] = (state.secretGenIds['grudge'] || 0) + 1; const genId = state.secretGenIds['grudge'];
   try {
     const result = await callAI(prompt, 'secret-grudge');
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['grudge']) return;
     const rawItems = result.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
     let html = '';
     for (const rawItem of rawItems) {
@@ -6453,7 +7090,7 @@ async function generateGrudge(charName) {
     }
     onSecretGenComplete('grudge', html);
   } catch(e) {
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['grudge']) return;
     onSecretGenError('grudge', e.message);
   }
 }
@@ -6463,10 +7100,10 @@ async function generateVoice(charName) {
   const context = buildSecretContext();
   const prompt = `此刻有人偷偷点开了你语音消息的"草稿箱"，那里藏着几条你录好却始终没按下发送的话。\n请根据以下你近期的真实生活动态，生成你草稿箱里此刻真实存在的3-5条未发送语音。\n每条都是你想对主控说却没说出口的话，听到最后才知道你真正想让主控明白什么。\n${context}\n\n每条格式严格为：时长|||语音文字|||时间\n时长形如"0:12"，语音文字是这段语音转写出的内容，时间为具体日期时间。\n条目之间用空行分隔。请直接输出内容，不要加任何说明。`;
 
-  const genId = ++state.secretGenId;
+  state.secretGenIds['voice'] = (state.secretGenIds['voice'] || 0) + 1; const genId = state.secretGenIds['voice'];
   try {
     const result = await callAI(prompt, 'secret-voice');
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['voice']) return;
     const rawItems = result.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
     let html = '';
     for (const rawItem of rawItems) {
@@ -6490,7 +7127,7 @@ async function generateVoice(charName) {
     }
     onSecretGenComplete('voice', html);
   } catch(e) {
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['voice']) return;
     onSecretGenError('voice', e.message);
   }
 }
@@ -6501,10 +7138,10 @@ async function generateImpression(charName) {
   const meName = state.data.characters.me.name || '主控';
   const prompt = `此刻有人偷偷翻开了你的"印象笔记"——那是你偷偷记录的关于${meName}的观察与感受。\n请根据以下你近期的真实生活动态，生成你此刻的印象笔记，包含三个板块。\n${context}\n\n格式严格如下：\n【我眼中的TA】\n时间|||From名字|||印象内容\nFrom名字填你的名字，印象内容是你对${meName}的整体印象\n\n【TA喜欢的】\n你观察到${meName}喜欢的3-5样事物，每条一行\n\n【TA讨厌的】\n你观察到${meName}讨厌的3-5样事物，每条一行\n\n三个板块之间用空行分隔。请直接输出内容，不要加任何说明。`;
 
-  const genId = ++state.secretGenId;
+  state.secretGenIds['impression'] = (state.secretGenIds['impression'] || 0) + 1; const genId = state.secretGenIds['impression'];
   try {
     const result = await callAI(prompt, 'secret-impression');
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['impression']) return;
 
     // 解析三个板块
     const eyesMatch = result.match(/【我眼中的TA】\s*([\s\S]*?)(?:\n\s*【TA喜欢的】|$)/);
@@ -6565,8 +7202,239 @@ async function generateImpression(charName) {
     html += '</div>';
     onSecretGenComplete('impression', html);
   } catch(e) {
-    if (genId !== state.secretGenId) return;
+    if (genId !== state.secretGenIds['impression']) return;
     onSecretGenError('impression', e.message);
+  }
+}
+
+// ========== 他的社交账号 ==========
+async function generateTrace(charName) {
+  const context = buildSecretContext();
+  const prompt = `此刻有人偷偷查看了你手机里和别人（非主控角色）的私聊记录。\n请根据以下你近期的真实生活动态，生成你此刻真实的私聊记录。\n注意：只能与同一个人的私聊，不要出现多个不同的聊天对象。\n${context}\n\n请直接输出私聊内容，不要加任何说明。`;
+
+  state.secretGenIds['trace'] = (state.secretGenIds['trace'] || 0) + 1; const genId = state.secretGenIds['trace'];
+  try {
+    const result = await callAI(prompt, 'secret-trace');
+    if (genId !== state.secretGenIds['trace']) return;
+
+    // 解析私聊板块
+    const sectionMap = {};
+    const sectionRegex = /【(他和别人的私聊)】\s*([\s\S]*?)(?=【(?:他和别人的私聊)】|$)/g;
+    let secMatch;
+    while ((secMatch = sectionRegex.exec(result)) !== null) {
+      sectionMap[secMatch[1]] = secMatch[2].trim();
+    }
+
+    let html = '';
+
+    if (sectionMap['他和别人的私聊']) {
+      // 先用 ||| 分割整个板块内容（因为聊天内容可能多行）
+      const raw = sectionMap['他和别人的私聊'].trim();
+      // 按行分割，每行一条消息
+      const lines = raw.split(/\n/).map(s => s.trim()).filter(s => s);
+
+      // 收集所有消息，只保留与第一个对话对象的私聊
+      const messages = [];
+      let firstPerson = '';
+      let firstTime = '';
+      for (const line of lines) {
+        const fields = line.split('|||').map(s => s.trim());
+        if (fields.length >= 4) {
+          const direction = fields[0].replace(/\s+/g, ' ');
+          const person = fields[1].replace(/\s+/g, ' ');
+          const content = fields[2].replace(/\s+/g, ' ');
+          const time = fields.slice(3).join(' ').replace(/\s+/g, ' ');
+          const isSent = direction === '发出';
+          // 确定第一个对话对象（优先取收到的消息发送者）
+          if (!firstPerson) {
+            firstPerson = person;
+            firstTime = time;
+          }
+          messages.push({ isSent, person, content, time });
+        }
+      }
+
+      // 只保留与 firstPerson 的对话（发出消息的 person 也应为 firstPerson，因为发出的就是给这个人的）
+      const filteredMessages = messages.filter(msg => msg.person === firstPerson);
+
+      html = '<div class="trace-chat-wrap" data-first-person="' + escapeHtml(firstPerson) + '">';
+
+      // 开头显示居中时间戳（用第一条消息的时间）
+      if (firstTime) {
+        html += `<div class="trace-chat-timestamp">${escapeHtml(firstTime)}</div>`;
+      }
+
+      // 渲染消息（不显示名字和每条时间，只有头像+气泡）
+      const otherAvatar = state.data.characters.other.avatar;
+      for (const msg of filteredMessages) {
+        if (msg.isSent) {
+          // AI角色发出的消息，使用真实头像
+          let avatarHtml;
+          if (otherAvatar) {
+            avatarHtml = `<div class="trace-msg-avatar me" style="background-image:url('${otherAvatar}');background-size:cover;background-position:center"></div>`;
+          } else {
+            avatarHtml = `<div class="trace-msg-avatar me">${escapeHtml(getAvatarChar(charName, '我'))}</div>`;
+          }
+          html += `
+            <div class="trace-msg-row me">
+              ${avatarHtml}
+              <div class="trace-msg-body">
+                <div class="trace-msg-bubble">${escapeHtml(msg.content)}</div>
+              </div>
+            </div>`;
+        } else {
+          // 其他人发的消息，使用文字头像
+          const avatarChar = getAvatarChar(msg.person, '?');
+          html += `
+            <div class="trace-msg-row other">
+              <div class="trace-msg-avatar other">${escapeHtml(avatarChar)}</div>
+              <div class="trace-msg-body">
+                <div class="trace-msg-bubble">${escapeHtml(msg.content)}</div>
+              </div>
+            </div>`;
+        }
+      }
+
+      // 顶部导航栏居中显示对方名字
+      if (firstPerson) {
+        setTimeout(() => {
+          const titleEl = document.querySelector('.secret-detail-title');
+          if (titleEl) titleEl.textContent = firstPerson;
+        }, 50);
+      }
+    } else {
+      html = '<div class="trace-chat-wrap">';
+    }
+
+    html += '</div>';
+    onSecretGenComplete('trace', html);
+  } catch(e) {
+    if (genId !== state.secretGenIds['trace']) return;
+    onSecretGenError('trace', e.message);
+  }
+}
+
+// ========== 他的精神角落 ==========
+async function generateMind(charName) {
+  const context = buildSecretContext();
+  const prompt = `此刻有人偷偷翻看了你藏在手机深处的精神角落——你的私密书单和深夜歌单。\n请根据以下你近期的真实生活动态，生成你此刻真实的精神角落，包含两个板块。\n${context}\n\n请直接输出精神角落内容，不要加任何说明。`;
+
+  state.secretGenIds['mind'] = (state.secretGenIds['mind'] || 0) + 1; const genId = state.secretGenIds['mind'];
+  try {
+    const result = await callAI(prompt, 'secret-mind');
+    if (genId !== state.secretGenIds['mind']) return;
+
+    console.log('[mind] AI raw output:', result);
+    console.log('[mind] has 书单:', result.includes('【书单】'));
+    console.log('[mind] has 深夜歌单:', result.includes('【深夜歌单】'));
+
+    // 解析两个板块 - 用更宽松的方式先找到各板块位置
+    const sectionMap = {};
+    // 先尝试正则匹配
+    const sectionRegex = /【(书单|深夜歌单)】\s*([\s\S]*?)(?=【(?:书单|深夜歌单)】|$)/g;
+    let secMatch;
+    while ((secMatch = sectionRegex.exec(result)) !== null) {
+      sectionMap[secMatch[1]] = secMatch[2].trim();
+    }
+    // 如果正则没匹配到书单，用字符串查找方式兜底
+    if (!sectionMap['书单'] && result.includes('书单')) {
+      const idx = result.indexOf('书单');
+      // 找到书单标记后的内容起始位置
+      let contentStart = result.indexOf('】', idx);
+      if (contentStart !== -1) {
+        contentStart++;
+        // 找到深夜歌单的位置，截取书单内容到歌单之前（如果歌单在书单后面）
+        let contentEnd = result.length;
+        const songIdx = result.indexOf('【深夜歌单】', contentStart);
+        if (songIdx !== -1) contentEnd = songIdx;
+        sectionMap['书单'] = result.substring(contentStart, contentEnd).trim();
+      }
+    }
+    if (!sectionMap['深夜歌单'] && result.includes('深夜歌单')) {
+      const idx = result.indexOf('深夜歌单');
+      let contentStart = result.indexOf('】', idx);
+      if (contentStart !== -1) {
+        contentStart++;
+        let contentEnd = result.length;
+        const bookIdx = result.indexOf('【书单】', contentStart);
+        if (bookIdx !== -1) contentEnd = bookIdx;
+        sectionMap['深夜歌单'] = result.substring(contentStart, contentEnd).trim();
+      }
+    }
+    console.log('[mind] sectionMap keys:', Object.keys(sectionMap));
+
+    let html = '<div class="mind-wrap">';
+
+    // 板块1: 深夜歌单
+    if (sectionMap['深夜歌单']) {
+      const raw = sectionMap['深夜歌单'].trim();
+      const fields = raw.split('|||').map(s => s.trim());
+      let itemsHtml = '';
+      if (fields.length >= 3) {
+        const song = fields[0].replace(/\s+/g, ' ');
+        const artist = fields[1].replace(/\s+/g, ' ');
+        const mood = fields.slice(2).join('\n').replace(/\s+$/, '');
+        itemsHtml += `
+          <div class="mind-song-item">
+            <div class="mind-song-info">
+              <div class="mind-song-name">${escapeHtml(song)}</div>
+              <div class="mind-song-artist">${escapeHtml(artist)}</div>
+            </div>
+            <div class="mind-song-mood">${renderParagraphs(mood)}</div>
+          </div>`;
+      }
+      if (itemsHtml) {
+        html += `
+          <div class="mind-section">
+            <div class="mind-section-label">深夜歌单</div>
+            ${itemsHtml}
+          </div>`;
+      }
+    }
+
+    // 板块2: 书单
+    if (sectionMap['书单']) {
+      const raw = sectionMap['书单'].trim();
+      const fields = raw.split('|||').map(s => s.trim());
+      let itemsHtml = '';
+      console.log('[mind] 书单 fields count:', fields.length, fields.map(f => f.substring(0, 20)));
+      if (fields.length >= 4) {
+        const book = fields[0].replace(/\s+/g, ' ');
+        const author = fields[1].replace(/\s+/g, ' ');
+        const excerpt = fields[2].replace(/\s+/g, ' ');
+        const review = fields.slice(3).join('\n').replace(/\s+$/, '');
+        itemsHtml += `
+          <div class="mind-book-item">
+            <div class="mind-book-title">《${escapeHtml(book)}》</div>
+            <div class="mind-book-author">${escapeHtml(author)}</div>
+            <div class="mind-book-excerpt">${renderParagraphs(excerpt)}</div>
+            <div class="mind-book-thoughts">${renderParagraphs(review)}</div>
+          </div>`;
+      } else if (fields.length >= 1) {
+        // 兜底：字段不足4个时，尽力展示已有内容
+        const book = fields[0].replace(/\s+/g, ' ');
+        itemsHtml += `
+          <div class="mind-book-item">
+            <div class="mind-book-title">《${escapeHtml(book)}》</div>
+            ${fields.length >= 2 ? `<div class="mind-book-author">${escapeHtml(fields[1])}</div>` : ''}
+            ${fields.length >= 3 ? `<div class="mind-book-excerpt">${renderParagraphs(fields[2])}</div>` : ''}
+            <div class="mind-book-thoughts">${renderParagraphs(raw)}</div>
+          </div>`;
+      }
+      if (itemsHtml) {
+        html += `
+          <div class="mind-section">
+            <div class="mind-section-label">书单</div>
+            ${itemsHtml}
+          </div>`;
+      }
+    }
+
+    html += '</div>';
+    onSecretGenComplete('mind', html);
+  } catch(e) {
+    if (genId !== state.secretGenIds['mind']) return;
+    onSecretGenError('mind', e.message);
   }
 }
 
@@ -7050,6 +7918,174 @@ function backToHome() {
   document.getElementById('home-screen').style.display = 'flex';
 }
 
+// ========== 数据备份/导入 ==========
+function showBackupModal() {
+  showModal(`
+    <div class="modal">
+      <div class="modal-header">数据备份</div>
+      <div class="modal-body" style="padding:20px;">
+        <p style="font-size:13px;color:var(--text-dim);margin:0 0 16px;line-height:1.6;">
+          导出当前游戏数据和所有存档为文件保存到本地，防止数据丢失。<br>
+          也可通过导入文件恢复之前备份的数据。
+        </p>
+        <button class="settings-action-btn" onclick="exportData()" style="width:100%;margin-bottom:10px;display:flex;flex-direction:column;gap:2px;align-items:center;">
+          <span>导出数据</span>
+          <span style="font-size:11px;color:var(--text-dim);letter-spacing:0;text-indent:0;">下载备份文件</span>
+        </button>
+        <button class="settings-action-btn" onclick="document.getElementById('import-file-input').click()" style="width:100%;display:flex;flex-direction:column;gap:2px;align-items:center;">
+          <span>导入数据</span>
+          <span style="font-size:11px;color:var(--text-dim);letter-spacing:0;text-indent:0;">从备份文件恢复</span>
+        </button>
+        <input type="file" id="import-file-input" accept=".json" style="display:none" onchange="importData(event)">
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn" onclick="closeModal()">关闭</button>
+      </div>
+    </div>
+  `);
+}
+
+function exportData() {
+  try {
+    const backup = {
+      _type: 'echo_full_backup',
+      _version: APP_VERSION,
+      _exportTime: Date.now(),
+      currentData: state.data,
+      saves: getAllSaves()
+    };
+    const jsonStr = JSON.stringify(backup, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const dateStr = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = `echo_backup_${dateStr}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('数据已导出');
+    closeModal();
+  } catch(e) {
+    console.error('导出失败', e);
+    showToast('导出失败：' + e.message);
+  }
+}
+
+function exportSavesOnly() {
+  try {
+    const saves = getAllSaves();
+    if (Object.keys(saves).length === 0) {
+      showToast('暂无存档可导出');
+      return;
+    }
+    const backup = {
+      _type: 'echo_saves_backup',
+      _version: APP_VERSION,
+      _exportTime: Date.now(),
+      saves: saves
+    };
+    const jsonStr = JSON.stringify(backup, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const dateStr = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = `echo_saves_${dateStr}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('存档已导出');
+    closeModal();
+  } catch(e) {
+    console.error('导出失败', e);
+    showToast('导出失败：' + e.message);
+  }
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const backup = JSON.parse(e.target.result);
+      if (!backup._type || !backup._type.startsWith('echo_')) {
+        showToast('文件格式不正确，请选择Echo备份文件');
+        return;
+      }
+
+      let importMsg = '';
+      let needReload = false;
+
+      // 恢复存档数据
+      if (backup.saves) {
+        const existingSaves = getAllSaves();
+        // 合并存档：新导入的覆盖同名槽位
+        const merged = { ...existingSaves, ...backup.saves };
+        writeAllSaves(merged);
+        importMsg += '存档数据已恢复（' + Object.keys(backup.saves).length + '个槽位）';
+        needReload = true;
+      }
+
+      // 恢复当前游戏数据
+      if (backup.currentData && backup._type === 'echo_full_backup') {
+        showModal(`
+          <div class="modal">
+            <div class="modal-header">确认导入当前数据</div>
+            <div class="modal-body" style="padding:20px;text-align:center;">
+              <p style="font-size:13px;color:var(--text-dim);margin:0;line-height:1.6;">
+                检测到备份中包含当前游戏进度数据。<br>
+                导入将<strong style="color:var(--gold);">覆盖当前游戏数据</strong>，是否继续？
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button class="modal-btn" onclick="closeModal()">取消</button>
+              <button class="modal-btn primary" onclick="confirmImportCurrentData()">确认覆盖</button>
+            </div>
+          </div>
+        `);
+        // 暂存备份数据供确认后使用
+        window._pendingImportData = backup.currentData;
+        return;
+      }
+
+      if (importMsg) {
+        showToast(importMsg);
+      }
+      closeModal();
+      if (needReload) {
+        // 刷新加载游戏弹窗
+        setTimeout(() => showLoadModal(true), 300);
+      }
+    } catch(err) {
+      console.error('导入失败', err);
+      showToast('导入失败：文件解析错误');
+    }
+  };
+  reader.readAsText(file);
+  // 清空 input，允许再次选择同一文件
+  event.target.value = '';
+}
+
+function confirmImportCurrentData() {
+  if (!window._pendingImportData) return;
+  try {
+    state.data = deepMerge(structuredClone(DEFAULT_DATA), structuredClone(window._pendingImportData));
+    saveToStorage();
+    delete window._pendingImportData;
+    showToast('数据已恢复，请重新进入游戏');
+    closeModal();
+  } catch(e) {
+    console.error('恢复失败', e);
+    showToast('恢复失败：' + e.message);
+    delete window._pendingImportData;
+    closeModal();
+  }
+}
+
 // 渲染规则卡片列表
 function renderGlobalRules() {
   const container = document.getElementById('global-rules-list');
@@ -7457,14 +8493,19 @@ function loadFromSlot(slotId, fromHome) {
   // 迁移：检测旧格式快照（含"时间节点"或"空间位置"字段），清除后等下次事件重新生成
   if (state.data.storyState && (state.data.storyState.includes('时间节点') || state.data.storyState.includes('空间位置'))) {
     state.data.storyState = '';
-    state.data.storyStateConsumed = false;
+    state.data.storyStateStale = true;
+  }
+  // 迁移：旧字段 storyStateConsumed → storyStateStale
+  if ('storyStateConsumed' in state.data) {
+    delete state.data.storyStateConsumed;
+    state.data.storyStateStale = true; // 旧存档强制重新提炼快照
   }
   // Reset all runtime state to avoid stale leftovers
   state.eventState = 'idle';
   state.currentChainId = null;
   state.quoteContext = null;
   state.secretModuleType = null;
-  state.secretGenerating = null;
+  state.secretGenerating.clear();
   secretPageHtml = null;
   showSecretNav();
   state.chatSessionId++;
