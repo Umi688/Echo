@@ -32,7 +32,6 @@
   --card-bg:rgba(239,244,250,0.75);
   --ease:cubic-bezier(0.4,0,0.2,1);
   --bg-image:url('https://cdn.jsdelivr.net/gh/Umi688/Echo@main/images/BackGround.jpg');
-  --paper-noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
 }
 html,body{height:100%;overflow:hidden}
 body{
@@ -46,14 +45,10 @@ body{
   align-items:center;
   justify-content:center;
 }
-/* 字体层次：标题用粗衬线、正文用细衬线、时间戳/小字用无衬线 */
-.font-title{font-family:"Cormorant","Noto Serif SC","Source Han Serif SC",serif;font-weight:600}
-.font-body{font-family:"Noto Serif SC","Source Han Serif SC","Songti SC",serif;font-weight:300}
-.font-meta{font-family:"Noto Sans SC",-apple-system,"PingFang SC","Helvetica Neue",sans-serif;font-weight:300}
 /* 卡片细微内阴影：顶部高光强化轮廓分层 */
-.home-btn,.msg-bubble,.input-bar input,.input-bar textarea,.input-bar button,
-.narr-card,.char-card,.avatar-frame,.rules-header,.rule-card-btn,.rule-card-content,
-.settings-action-btn,.modal,.form-input,.form-textarea,.api-tab,.save-item,
+.msg-bubble,.input-bar input,.input-bar textarea,.input-bar button,
+.narr-card,.char-card,.avatar-frame,.rules-header,.rule-card-btn,
+.settings-action-btn,.modal,.form-input,.form-textarea,
 .secret-module,.memo-item,.history-item,.mail-item,.secret-record-card,
 #bottom-nav,.chat-avatar{
   box-shadow:inset 0 1px 0 rgba(255,255,255,0.5);
@@ -80,152 +75,6 @@ body{
 
 /* ========== Screens ========== */
 .screen{position:absolute;inset:0;display:flex;flex-direction:column}
-
-/* ========== Home Screen ========== */
-#home-screen{
-  background:var(--bg-image) center/cover no-repeat;
-  align-items:center;
-  justify-content:center;
-  padding:20px 28px;
-  position:relative;
-  overflow:hidden;
-  min-height:100%;
-  height:100%;
-}
-.home-content{
-  width:100%;
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:48px;
-  position:relative;
-  z-index:1;
-}
-.game-title{
-  font-family:"Cormorant","Times New Roman",serif;
-  font-size:48px;
-  font-weight:700;
-  font-style:italic;
-  letter-spacing:2px;
-  color:var(--text);
-  text-align:center;
-  text-shadow:0 1px 2px rgba(26,43,60,0.08);
-  position:relative;
-}
-.game-title::after{
-  content:'';
-  position:absolute;
-  left:50%;bottom:-6px;
-  width:60px;height:1px;
-  transform:translateX(-50%);
-  background:linear-gradient(90deg,transparent 0%,rgba(26,43,60,0.3) 50%,transparent 100%);
-}
-.game-subtitle{
-  font-size:13px;
-  color:rgba(58,111,165,0.7);
-  letter-spacing:6px;
-  font-weight:300;
-  margin-top:12px;
-  font-family:"Noto Sans SC",-apple-system,"PingFang SC","Helvetica Neue",sans-serif;
-  text-align:center;
-}
-.home-buttons{width:100%;display:flex;flex-direction:column;gap:12px;margin-top:0}
-.home-btn{
-  padding:15px 0;
-  background:linear-gradient(135deg,rgba(239,244,250,0.78) 0%,rgba(138,168,208,0.72) 100%);
-  border:none;
-  border-radius:2px;
-  color:var(--text);
-  font-size:15px;
-  font-weight:400;
-  letter-spacing:5px;
-  text-align:center;
-  text-indent:5px;
-  cursor:pointer;
-  transition:all 0.3s var(--ease);
-  backdrop-filter:blur(4px);
-  -webkit-backdrop-filter:blur(4px);
-  position:relative;
-  overflow:hidden;
-}
-.home-btn::before{
-  content:'';
-  position:absolute;
-  top:0;left:0;right:0;
-  height:1px;
-  pointer-events:none;
-  background:linear-gradient(90deg,rgba(26,43,60,0.15) 0%,rgba(58,111,165,0.06) 40%,transparent 100%);
-}
-.home-btn:hover{background:rgba(138,168,208,0.8);color:var(--gold)}
-.home-btn:active{transform:scale(0.98)}
-.home-btn.primary{
-  background:linear-gradient(135deg,rgba(138,168,208,0.72) 0%,rgba(165,192,224,0.72) 100%);
-  color:var(--text);
-}
-
-/* ========== Echo Select Screen ========== */
-#echo-select-screen{
-  background:var(--bg-image) center/cover no-repeat;
-  align-items:center;
-  justify-content:center;
-  padding:20px 28px;
-}
-.echo-select-content{
-  width:100%;
-  max-width:380px;
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  position:relative;
-  z-index:1;
-}
-.echo-script-list{
-  width:100%;
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-}
-.echo-script-card{
-  width:100%;
-  padding:18px 20px;
-  background:linear-gradient(135deg,rgba(239,244,250,0.78) 0%,rgba(138,168,208,0.72) 100%);
-  border:none;
-  border-radius:2px;
-  cursor:pointer;
-  transition:all 0.3s var(--ease);
-  backdrop-filter:blur(4px);
-  -webkit-backdrop-filter:blur(4px);
-  position:relative;
-  overflow:hidden;
-  text-align:left;
-}
-.echo-script-card::before{
-  content:'';
-  position:absolute;
-  top:0;left:0;right:0;
-  height:1px;
-  pointer-events:none;
-  background:linear-gradient(90deg,rgba(26,43,60,0.15) 0%,rgba(58,111,165,0.06) 40%,transparent 100%);
-}
-.echo-script-card:hover{background:rgba(138,168,208,0.8);color:var(--gold)}
-.echo-script-card:active{transform:scale(0.98)}
-.echo-script-name{
-  font-size:16px;
-  color:var(--text);
-  letter-spacing:3px;
-  text-indent:3px;
-  margin-bottom:6px;
-}
-.echo-script-desc{
-  font-size:12px;
-  color:var(--text-dim);
-  line-height:1.6;
-  letter-spacing:1px;
-}
 
 /* ========== World Loading Screen ========== */
 #world-loading-screen{
@@ -565,7 +414,6 @@ html:-webkit-full-screen #app{
 .msg-action-item:hover{background:rgba(58,111,165,0.05);color:var(--text)}
 .msg-action-item.danger{color:var(--danger)}
 .msg-action-item.danger:hover{background:rgba(58,111,165,0.1)}
-.msg-action-item.cancel{color:var(--text-faint);font-size:12px}
 
 /* Quote Bar */
 .quote-bar{
@@ -617,7 +465,7 @@ html:-webkit-full-screen #app{
 .input-bar input,.input-bar textarea{
   flex:1;
   padding:10px 16px;
-  background:rgba(239,244,250,0.75);
+  background:rgba(239,244,250,0.82);
   border:none;
   border-radius:0;
   color:var(--text);
@@ -626,7 +474,6 @@ html:-webkit-full-screen #app{
   resize:none;
   outline:none;
   transition:background 0.3s var(--ease);
-  backdrop-filter:blur(3px);
 }
 .input-bar input:focus,.input-bar textarea:focus{background:rgba(138,168,208,0.7)}
 .input-bar input::placeholder,.input-bar textarea::placeholder{color:var(--text-faint)}
@@ -649,7 +496,6 @@ html:-webkit-full-screen #app{
   cursor:pointer;
   transition:all 0.3s var(--ease);
   white-space:nowrap;
-  backdrop-filter:blur(3px);
   box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 2px 8px rgba(26,43,60,0.1);
   position:relative;
   overflow:hidden;
@@ -686,52 +532,6 @@ html:-webkit-full-screen #app{
 #tab-bonds .bg-overlay{
   background:rgba(232,238,246,0.3);
 }
-.bonds-idle{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:24px;
-  padding:20px;
-  flex-shrink:0;
-}
-.bonds-idle-text{
-  font-size:13px;
-  color:rgba(58,111,165,0.7);
-  text-align:center;
-  line-height:2;
-  letter-spacing:1px;
-}
-.event-card-btn{
-  padding:13px 32px;
-  background:linear-gradient(135deg,rgba(138,168,208,0.82) 0%,rgba(165,192,224,0.72) 100%);
-  border:none;
-  border-radius:2px;
-  color:var(--text);
-  font-size:14px;
-  letter-spacing:4px;
-  text-indent:4px;
-  cursor:pointer;
-  transition:all 0.3s var(--ease);
-  backdrop-filter:blur(3px);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 2px 8px rgba(26,43,60,0.1);
-  position:relative;
-  overflow:hidden;
-}
-.event-card-btn::before{
-  content:'';
-  position:absolute;
-  top:0;left:0;right:0;
-  height:1px;
-  pointer-events:none;
-  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.35) 50%,transparent 100%);
-}
-.event-card-btn:hover{
-  background:linear-gradient(135deg,rgba(138,168,208,0.9) 0%,rgba(165,192,224,0.85) 100%);
-  color:var(--gold);
-}
-.event-card-btn:active{transform:scale(0.97)}
 
 /* Narrative block - narrative card style */
 .narrative-block{
@@ -838,34 +638,6 @@ html:-webkit-full-screen #app{
   display:flex;
   gap:6px;
   padding:0 14px 10px;
-}
-.narr-action-btn{
-  padding:5px 14px;
-  background:transparent;
-  border:none;
-  border-radius:0;
-  color:var(--text-dim);
-  font-size:11px;
-  letter-spacing:1px;
-  cursor:pointer;
-  transition:all 0.3s var(--ease);
-}
-.narr-action-btn:hover{color:var(--gold)}
-.narrative-edit-area{
-  width:100%;
-  min-height:60px;
-  padding:0;
-  margin:0;
-  background:transparent;
-  border:none;
-  border-radius:0;
-  color:var(--text);
-  font-size:14px;
-  font-family:inherit;
-  line-height:1.8;
-  resize:vertical;
-  outline:none;
-  backdrop-filter:blur(3px);
 }
 .bonds-loading{
   text-align:center;
@@ -1145,22 +917,6 @@ html:-webkit-full-screen #app{
   transition:transform 0.3s var(--ease);
 }
 .secret-module-records:hover .secret-module-arrow{transform:translateX(3px);color:var(--gold)}
-/* Secret detail view */
-.secret-detail-panel{
-  flex:1;
-  overflow-y:auto;
-  padding:8px 0 20px;
-  -webkit-overflow-scrolling:touch;
-}
-.secret-detail-panel-inner{
-  background:linear-gradient(160deg,rgba(239,244,250,0.5) 0%,rgba(232,238,246,0.5) 50%,rgba(239,244,250,0.5) 100%);
-  backdrop-filter:blur(6px);
-  border-radius:6px;
-  padding:4px 16px 20px;
-  min-height:100%;
-  box-shadow:0 4px 30px rgba(26,43,60,0.08),inset 0 1px 0 rgba(255,255,255,0.5);
-  border:1px solid rgba(58,111,165,0.04);
-}
 #secret-detail-list{
   padding:4px 0 8px;
 }
@@ -1179,38 +935,6 @@ html:-webkit-full-screen #app{
   transition:color 0.3s var(--ease);
 }
 .secret-back:hover{color:var(--gold)}
-.secret-actions{
-  display:flex;
-  gap:14px;
-  padding:14px;
-  flex-shrink:0;
-}
-.secret-action-btn{
-  flex:1;
-  padding:14px;
-  border:none;
-  border-radius:2px;
-  font-size:13px;
-  letter-spacing:2px;
-  cursor:pointer;
-  transition:all 0.3s var(--ease);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.4);
-}
-.secret-action-btn.cancel{
-  background:linear-gradient(135deg,rgba(239,244,250,0.85) 0%,rgba(221,231,241,0.75) 100%);
-  color:var(--text);
-}
-.secret-action-btn.cancel:hover{background:linear-gradient(135deg,rgba(138,168,208,0.75) 0%,rgba(165,192,224,0.7) 100%);color:var(--gold)}
-.secret-action-btn.save{
-  background:linear-gradient(135deg,rgba(138,168,208,0.82) 0%,rgba(165,192,224,0.72) 100%);
-  color:var(--text);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 2px 8px rgba(26,43,60,0.1);
-}
-.secret-action-btn.save:hover{
-  background:linear-gradient(135deg,rgba(138,168,208,0.9) 0%,rgba(165,192,224,0.85) 100%);
-  color:var(--gold);
-}
-.secret-action-btn:active{transform:scale(0.98)}
 .secret-detail-title{
   font-size:14px;
   color:var(--gold);
@@ -1239,9 +963,8 @@ html:-webkit-full-screen #app{
   gap:8px;
   padding:8px 12px;
   margin:0;
-  background:rgba(255,255,255,0.88);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
+  /* 原为 blur(12px)：吸顶元素在滚动容器内，滚动时每帧重采样；提高底色不透明度替代 */
+  background:rgba(255,255,255,0.94);
   border-bottom:1px solid rgba(138,168,208,0.2);
   border-radius:0;
   box-shadow:0 1px 3px rgba(26,43,60,0.06);
@@ -1302,57 +1025,6 @@ html:-webkit-full-screen #app{
 }
 .secret-page-body.trace-body{
   padding:4px 16px 20px;
-}
-.secret-page-confirm{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:24px;
-  padding:80px 20px;
-  text-align:center;
-}
-.secret-page-confirm-text{
-  font-size:13px;
-  color:var(--text-dim);
-  letter-spacing:1px;
-  line-height:1.8;
-}
-.secret-page-confirm-btn{
-  padding:12px 48px;
-  border:none;
-  border-radius:2px;
-  background:linear-gradient(135deg,rgba(138,168,208,0.82) 0%,rgba(165,192,224,0.72) 100%);
-  color:var(--text);
-  font-size:14px;
-  letter-spacing:3px;
-  text-indent:3px;
-  cursor:pointer;
-  transition:all 0.3s var(--ease);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 2px 8px rgba(26,43,60,0.1);
-  position:relative;
-  overflow:hidden;
-}
-.secret-page-confirm-btn::before{
-  content:'';
-  position:absolute;
-  top:0;left:0;right:0;
-  height:1px;
-  pointer-events:none;
-  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.35) 50%,transparent 100%);
-}
-.secret-page-confirm-btn:hover{
-  background:linear-gradient(135deg,rgba(138,168,208,0.9) 0%,rgba(165,192,224,0.85) 100%);
-  color:var(--gold);
-}
-.secret-page-confirm-btn:active{transform:scale(0.98)}
-.secret-record-view-time{
-  font-size:11px;
-  color:var(--text-dim);
-  letter-spacing:1px;
-  margin-bottom:8px;
-  padding:10px 0 8px;
-  border-bottom:1px solid rgba(58,111,165,0.08);
 }
 .secret-record-view-content{
   padding:4px 0 8px;
@@ -1608,15 +1280,6 @@ html:-webkit-full-screen #app{
 .secret-record-delete-btn:hover{
   background:rgba(58,111,165,0.1);
   border-color:var(--danger);
-}
-.secret-record-card-body{
-  padding:12px 16px;
-}
-.secret-record-card-body .memo-item,
-.secret-record-card-body .history-item,
-.secret-record-card-body .mail-item,
-.secret-record-card-body .cart-section{
-  background:rgba(232,238,246,0.2);
 }
 
 /* ========== Cart Module ========== */
@@ -2393,128 +2056,6 @@ html:-webkit-full-screen #app{
   border-bottom:none;
   padding-bottom:0;
 }
-.secret-record-card-body .grudge-item,
-.secret-record-card-body .voice-item,
-.secret-record-card-body .impression-section{
-  background:rgba(232,238,246,0.2);
-}
-
-/* Trace: 行动痕迹 */
-.trace-wrap{padding:4px 0}
-.trace-section{
-  margin-bottom:20px;
-  background:rgba(232,238,246,0.35);
-  border-radius:8px;
-  padding:16px 14px;
-  border-left:3px solid rgba(58,111,165,0.4);
-}
-.trace-section:last-child{margin-bottom:0}
-.trace-section-label{
-  font-size:12px;
-  color:rgba(26,43,60,0.5);
-  letter-spacing:3px;
-  margin-bottom:14px;
-  font-weight:500;
-}
-.trace-track-item{
-  display:flex;
-  align-items:flex-start;
-  gap:10px;
-  margin-bottom:14px;
-  position:relative;
-}
-.trace-track-item:last-child{margin-bottom:0}
-.trace-track-time{
-  font-size:12px;
-  color:rgba(26,43,60,0.45);
-  min-width:40px;
-  padding-top:2px;
-  font-variant-numeric:tabular-nums;
-}
-.trace-track-dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:rgba(58,111,165,0.6);
-  margin-top:6px;
-  flex-shrink:0;
-  position:relative;
-}
-.trace-track-item:not(:last-child) .trace-track-dot::after{
-  content:'';
-  position:absolute;
-  top:10px;
-  left:50%;
-  transform:translateX(-50%);
-  width:2px;
-  height:calc(100% + 6px);
-  background:rgba(58,111,165,0.2);
-}
-.trace-track-content{flex:1;min-width:0}
-.trace-track-place{
-  font-size:14px;
-  color:rgba(26,43,60,0.9);
-  font-weight:500;
-  margin-bottom:2px;
-}
-.trace-track-action{
-  font-size:13px;
-  color:rgba(26,43,60,0.55);
-  line-height:1.5;
-  word-break:break-word;
-}
-.trace-alt-item{
-  margin-bottom:14px;
-  padding:12px 14px;
-  background:rgba(255,255,255,0.5);
-  border-radius:6px;
-}
-.trace-alt-item:last-child{margin-bottom:0}
-.trace-alt-time{
-  font-size:11px;
-  color:rgba(26,43,60,0.4);
-  margin-bottom:6px;
-}
-.trace-alt-content{
-  font-size:14px;
-  color:rgba(26,43,60,0.85);
-  line-height:1.6;
-  word-break:break-word;
-}
-.trace-chat-item{
-  margin-bottom:12px;
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-}
-.trace-chat-item:last-child{margin-bottom:0}
-.trace-chat-item.sent{align-items:flex-end}
-.trace-chat-item.received{align-items:flex-start}
-.trace-chat-meta{
-  display:flex;
-  gap:8px;
-  align-items:center;
-  font-size:11px;
-  color:rgba(26,43,60,0.4);
-}
-.trace-chat-bubble{
-  max-width:80%;
-  padding:8px 12px;
-  border-radius:10px;
-  font-size:13px;
-  line-height:1.5;
-  word-break:break-word;
-}
-.trace-chat-item.sent .trace-chat-bubble{
-  background:rgba(58,111,165,0.15);
-  color:rgba(26,43,60,0.9);
-  border-bottom-right-radius:2px;
-}
-.trace-chat-item.received .trace-chat-bubble{
-  background:rgba(255,255,255,0.6);
-  color:rgba(26,43,60,0.85);
-  border-bottom-left-radius:2px;
-}
 
 /* Trace: 私聊对话 */
 .trace-chat-wrap{
@@ -2561,14 +2102,6 @@ html:-webkit-full-screen #app{
 }
 .trace-msg-row.me .trace-msg-body{align-items:flex-end}
 .trace-msg-row.other .trace-msg-body{align-items:flex-start}
-.trace-msg-meta{
-  display:flex;
-  gap:6px;
-  align-items:center;
-  font-size:11px;
-  color:rgba(26,43,60,0.4);
-}
-.trace-msg-name{font-weight:500}
 .trace-msg-bubble{
   padding:10px 13px;
   border-radius:0;
@@ -2671,41 +2204,30 @@ html:-webkit-full-screen #app{
   word-break:break-word;
 }
 
-/* Record cards compact mode */
-.secret-record-card-body .trace-section,
-.secret-record-card-body .mind-section{
-  background:rgba(232,238,246,0.2);
-}
-
 /* ========== Settings Tab ========== */
 #settings-content{
   flex:1;
   overflow-y:auto;
-  padding:10px 16px 10px;
+  padding:10px 16px 0;
   display:flex;
   flex-direction:column;
   gap:16px;
   -webkit-overflow-scrolling:touch;
 }
-.settings-section-label{
-  font-size:11px;
-  color:var(--gold-faint);
-  letter-spacing:3px;
-  text-indent:3px;
-  margin:0;
-  flex-shrink:0;
-}
 
-/* Character Card - full-bleed background, no avatar frame */
+/* Character Card - full-bleed background, no avatar frame
+ * 高度弹性：收起外部规则时两张卡自动撑满剩余空间，让规则栏恰好贴底；
+ * 展开时（内容超高）卡片收缩到 min-height，页面正常滚动 */
 .char-card{
   position:relative;
-  height:185px;
+  height:auto;
+  flex:1 1 0;
+  min-height:148px;
   border-radius:2px;
   overflow:hidden;
   cursor:pointer;
   transition:transform 0.3s var(--ease);
   background:rgba(239,244,250,0.75);
-  flex-shrink:0;
   backdrop-filter:blur(3px);
 }
 .char-card:active{transform:scale(0.98)}
@@ -2720,39 +2242,67 @@ html:-webkit-full-screen #app{
 .char-card-bg.other{
   background:linear-gradient(135deg,#3A6FA5 0%,#8AA8D0 50%,#EFF4FA 100%);
 }
-.char-card-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(180deg,transparent 30%,rgba(26,43,60,0.5) 100%);
-}
 .char-card-watermark{
   position:absolute;
   top:50%;left:50%;
   transform:translate(-50%,-50%);
-  font-size:64px;
+  font-size:96px;
   font-weight:100;
   color:rgba(58,111,165,0.1);
   pointer-events:none;
   letter-spacing:0;
 }
-.char-card-info{
-  position:absolute;
-  bottom:0;left:0;right:0;
-  padding:14px 16px;
-  z-index:1;
+
+/* 角色区块：名字（两侧渐隐细线）→ 一句话介绍 → 纯视觉头像卡 */
+.char-block{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+  flex:1 1 0;
+  min-height:200px;
+  cursor:pointer;
+  flex-shrink:0;
 }
-.char-card-name{
-  font-size:16px;
+.char-name-divider{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  flex-shrink:0;
+  padding:2px 6px 0;
+}
+.char-name-divider::before,
+.char-name-divider::after{
+  content:'';
+  flex:1;
+  height:1px;
+}
+.char-name-divider::before{
+  background:linear-gradient(90deg,transparent 0%,rgba(58,111,165,0.4) 100%);
+}
+.char-name-divider::after{
+  background:linear-gradient(90deg,rgba(58,111,165,0.4) 0%,transparent 100%);
+}
+.char-name-text{
+  font-size:15px;
   font-weight:400;
-  color:#3A6FA5;
-  margin-bottom:2px;
-  letter-spacing:1px;
-}
-.char-card-liner{
-  font-size:12px;
-  color:rgba(58,111,165,0.75);
+  letter-spacing:3px;
+  text-indent:3px;
+  color:var(--text);
+  max-width:60%;
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
+}
+.char-one-liner{
+  text-align:center;
+  font-size:12px;
+  color:var(--text-dim);
+  letter-spacing:1px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  flex-shrink:0;
+  padding:0 8px;
 }
 
 /* Avatar Picker in editor */
@@ -2806,12 +2356,14 @@ html:-webkit-full-screen #app{
   border-radius:0;
   overflow:hidden;
   flex-shrink:0;
-  backdrop-filter:blur(12px) saturate(1.2);
-  -webkit-backdrop-filter:blur(12px) saturate(1.2);
-  background:rgba(232,238,246,0.45);
+  /* 原为 blur(12px)+saturate：设定页滚动容器内的大块面板，
+   * 滚动时每帧重采样模糊是设定页卡顿主因；改纯色+白描边近似观感 */
+  background:rgba(232,238,246,0.72);
   border:1px solid rgba(255,255,255,0.25);
   box-shadow:0 2px 16px rgba(26,43,60,0.06),inset 0 1px 0 rgba(255,255,255,0.4);
+  margin-bottom:16px;
 }
+/* 收起时贴底留白 = 与上方卡片间距一致（16px）；展开时同样保持 16px 滚动余量 */
 .rules-header{
   display:flex;
   justify-content:space-between;
@@ -2908,13 +2460,6 @@ html:-webkit-full-screen #app{
 .add-rule-btn::before{top:0}
 .add-rule-btn::after{bottom:0}
 .add-rule-btn:hover{background:var(--gold-dim)}
-.settings-actions{
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-  padding-bottom:0;
-  flex-shrink:0;
-}
 .settings-action-btn{
   padding:13px 0;
   background:linear-gradient(135deg,rgba(239,244,250,0.78) 0%,rgba(138,168,208,0.72) 100%);
@@ -2953,29 +2498,11 @@ html:-webkit-full-screen #app{
   box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 2px 8px rgba(26,43,60,0.1);
 }
 
-/* Rule edit area in modal */
-.rule-content-edit{
-  width:100%;
-  min-height:80px;
-  padding:10px 12px;
-  background:rgba(239,244,250,0.75);
-  border:none;
-  border-radius:0;
-  backdrop-filter:blur(3px);
-  color:var(--text);
-  font-size:14px;
-  font-family:inherit;
-  line-height:1.7;
-  resize:vertical;
-  outline:none;
-}
-.rule-content-actions{display:flex;gap:8px;margin-top:8px}
-
 /* ========== Modal ========== */
 #modal-overlay{
   position:fixed;
   inset:0;
-  z-index:100;
+  z-index:500;
   display:none;
   align-items:center;
   justify-content:center;
@@ -3016,6 +2543,32 @@ html:-webkit-full-screen #app{
   flex-shrink:0;
 }
 .modal-body{padding:16px 20px;overflow-y:auto;flex:1;min-height:0;}
+/* 新增角色确认弹窗：标题→描述→确认问题，弱字号层级、全部居中（对齐参考截图） */
+.modal-confirm-title{
+  font-size:19px;
+  font-weight:500;
+  letter-spacing:3px;
+  text-indent:3px;
+  color:var(--text);
+  text-align:center;
+}
+.modal-confirm-desc{
+  margin-top:14px;
+  font-size:15px;
+  line-height:1.8;
+  letter-spacing:1px;
+  color:var(--text-dim);
+  text-align:center;
+}
+.modal-confirm-q{
+  margin-top:22px;
+  font-size:15px;
+  font-weight:400;
+  letter-spacing:2px;
+  text-indent:2px;
+  color:var(--text);
+  text-align:center;
+}
 .modal-footer{
   display:flex;
   gap:10px;
@@ -3063,24 +2616,13 @@ html:-webkit-full-screen #app{
   color:var(--gold);
   box-shadow:inset 0 1px 0 rgba(255,255,255,0.5),0 3px 12px rgba(26,43,60,0.14);
 }
-/* Secret record modal: mirrors #secret-detail-list + .secret-detail-panel-inner
-   so stored HTML renders identically to the original generated view */
-.secret-record-modal-body{
-  padding:0 16px 12px;
-  max-height:60vh;
-  overflow-y:auto;
-  -webkit-overflow-scrolling:touch;
-}
-.secret-record-modal-time{
-  font-size:11px;
-  color:var(--text-dim);
+/* 拉取模型按钮：与输入框 1:3 分布 → 宽度为原 flex:1 布局的一半 */
+.fetch-models-btn{
+  flex:1;
+  padding:12px 4px;
+  font-size:13px;
   letter-spacing:1px;
-  margin-bottom:8px;
-  padding:10px 0 8px;
-  border-bottom:1px solid rgba(58,111,165,0.08);
-}
-.secret-record-modal-content{
-  padding:4px 0 8px;
+  text-indent:1px;
 }
 
 /* Form Fields */
@@ -3169,26 +2711,6 @@ input[type="range"].form-input::-moz-range-thumb{
 input[type="range"].form-input::-moz-range-thumb:hover{background:var(--accent-bright)}
 
 /* API Config */
-.api-tabs{display:flex;gap:8px;margin-bottom:16px}
-.api-tab{
-  flex:1;
-  padding:10px 0;
-  background:linear-gradient(135deg,rgba(239,244,250,0.8) 0%,rgba(221,231,241,0.7) 100%);
-  border:none;
-  border-radius:2px;
-  backdrop-filter:blur(3px);
-  color:var(--text);
-  font-size:13px;
-  letter-spacing:2px;
-  cursor:pointer;
-  transition:all 0.3s var(--ease);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.4);
-}
-.api-tab.active{
-  background:linear-gradient(135deg,rgba(138,168,208,0.8) 0%,rgba(165,192,224,0.7) 100%);
-  color:var(--text);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 2px 8px rgba(26,43,60,0.1);
-}
 .api-status{
   display:inline-block;
   padding:2px 8px;
@@ -3200,49 +2722,7 @@ input[type="range"].form-input::-moz-range-thumb:hover{background:var(--accent-b
 .api-status.on{background:var(--gold-dim);color:var(--gold)}
 .api-status.off{background:rgba(58,111,165,0.08);color:var(--danger)}
 
-/* Save List */
-.save-list{display:flex;flex-direction:column;gap:8px}
-.save-item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:14px 16px;
-  background:linear-gradient(135deg,rgba(239,244,250,0.8) 0%,rgba(221,231,241,0.7) 100%);
-  border:none;
-  border-radius:2px;
-  backdrop-filter:blur(3px);
-  cursor:pointer;
-  transition:all 0.3s var(--ease);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.4);
-}
-.save-item:hover{
-  background:linear-gradient(135deg,rgba(138,168,208,0.75) 0%,rgba(165,192,224,0.7) 100%);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 2px 8px rgba(26,43,60,0.1);
-}
-.save-item.auto-slot{
-  border-left:2px solid var(--gold);
-}
-.save-item.empty-slot{
-  opacity:0.5;
-  cursor:default;
-}
-.save-info{flex:1}
-.save-time{font-size:13px;color:var(--text);margin-bottom:2px}
-.save-detail{font-size:11px;color:var(--text-faint)}
-.save-empty{text-align:center;padding:40px 20px;color:var(--text-faint);font-size:13px;letter-spacing:2px}
-.save-name-input{
-  width:100%;
-  background:rgba(239,244,250,0.75);
-  border:1px solid rgba(58,111,165,0.1);
-  border-radius:2px;
-  color:var(--text);
-  font-size:14px;
-  font-family:inherit;
-  padding:12px 14px;
-  outline:none;
-  transition:border-color 0.3s var(--ease);
-}
-.save-name-input:focus{border-color:var(--gold-faint)}
+/* Save List（存档系统已移除，样式已并入 Settings Tab 区块） */
 
 /* ========== Toast ========== */
 #toast-container{
@@ -3278,6 +2758,46 @@ input[type="range"].form-input::-moz-range-thumb:hover{background:var(--accent-b
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(58,111,165,0.06);border-radius:3px}
+
+/* ========== API Config Screen（与全局设定同构的子页面） ========== */
+.subpage-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 16px;
+  flex-shrink:0;
+}
+.subpage-back,.subpage-action{
+  background:none;
+  border:none;
+  color:var(--text-dim);
+  font-size:14px;
+  letter-spacing:1px;
+  cursor:pointer;
+  padding:6px 4px;
+  transition:color 0.2s var(--ease);
+}
+.subpage-back:hover,.subpage-action:hover{color:var(--gold)}
+.subpage-title{
+  font-size:14px;
+  color:var(--gold);
+  letter-spacing:4px;
+  text-indent:4px;
+  font-weight:300;
+}
+.subpage-body{
+  flex:1;
+  overflow-y:auto;
+  padding:4px 16px 24px;
+  -webkit-overflow-scrolling:touch;
+}
+.api-save-note{
+  text-align:center;
+  font-size:11px;
+  color:var(--text-faint);
+  letter-spacing:1px;
+  padding:8px 0 0;
+}
 
 /* ========== Global Rules Screen ========== */
 .global-rules-header{
@@ -3388,38 +2908,261 @@ input[type="range"].form-input::-moz-range-thumb:hover{background:var(--accent-b
   animation:spin 0.8s linear infinite;
 }
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* ========== 角色导航抽屉 ========== */
+#nav-overlay{
+  position:absolute;
+  inset:0;
+  z-index:400;
+  background:rgba(26,43,60,0.32);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.3s var(--ease);
+}
+#nav-overlay.open{opacity:1;pointer-events:auto}
+#nav-drawer{
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:80%;
+  max-width:300px;
+  /* 原为 blur(10px)：抽屉滑入/滑出动画期间模糊需逐帧重算，
+   * 大面板上代价显著；背景已近实色（0.96），去模糊视觉无差 */
+  background:rgba(232,238,246,0.96);
+  box-shadow:4px 0 32px rgba(26,43,60,0.18);
+  transform:translateX(-102%);
+  transition:transform 0.32s var(--ease);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+#nav-overlay.open #nav-drawer{transform:translateX(0)}
+:fullscreen #nav-drawer,
+:-webkit-full-screen #nav-drawer{padding-top:25px}
+.nav-drawer-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 14px 10px 20px;
+  flex-shrink:0;
+}
+.nav-brand{
+  font-family:"Cormorant","Times New Roman",serif;
+  font-style:italic;
+  font-weight:700;
+  font-size:22px;
+  letter-spacing:2px;
+  color:var(--text);
+}
+.nav-close{
+  width:30px;height:30px;
+  border:none;
+  background:transparent;
+  color:var(--text-dim);
+  font-size:20px;
+  line-height:1;
+  cursor:pointer;
+  transition:color 0.3s var(--ease);
+  padding:0;
+}
+.nav-close:hover{color:var(--gold)}
+.nav-fixed-actions{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  padding:4px 14px 14px;
+  flex-shrink:0;
+}
+.nav-action-btn{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px;
+  border:none;
+  border-radius:2px;
+  background:linear-gradient(135deg,rgba(239,244,250,0.85) 0%,rgba(221,231,241,0.75) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.5);
+  color:var(--text);
+  font-size:13px;
+  letter-spacing:3px;
+  cursor:pointer;
+  transition:all 0.3s var(--ease);
+  font-family:inherit;
+  text-align:left;
+}
+.nav-action-btn svg{width:15px;height:15px;flex-shrink:0;color:var(--gold)}
+.nav-action-btn:hover{background:linear-gradient(135deg,rgba(138,168,208,0.75) 0%,rgba(165,192,224,0.7) 100%);color:var(--gold)}
+.nav-action-btn:active{transform:scale(0.98)}
+.nav-divider{
+  height:1px;
+  margin:0 20px;
+  background:linear-gradient(90deg,transparent 0%,rgba(138,168,208,0.3) 50%,transparent 100%);
+  flex-shrink:0;
+}
+.nav-char-label{
+  padding:12px 20px 6px;
+  font-size:11px;
+  color:var(--text-faint);
+  letter-spacing:4px;
+  flex-shrink:0;
+}
+.nav-char-list{
+  flex:1;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  padding:0 14px 8px;
+  min-height:0;
+}
+.nav-char-empty{
+  padding:28px 8px;
+  text-align:center;
+  font-size:12px;
+  color:var(--text-faint);
+  line-height:2;
+}
+.nav-char-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px;
+  margin-bottom:6px;
+  border-radius:2px;
+  border-left:2px solid transparent;
+  cursor:pointer;
+  transition:all 0.25s var(--ease);
+}
+.nav-char-item:hover{background:rgba(138,168,208,0.18)}
+.nav-char-item.active{border-left-color:var(--gold);background:rgba(58,111,165,0.1)}
+.nav-char-avatar{
+  width:38px;height:38px;
+  border-radius:50%;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,rgba(138,168,208,0.5) 0%,rgba(58,111,165,0.4) 100%);
+  color:#fff;
+  font-size:16px;
+  overflow:hidden;
+}
+.nav-char-name{
+  flex:1;
+  font-size:14px;
+  color:var(--text);
+  letter-spacing:1px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.nav-char-item.active .nav-char-name{color:var(--gold)}
+.nav-char-del{
+  width:26px;height:26px;
+  flex-shrink:0;
+  border:none;
+  border-radius:50%;
+  background:transparent;
+  color:var(--text-faint);
+  font-size:16px;
+  line-height:1;
+  cursor:pointer;
+  transition:all 0.25s var(--ease);
+  padding:0;
+}
+.nav-char-del:hover{color:var(--danger);background:rgba(168,120,120,0.12)}
+.nav-add-btn{
+  margin:8px 14px 18px;
+  padding:13px 0;
+  border:none;
+  border-radius:2px;
+  background:linear-gradient(135deg,rgba(138,168,208,0.72) 0%,rgba(165,192,224,0.72) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.5);
+  color:var(--text);
+  font-size:13px;
+  letter-spacing:3px;
+  text-indent:3px;
+  cursor:pointer;
+  transition:all 0.3s var(--ease);
+  flex-shrink:0;
+  font-family:inherit;
+}
+.nav-add-btn:hover{color:var(--gold)}
+.nav-add-btn:active{transform:scale(0.98)}
+/* 聊天页标题 = 当前角色名（长名截断） */
+#chat-title{
+  display:inline-block;
+  max-width:52%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  vertical-align:bottom;
+  letter-spacing:2px;
+  text-indent:2px;
+}
+
+/* ========== 性能优化：列表项级毛玻璃 = 滚动卡顿主因 ==========
+ * backdrop-filter 需要浏览器为每个元素实时采样并模糊背后的内容。
+ * 聊天气泡、事件卡、记忆卡、便签等都是"每条记录一张"的列表项，
+ * 数量随游玩不断增长；滚动时每一帧都要为所有可见项重算模糊，
+ * 在中低端手机上会明显掉帧。
+ * 处理：内容卡片一律关闭毛玻璃，背景不透明度略微调高以保持可读性；
+ * 顶栏 / 输入栏 / 底部导航 / 弹窗等单个固定元素保留毛玻璃
+ * （它们背后是静态背景，不随滚动重算，代价极低）。 */
+.msg-bubble,.narr-card,.memory-card,.secret-module,.secret-record-card,
+.memo-item,.history-item,.mail-item,.cart-section,
+.wish-item,.plan-sticky-note,.forum-post,.forum-replies,.gchat-body,
+.grudge-item,.voice-item,.impression-section,.rule-card-btn,.global-rule-card,
+.char-card,.settings-action-btn,.form-input,.form-textarea{
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+}
+/* 去掉模糊后补足不透明度，视觉上仍保持"纸面"质感 */
+.msg-row.ai .msg-bubble{background:rgba(239,244,250,0.92)}
+.msg-row.me .msg-bubble{background:rgba(138,168,208,0.9)}
+.narr-card{background:rgba(239,244,250,0.9)}
+.narr-card.player{background:rgba(138,168,208,0.88)}
+.narr-card.ai{background:rgba(232,238,246,0.92)}
+.memory-card,.secret-record-card,.char-card{background:rgba(239,244,250,0.9)}
+.secret-module,.memo-item,.history-item,.mail-item,.cart-section,.wish-item,
+.grudge-item,.voice-item,.impression-section,.global-rule-card{
+  background:linear-gradient(135deg,rgba(239,244,250,0.92) 0%,rgba(138,168,208,0.88) 100%);
+}
+.secret-module-records{background:linear-gradient(135deg,rgba(26,43,60,0.9) 0%,rgba(58,111,165,0.82) 50%,rgba(138,168,208,0.78) 100%)}
+.forum-replies,.gchat-body{
+  background:linear-gradient(160deg,rgba(239,244,250,0.85) 0%,rgba(232,238,246,0.85) 50%,rgba(239,244,250,0.85) 100%);
+}
+.rule-card-btn{background:linear-gradient(135deg,rgba(239,244,250,0.92) 0%,rgba(221,231,241,0.88) 100%)}
+
+/* ========== 性能优化：头像走全局 CSS 变量 ==========
+ * 头像是 base64 数据时，此前每条聊天消息的行内 style 都复制完整一份，
+ * 长对话下 DOM 体积随消息数线性膨胀（每条多上百KB），渲染与内存开销暴涨。
+ * 现在整个应用只在根节点存一份（--av-me / --av-ai），消息行不再内联。 */
+.chat-avatar.me{
+  background-image:var(--av-me,linear-gradient(135deg,#8AA8D0 0%,#EFF4FA 100%));
+  background-size:cover;
+  background-position:center;
+}
+.chat-avatar.ai{
+  background-image:var(--av-ai,linear-gradient(135deg,#3A6FA5 0%,#8AA8D0 100%));
+  background-size:cover;
+  background-position:center;
+}
+.trace-msg-avatar.me{
+  background-image:var(--av-ai,linear-gradient(135deg,#8AA8D0 0%,#EFF4FA 100%));
+  background-size:cover;
+  background-position:center;
+}
 </style>
 </head>
 <body>
 <div id="app">
 
-<!-- ========== Home Screen ========== -->
-<div id="home-screen" class="screen">
-  <div class="home-content">
-    <div style="text-align:center;">
-      <h1 class="game-title">Echo</h1>
-      <p class="game-subtitle">即时 ｜ 回响</p>
-    </div>
-    <div class="home-buttons">
-      <button class="home-btn" onclick="startGame()">开始游戏</button>
-      <button class="home-btn" onclick="showLoadModal(true)">加载游戏</button>
-      <button class="home-btn" onclick="showApiConfig()">API配置</button>
-      <button class="home-btn" onclick="showGlobalRules()">全局设定</button>
-      <button class="home-btn" onclick="showBackupModal()">数据备份</button>
-    </div>
+<!-- ========== API Config Screen（全屏页面，同全局设定） ========== -->
+<div id="api-config-screen" class="screen" style="display:none">
+  <div class="subpage-header">
+    <button class="subpage-back" onclick="backToHome()">‹ 返回</button>
+    <span class="subpage-title">API配置</span>
+    <button class="subpage-action" onclick="saveApiConfig()">保存</button>
   </div>
-</div>
-
-<!-- ========== Echo Select Screen ========== -->
-<div id="echo-select-screen" class="screen" style="display:none">
-  <div class="echo-select-content">
-    <div style="text-align:center;margin-bottom:32px;">
-      <h1 class="game-title" style="font-size:36px;">Echo</h1>
-      <p class="game-subtitle">选择你的回响</p>
-    </div>
-    <div id="echo-script-list" class="echo-script-list"></div>
-    <button class="home-btn" style="margin-top:24px;width:100%;max-width:340px;" onclick="cancelEchoSelect()">返回</button>
-  </div>
+  <div id="api-config-body" class="subpage-body"></div>
 </div>
 
 <!-- ========== Global Rules Screen ========== -->
@@ -3446,7 +3189,7 @@ input[type="range"].form-input::-moz-range-thumb:hover{background:var(--accent-b
   <!-- Chat Tab -->
   <div id="tab-chat" class="tab-content has-bg">
     <div class="bg-overlay chat-mask"></div>
-    <div class="tab-header"><button class="fs-btn" onclick="toggleFullscreen()" title="全屏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"/></svg></button><span class="tab-header-title">聊天</span><button class="bottom-btn" onclick="scrollToBottomTab('chat-messages')" title="置底"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg></button><button class="top-btn" onclick="scrollToTopTab('chat-messages')" title="置顶"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div>
+    <div class="tab-header"><button class="fs-btn" onclick="openNav()" title="角色列表"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button><span class="tab-header-title" id="chat-title">聊天</span><button class="bottom-btn" onclick="scrollToBottomTab('chat-messages')" title="置底"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg></button><button class="top-btn" onclick="scrollToTopTab('chat-messages')" title="置顶"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div>
     <div id="chat-messages"></div>
     <div class="quote-bar" id="quote-bar">
       <span class="quote-bar-text"></span>
@@ -3461,7 +3204,7 @@ input[type="range"].form-input::-moz-range-thumb:hover{background:var(--accent-b
   <!-- Bonds Tab -->
   <div id="tab-bonds" class="tab-content has-bg" style="display:none">
     <div class="bg-overlay"></div>
-    <div class="tab-header"><button class="fs-btn" onclick="toggleFullscreen()" title="全屏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"/></svg></button><span class="tab-header-title">羁绊</span><button class="bottom-btn" onclick="scrollToBottomTab('bonds-content')" title="置底"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg></button><button class="top-btn" onclick="scrollToTopTab('bonds-content')" title="置顶"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div>
+    <div class="tab-header"><button class="fs-btn" onclick="openNav()" title="角色列表"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button><span class="tab-header-title">羁绊</span><button class="bottom-btn" onclick="scrollToBottomTab('bonds-content')" title="置底"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg></button><button class="top-btn" onclick="scrollToTopTab('bonds-content')" title="置顶"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div>
     <div id="bonds-content"></div>
     <div id="bonds-input-area" class="input-bar"></div>
   </div>
@@ -3469,7 +3212,7 @@ input[type="range"].form-input::-moz-range-thumb:hover{background:var(--accent-b
   <!-- Memory Tab -->
   <div id="tab-memory" class="tab-content has-bg" style="display:none">
     <div class="bg-overlay"></div>
-    <div class="tab-header"><button class="fs-btn" onclick="toggleFullscreen()" title="全屏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"/></svg></button><span class="tab-header-title">记忆</span><button class="bottom-btn" onclick="scrollToBottomTab('memory-cards')" title="置底"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg></button><button class="top-btn" onclick="scrollToTopTab('memory-cards')" title="置顶"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div>
+    <div class="tab-header"><button class="fs-btn" onclick="openNav()" title="角色列表"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button><span class="tab-header-title">记忆</span><button class="bottom-btn" onclick="scrollToBottomTab('memory-cards')" title="置底"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg></button><button class="top-btn" onclick="scrollToTopTab('memory-cards')" title="置顶"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div>
     <div id="memory-cards"></div>
     <div class="memory-actions">
       <button class="memory-action-btn" id="improve-memory-btn" onclick="improveMemory()">完善记忆</button>
@@ -3479,7 +3222,7 @@ input[type="range"].form-input::-moz-range-thumb:hover{background:var(--accent-b
   <!-- Secret Tab -->
   <div id="tab-secret" class="tab-content has-bg" style="display:none">
     <div class="bg-overlay"></div>
-    <div class="tab-header"><button class="fs-btn" onclick="toggleFullscreen()" title="全屏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"/></svg></button><span class="tab-header-title">秘密</span></div>
+    <div class="tab-header"><button class="fs-btn" onclick="openNav()" title="角色列表"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button><span class="tab-header-title">秘密</span></div>
     <div id="secret-content">
       <div class="secret-module secret-module-records" onclick="openSecretRecords()">
         <div class="secret-module-icon">📋</div>
@@ -3591,7 +3334,7 @@ input[type="range"].form-input::-moz-range-thumb:hover{background:var(--accent-b
   <!-- Settings Tab -->
   <div id="tab-settings" class="tab-content has-bg" style="display:none">
     <div class="bg-overlay"></div>
-    <div class="tab-header"><button class="fs-btn" onclick="toggleFullscreen()" title="全屏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"/></svg></button><span class="tab-header-title">设定</span></div>
+    <div class="tab-header"><button class="fs-btn" onclick="openNav()" title="角色列表"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button><span class="tab-header-title">设定</span></div>
     <div id="settings-content"></div>
   </div>
 
@@ -3603,6 +3346,34 @@ input[type="range"].form-input::-moz-range-thumb:hover{background:var(--accent-b
     <button class="nav-btn" data-tab="secret" onclick="switchTab('secret')">秘密</button>
     <button class="nav-btn" data-tab="settings" onclick="switchTab('settings')">设定</button>
   </nav>
+</div>
+
+<!-- ========== 角色导航抽屉 ========== -->
+<div id="nav-overlay" onclick="if(event.target===this)closeNav()">
+  <aside id="nav-drawer">
+    <div class="nav-drawer-header">
+      <span class="nav-brand">Echo</span>
+      <button class="nav-close" onclick="closeNav()" title="收起">×</button>
+    </div>
+    <div class="nav-fixed-actions">
+      <button class="nav-action-btn" onclick="closeNav();showApiConfig()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Api配置</span>
+      </button>
+      <button class="nav-action-btn" onclick="closeNav();showGlobalRules()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>全局设定</span>
+      </button>
+      <button class="nav-action-btn" onclick="closeNav();showBackupModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        <span>数据备份</span>
+      </button>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-char-label">角色</div>
+    <div id="nav-char-list" class="nav-char-list"></div>
+    <button class="nav-add-btn" onclick="confirmCreateProfile()">＋ 新增角色</button>
+  </aside>
 </div>
 
 </div><!-- /app -->
@@ -3783,13 +3554,14 @@ let state = {
 };
 
 /* ========== 持久化 ========== */
-const STORAGE_KEY = 'aitg_current';
-const SAVES_KEY = 'aitg_saves';
-const APP_VERSION = '3.1'; // 版本号，改动时递增可强制清除旧缓存数据
+const STORAGE_KEY = 'aitg_current';          // 旧版单角色数据（仅用于迁移读取）
+const SAVES_KEY = 'aitg_saves';                 // 旧版存档键：仅用于启动时清理残留释放空间
+const PROFILES_KEY = 'aitg_profiles';        // 多角色档案：{order, activeId, globals, meta, data}
+const APP_VERSION = '3.3'; // 版本号，改动时递增可强制清除旧缓存数据
 
 /* ----- IndexedDB 存储层（替代 localStorage，容量从 5MB 提升到数百 MB）-----
  * 设计原则：
- *  - 对上层透明：saveToStorage/loadFromStorage/getAllSaves/writeAllSaves 接口不变
+ *  - 对上层透明：saveToStorage/档案层 接口不变（存档槽位系统已移除）
  *  - 异步内部转同步对外：用同步标志位 + Promise 缓存，保证调用方无需改 await
  *  - 自动迁移：首次检测到 localStorage 有旧数据时自动迁移到 IndexedDB
  *  - 降级兼容：IndexedDB 不可用时自动回退 localStorage
@@ -3869,6 +3641,7 @@ async function initStorage() {
     // IndexedDB 不可用，降级 localStorage（从 localStorage 加载到缓存）
     _memCache[STORAGE_KEY] = localStorage.getItem(STORAGE_KEY);
     _memCache[SAVES_KEY] = localStorage.getItem(SAVES_KEY);
+    _memCache[PROFILES_KEY] = localStorage.getItem(PROFILES_KEY);
     _memCacheLoaded = true;
     return;
   }
@@ -3879,11 +3652,14 @@ async function initStorage() {
     _memCache[STORAGE_KEY] = typeof hasCurrent === 'string' ? hasCurrent : JSON.stringify(hasCurrent);
     const savesData = await dbGet(SAVES_KEY);
     _memCache[SAVES_KEY] = savesData !== undefined ? (typeof savesData === 'string' ? savesData : JSON.stringify(savesData)) : null;
+    const profilesData = await dbGet(PROFILES_KEY);
+    _memCache[PROFILES_KEY] = profilesData !== undefined ? (typeof profilesData === 'string' ? profilesData : JSON.stringify(profilesData)) : null;
     _memCacheLoaded = true;
   } else {
     // IndexedDB 无数据，检查 localStorage 是否有旧数据需要迁移
     const lsCurrent = localStorage.getItem(STORAGE_KEY);
     const lsSaves = localStorage.getItem(SAVES_KEY);
+    const lsProfiles = localStorage.getItem(PROFILES_KEY);
     if (lsCurrent) {
       await dbPut(STORAGE_KEY, lsCurrent);
       localStorage.removeItem(STORAGE_KEY);
@@ -3892,8 +3668,13 @@ async function initStorage() {
       await dbPut(SAVES_KEY, lsSaves);
       localStorage.removeItem(SAVES_KEY);
     }
+    if (lsProfiles) {
+      await dbPut(PROFILES_KEY, lsProfiles);
+      localStorage.removeItem(PROFILES_KEY);
+    }
     _memCache[STORAGE_KEY] = lsCurrent || null;
     _memCache[SAVES_KEY] = lsSaves || null;
+    _memCache[PROFILES_KEY] = lsProfiles || null;
     _memCacheLoaded = true;
   }
 }
@@ -3904,62 +3685,218 @@ async function ensureStorageReady() {
 }
 
 function saveToStorage() {
+  // 多角色档案：当前角色数据 + 全局配置（API/全局规则）一起持久化。
   // 不再自动清理事件/对话历史 —— 完整保留所有已生成的记录。
-  // 存储容量由 IndexedDB（上限远高于 localStorage）承载；
-  // 仅在真正写入失败时才提示用户手动处理，绝不静默裁剪数据。
   try {
-    const dataWithVersion = { ...state.data, _version: APP_VERSION };
-    const jsonStr = JSON.stringify(dataWithVersion);
-    // 同步更新内存缓存 + 异步写入 IndexedDB
-    _memCache[STORAGE_KEY] = jsonStr;
-    if (_dbReady) {
-      dbPut(STORAGE_KEY, jsonStr).then(_ok => {
-        if (!_ok) {
-          console.error('IndexedDB 写入失败，数据仅保留在内存中');
-          showToast('存储写入失败，数据仅暂存于内存，请检查存储空间');
-        }
-      }).catch(() => {
-        console.error('IndexedDB 写入异常');
-        showToast('存储写入失败，数据仅暂存于内存，请检查存储空间');
-      });
-    } else {
-      // 降级 localStorage
-      localStorage.setItem(STORAGE_KEY, jsonStr);
+    if (!state.data) return false;
+    if (profiles && profiles.activeId) {
+      const id = profiles.activeId;
+      profiles.data[id] = state.data;
+      const m = profiles.meta[id] || (profiles.meta[id] = { createdAt: Date.now() });
+      m.name = (state.data.characters && state.data.characters.other.name) || '';
+      m.avatar = (state.data.characters && state.data.characters.other.avatar) || '';
+      m.updatedAt = Date.now();
+      // API配置与全局设定为全局共享：同步进档案全局区
+      profiles.globals.apiConfig = state.data.apiConfig;
+      profiles.globals.globalRules = Array.isArray(state.data.globalRules) ? state.data.globalRules : [];
+      // 变更即失效：该角色的缓存串作废（真正落盘时才重新 stringify），并置脏
+      _profileJsonCache.delete(id);
+      _dataDirty = true;
+      persistProfiles();
+      renderNavCharList();
     }
     return true;
   } catch(e) {
     console.error('保存失败', e);
-    // localStorage 配额不足：仅清除存档槽位（不影响当前对话/事件）后重试
+    // 配额不足：清掉旧版存档残留数据（当前角色数据不受影响）后重试
     if (emergencyClearStorage()) {
-      showToast('存档槽位已清理以释放空间（当前对话与事件不受影响）');
+      showToast('已清理旧版存档残留以释放空间（当前进度不受影响）');
       return true;
     }
-    showToast('保存失败：存储空间不足，请手动导出或清理浏览器数据');
+    showToast('自动保存失败：存储空间不足，请尽快通过「数据备份」导出');
     return false;
   }
 }
 
-function loadFromStorage() {
+/* ========== 多角色档案层 ==========
+ * profiles 结构（单键存储于 PROFILES_KEY，IndexedDB / localStorage 自动适配）：
+ *  {
+ *    order:    [profileId, ...]           // 角色顺序，新增在前
+ *    activeId: 'p_xxx' | null             // 当前激活角色
+ *    globals:  { apiConfig, globalRules } // 全局共享配置
+ *    meta:     { id: {name, avatar, createdAt, updatedAt} }
+ *    data:     { id: 完整游戏数据 }        // 每个角色独立进度
+ *  }
+ */
+let profiles = null;
+
+function loadRegistry() {
+  profiles = null;
   try {
-    const raw = _memCache[STORAGE_KEY] || localStorage.getItem(STORAGE_KEY);
+    const raw = _memCache[PROFILES_KEY] || localStorage.getItem(PROFILES_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      const oldVersion = parsed._version;
-      const needsMigration = oldVersion !== APP_VERSION;
-      // 版本不匹配：保留存档数据，用 deepMerge 迁移（补全新字段，保留旧数据）
-      if (needsMigration) {
-        console.log('版本迁移：保留存档数据', oldVersion, '→', APP_VERSION);
-      }
-      delete parsed._version; // 移除版本标记，不混入 state.data
-      state.data = deepMerge(structuredClone(DEFAULT_DATA), parsed);
-      // 迁移旧版 apiConfig（{deepseek,gemini,active} → 统一格式）
-      state.data.apiConfig = migrateApiConfig(state.data.apiConfig);
-      // 版本迁移后立即保存（写入新版本号，避免重复迁移）
-      if (needsMigration) saveToStorage();
-      return true;
+      const data = parsed.data || {};
+      profiles = {
+        order: (Array.isArray(parsed.order) ? parsed.order : []).filter(id => data[id]),
+        activeId: (parsed.activeId && data[parsed.activeId]) ? parsed.activeId : null,
+        globals: {
+          apiConfig: (parsed.globals && parsed.globals.apiConfig) || structuredClone(DEFAULT_DATA.apiConfig),
+          globalRules: (parsed.globals && Array.isArray(parsed.globals.globalRules)) ? parsed.globals.globalRules : []
+        },
+        meta: parsed.meta || {},
+        data: data
+      };
+      if (profiles.order.length && !profiles.activeId) profiles.activeId = profiles.order[0];
     }
-  } catch(e) { console.error('加载失败', e); }
-  return false;
+  } catch(e) { console.error('角色档案加载失败', e); }
+  if (!profiles) {
+    profiles = {
+      order: [],
+      activeId: null,
+      globals: { apiConfig: structuredClone(DEFAULT_DATA.apiConfig), globalRules: [] },
+      meta: {},
+      data: {}
+    };
+  }
+}
+
+/* 持久化调度：磁盘写入去抖
+ * 背景：saveToStorage 在每条消息/设定修改后都会调用，若每次都同步
+ * JSON.stringify 全部角色的完整数据（随角色数与聊天长度增长），
+ * 主线程会被反复阻塞造成输入/滚动卡顿。
+ * 策略：内存缓存即时更新；磁盘写入合并到 600ms 静止后执行一次。
+ * 数据安全：切后台/关页/切换角色等关键时刻调用 flushProfilesNow() 立即落盘，
+ * 且另有 20s 定时兜底（带脏标记，无变更时零开销），单次去抖窗口最多延迟 0.6s。
+ */
+let _persistTimer = null;
+let _dataDirty = false; // 脏标记：20s 兜底定时器据此跳过无变更周期的全量序列化
+
+/* 按角色缓存序列化结果：非激活角色的聊天史不变却每次重新 stringify
+ * 是隐形大头（多角色×长聊天记录）。策略是"变更即失效"：
+ * - saveToStorage 改了某角色数据 → 删除其缓存（只删不写，保持去抖语义）
+ * - writeProfilesNow 落盘时缺谁补谁 → 只有被改过的角色会重新 stringify
+ * 切角色场景安全：旧角色最后的变更先失效缓存，切换后的落盘会重新序列化它。 */
+const _profileJsonCache = new Map(); // profileId -> 序列化后的 data JSON 串
+
+function writeProfilesNow() {
+  // 逐角色装配：order 内 + data 中游离的（迁移期结构），缓存缺失的现算并回填
+  const dataParts = [];
+  const seen = new Set();
+  const emit = id => {
+    seen.add(id);
+    let s = _profileJsonCache.get(id);
+    if (s === undefined) {
+      s = JSON.stringify(profiles.data[id]);
+      _profileJsonCache.set(id, s);
+    }
+    dataParts.push(JSON.stringify(id) + ':' + s);
+  };
+  for (const id of profiles.order) if (profiles.data[id]) emit(id);
+  for (const id of Object.keys(profiles.data)) if (!seen.has(id)) emit(id);
+  const finalStr = '{"_version":' + JSON.stringify(APP_VERSION)
+    + ',"order":' + JSON.stringify(profiles.order)
+    + ',"activeId":' + JSON.stringify(profiles.activeId)
+    + ',"globals":' + JSON.stringify(profiles.globals)
+    + ',"meta":' + JSON.stringify(profiles.meta)
+    + ',"data":{' + dataParts.join(',') + '}}';
+  _memCache[PROFILES_KEY] = finalStr;
+  _dataDirty = false;
+  if (_dbReady) {
+    dbPut(PROFILES_KEY, finalStr).then(_ok => {
+      if (!_ok) {
+        console.error('IndexedDB 写入失败，数据仅保留在内存中');
+        showToast('存储写入失败，数据仅暂存于内存，请检查存储空间');
+      }
+    }).catch(() => {
+      console.error('IndexedDB 写入异常');
+      showToast('存储写入失败，数据仅暂存于内存，请检查存储空间');
+    });
+  } else {
+    localStorage.setItem(PROFILES_KEY, finalStr);
+  }
+}
+
+function flushProfilesNow() {
+  if (_persistTimer) { clearTimeout(_persistTimer); _persistTimer = null; }
+  writeProfilesNow();
+}
+
+function persistProfiles() {
+  try {
+    if (_persistTimer) clearTimeout(_persistTimer);
+    _persistTimer = setTimeout(function() {
+      _persistTimer = null;
+      try { writeProfilesNow(); } catch(e) { console.error('角色档案保存失败', e); }
+    }, 600);
+    return true;
+  } catch(e) {
+    console.error('角色档案保存失败', e);
+    return false;
+  }
+}
+
+function profileDisplayName(id) {
+  const m = profiles.meta[id];
+  return (m && m.name) ? m.name : '未命名角色';
+}
+
+// 全局配置（API配置/全局规则）注入当前 state
+function applyGlobalsToState() {
+  if (!profiles || !state.data) return;
+  state.data.apiConfig = migrateApiConfig(structuredClone(profiles.globals.apiConfig || DEFAULT_DATA.apiConfig));
+  state.data.globalRules = Array.isArray(profiles.globals.globalRules) ? structuredClone(profiles.globals.globalRules) : [];
+}
+
+// 把全局配置写入选定的角色数据对象（新建角色时使用）
+function applyProfileGlobals(data) {
+  data.apiConfig = migrateApiConfig(structuredClone(profiles.globals.apiConfig || DEFAULT_DATA.apiConfig));
+  data.globalRules = Array.isArray(profiles.globals.globalRules) ? structuredClone(profiles.globals.globalRules) : [];
+}
+
+// 把某个角色的完整数据装入 state.data（含结构迁移）
+function loadProfileIntoState(id) {
+  let parsed = profiles.data[id];
+  if (typeof parsed === 'string') parsed = JSON.parse(parsed);
+  state.data = deepMerge(structuredClone(DEFAULT_DATA), structuredClone(parsed || {}));
+  applyGlobalsToState();
+  // 迁移：检测旧格式快照（含"时间节点"或"空间位置"字段），清除后等下次事件重新生成
+  if (state.data.storyState && (state.data.storyState.includes('时间节点') || state.data.storyState.includes('空间位置'))) {
+    state.data.storyState = '';
+    state.data.storyStateStale = true;
+  }
+  // 迁移：旧字段 storyStateConsumed → storyStateStale
+  if ('storyStateConsumed' in state.data) {
+    delete state.data.storyStateConsumed;
+    state.data.storyStateStale = true;
+  }
+}
+
+// 旧版单角色数据 → 自动迁移为第一个角色档案
+function migrateLegacyIfNeeded() {
+  if (profiles.order.length > 0) return;
+  const raw = _memCache[STORAGE_KEY] || localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+  try {
+    const parsed = JSON.parse(raw);
+    delete parsed._version;
+    const id = 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+    const data = deepMerge(structuredClone(DEFAULT_DATA), parsed);
+    data.apiConfig = migrateApiConfig(data.apiConfig);
+    profiles.order = [id];
+    profiles.activeId = id;
+    profiles.data[id] = data;
+    profiles.meta[id] = {
+      name: (data.characters && data.characters.other.name) || '',
+      avatar: (data.characters && data.characters.other.avatar) || '',
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    };
+    profiles.globals.apiConfig = structuredClone(data.apiConfig);
+    profiles.globals.globalRules = Array.isArray(data.globalRules) ? structuredClone(data.globalRules) : [];
+    persistProfiles();
+    console.log('已迁移旧版单角色数据 → 多角色档案');
+  } catch(e) { console.error('旧数据迁移失败', e); }
 }
 
 // 迁移旧版 apiConfig：{deepseek:{apiKey,model,baseUrl}, gemini:{...}, active:'deepseek'}
@@ -4000,31 +3937,59 @@ async function init() {
   // 等待 IndexedDB 存储层就绪（含旧 localStorage 数据自动迁移）
   await ensureStorageReady();
 
-  // Clean up old array-format saves
-  const rawSaves = _memCache[SAVES_KEY];
-  if (rawSaves) {
-    try {
-      const parsed = JSON.parse(rawSaves);
-      if (Array.isArray(parsed)) {
-        _memCache[SAVES_KEY] = null;
-        if (_dbReady) dbDelete(SAVES_KEY).catch(() => {});
-        localStorage.removeItem(SAVES_KEY);
-      }
-    } catch(e) {
-      _memCache[SAVES_KEY] = null;
-      if (_dbReady) dbDelete(SAVES_KEY).catch(() => {});
-      localStorage.removeItem(SAVES_KEY);
-    }
+  // 存档系统已移除：启动时清理旧版本遗留的存档数据，释放存储空间
+  if (_memCache[SAVES_KEY] || localStorage.getItem(SAVES_KEY)) {
+    _memCache[SAVES_KEY] = null;
+    if (_dbReady) dbDelete(SAVES_KEY).catch(() => {});
+    localStorage.removeItem(SAVES_KEY);
   }
 
-  if (!loadFromStorage()) {
+  // 多角色档案：加载注册表 + 旧版单角色数据自动迁移
+  loadRegistry();
+  migrateLegacyIfNeeded();
+  // 默认角色保障：折刀、骁常驻导航栏（有旧数据也补齐；用户当前角色保持激活）
+  ensureDefaultScriptProfiles();
+  if (profiles.activeId && profiles.data[profiles.activeId]) {
+    loadProfileIntoState(profiles.activeId);
+  } else {
     state.data = structuredClone(DEFAULT_DATA);
-    saveToStorage();
+    applyGlobalsToState();
   }
   applyBgImage();
-  renderChat();
+  // 主界面 = 聊天界面
+  enterChatMain();
   setupChatKeyboardDismiss();
   setupKeyboardHandler();
+  setupSwipeNav();
+  setupAutoSaveHooks();
+}
+
+/* ========== 游玩自动保存（兜底层） ==========
+ * 常规保存：每条消息/事件/记忆/设定变更后已即时调用 saveToStorage()。
+ * 这里补三道兜底，覆盖「改了数据但没走到保存点」的边角场景：
+ *   1. 定时保存：每 20 秒兜底落盘一次（幂等，数据没变写入也很快）
+ *   2. 切后台：visibilitychange → hidden 时立即保存（手机切App/锁屏最常见）
+ *   3. 关闭/跳转：pagehide + beforeunload 双保险
+ */
+function setupAutoSaveHooks() {
+  const safeSave = () => {
+    try { if (state.data) saveToStorage(); } catch(e) {}
+  };
+  // 关键时刻：同步把档案写盘（去抖窗口内也不能丢）
+  const flushNow = () => {
+    try { flushProfilesNow(); } catch(e) {}
+  };
+  // 定时兜底：只在实际有变更时才落盘。
+  // 之前每 20s 无条件全量序列化（updatedAt 必变导致永远"有变更"），
+  // 在手机上是每 20 秒一次可感知的微卡顿——静置阅读/滚动时尤其明显。
+  setInterval(() => { if (_dataDirty) safeSave(); }, 20000);
+  // 切后台立即保存并同步落盘（移动端切走/锁屏时触发，比 beforeunload 可靠）
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') { safeSave(); flushNow(); }
+  });
+  // 页面关闭/刷新/跳转前保存并同步落盘
+  window.addEventListener('pagehide', () => { safeSave(); flushNow(); });
+  window.addEventListener('beforeunload', () => { safeSave(); flushNow(); });
 }
 
 // 应用剧本背景图：有自定义则用自定义，否则用默认
@@ -4037,25 +4002,33 @@ function applyBgImage() {
     state.data.bgImage = DEFAULT_BG;
   }
   document.documentElement.style.setProperty('--bg-image', bg ? `url('${bg}')` : `url('${DEFAULT_BG}')`);
+  applyChatAvatarVars();
 }
 
-// Emergency cleanup: if storage is full, clear saves to make room
+// 头像注册为全局 CSS 变量：base64 头像整个 DOM 只存一份（见样式表注释）。
+// 之前每条聊天消息的行内 style 都复制完整 base64，长对话时 DOM 与内存随消息数膨胀。
+function applyChatAvatarVars() {
+  if (!state.data || !state.data.characters) return;
+  const root = document.documentElement.style;
+  const meC = state.data.characters.me || {};
+  const aiC = state.data.characters.other || {};
+  const me = meC.avatar || '';
+  const ai = aiC.avatar || '';
+  if (me) root.setProperty('--av-me', `url('${me.replace(/'/g, '%27')}')`);
+  else root.removeProperty('--av-me');
+  if (ai) root.setProperty('--av-ai', `url('${ai.replace(/'/g, '%27')}')`);
+  else root.removeProperty('--av-ai');
+}
+
+// Emergency cleanup: if storage is full, clear legacy save-slot data to make room
 function emergencyClearStorage() {
-  // Remove all saves first (IndexedDB + localStorage + memory cache)
+  // 存档系统已移除：这里只清理旧版本遗留的存档数据（IndexedDB + localStorage + 内存缓存）
   _memCache[SAVES_KEY] = null;
   if (_dbReady) dbDelete(SAVES_KEY).catch(() => {});
   localStorage.removeItem(SAVES_KEY);
-  // Try saving current data again (include _version so it survives next load)
+  // Try saving profiles again (current data survives via profile store)
   try {
-    const dataWithVersion = { ...state.data, _version: APP_VERSION };
-    const jsonStr = JSON.stringify(dataWithVersion);
-    _memCache[STORAGE_KEY] = jsonStr;
-    if (_dbReady) {
-      dbPut(STORAGE_KEY, jsonStr).catch(() => {});
-    } else {
-      localStorage.setItem(STORAGE_KEY, jsonStr);
-    }
-    return true;
+    return persistProfiles();
   } catch(e) {
     console.error('紧急清理后仍无法保存', e);
     return false;
@@ -4080,44 +4053,56 @@ function setupChatKeyboardDismiss() {
 
 // Handle virtual keyboard: resize app and scroll chat to bottom
 function setupKeyboardHandler() {
+  let lastAppliedH = -1;   // 高度守卫：只在键盘实际开/关（高度变化）时干活
+  let rafPending = false;
   function applyViewportHeight() {
     if (!window.visualViewport) return;
     const vh = window.visualViewport.height;
-    const offset = window.visualViewport.offsetTop || 0;
-    const app = document.getElementById('app');
-    if (app) {
-      // 把 #app 高度收缩到键盘上方的可视区高度，让 flex 底部的 input-bar 自然上移
-      app.style.height = vh + 'px';
-    }
-    // 全屏模式下也需要同步收缩 html/body，否则它们仍占满整个屏幕高度
-    const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
-    if (isFs) {
-      document.documentElement.style.height = vh + 'px';
-      document.body.style.height = vh + 'px';
-    }
-    // 滚动聊天/羁绊内容到底部
-    const chatMessages = document.getElementById('chat-messages');
-    if (chatMessages && document.getElementById('tab-chat').style.display !== 'none') {
-      setTimeout(function() { chatMessages.scrollTop = chatMessages.scrollHeight; }, 50);
-    }
-    const bondsContent = document.getElementById('bonds-content');
-    if (bondsContent && document.getElementById('tab-bonds').style.display !== 'none') {
-      setTimeout(function() { bondsContent.scrollTop = bondsContent.scrollHeight; }, 50);
-    }
-    // 确保当前聚焦的输入框在可视区域内
-    const active = document.activeElement;
-    if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) {
-      setTimeout(function() {
-        try {
-          active.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        } catch(e) {}
-      }, 100);
-    }
+    // 高度没变（纯滚动/缩放扰动）→ 什么都不做，避免「滚动事件→重排→scrollIntoView→再滚动」死循环
+    if (Math.abs(vh - lastAppliedH) < 1) return;
+    lastAppliedH = vh;
+    if (rafPending) return;
+    rafPending = true;
+    // 样式写入与强制重排合并到下一帧，不阻塞当前帧的输入/动画
+    requestAnimationFrame(function() {
+      rafPending = false;
+      const vhNow = window.visualViewport ? window.visualViewport.height : vh;
+      const app = document.getElementById('app');
+      if (app) {
+        // 把 #app 高度收缩到键盘上方的可视区高度，让 flex 底部的 input-bar 自然上移
+        app.style.height = vhNow + 'px';
+      }
+      // 全屏模式下也需要同步收缩 html/body，否则它们仍占满整个屏幕高度
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      if (isFs) {
+        document.documentElement.style.height = vhNow + 'px';
+        document.body.style.height = vhNow + 'px';
+      }
+      // 滚动聊天/羁绊内容到底部
+      const chatMessages = document.getElementById('chat-messages');
+      if (chatMessages && document.getElementById('tab-chat').style.display !== 'none') {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+      const bondsContent = document.getElementById('bonds-content');
+      if (bondsContent && document.getElementById('tab-bonds').style.display !== 'none') {
+        bondsContent.scrollTop = bondsContent.scrollHeight;
+      }
+      // 键盘弹出后确保输入框可见（仅高度变化时执行一次；不用 smooth，避免触发新的视口滚动事件）
+      const active = document.activeElement;
+      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) {
+        try { active.scrollIntoView({ block: 'nearest' }); } catch(e) {}
+      }
+    });
   }
 
+  // 只监听 resize（键盘开/关）；绝不监听 scroll ——
+  // Android 上键盘动画期间 scroll 每帧触发，会与 scrollIntoView 形成循环导致持续卡顿
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', applyViewportHeight);
-    window.visualViewport.addEventListener('scroll', applyViewportHeight);
+    window.addEventListener('orientationchange', function() {
+      lastAppliedH = -1;  // 旋转屏幕后强制重算一次
+      setTimeout(applyViewportHeight, 250);
+    });
   }
 
   // 全屏模式切换后重新应用
@@ -4205,49 +4190,107 @@ function scrollAllToBottom() {
 }
 
 /* ========== 导航 ========== */
-function startGame() {
-  // Show Echo select screen (新开一局，不加载存档)
-  document.getElementById('home-screen').style.display = 'none';
-  document.getElementById('echo-select-screen').style.display = 'flex';
-  renderEchoScriptList();
-}
 
-function renderEchoScriptList() {
-  const listEl = document.getElementById('echo-script-list');
-  let html = '';
-  SCRIPTS.forEach(script => {
-    html += `
-      <div class="echo-script-card" onclick="selectEchoScript('${script.id}')">
-        <div class="echo-script-name">${escapeHtml(script.name)}</div>
-        <div class="echo-script-desc">${escapeHtml(script.desc)}</div>
-      </div>
-    `;
-  });
-  listEl.innerHTML = html;
-}
-
-function selectEchoScript(scriptId) {
+// 新增角色：选择剧本模板（弹窗版剧本列表）
+// 从剧本同步构建并注册一个新角色档案（不切界面、不弹加载页）
+// 返回新档案 id；scriptId 无效时返回 null。供「确认新增」与「默认角色保障」共用
+// opts.silent：不切换激活角色（用于初始化补齐默认角色时保留用户当前进度）
+function registerProfileFromScript(scriptId, opts) {
   const script = SCRIPTS.find(s => s.id === scriptId);
+  if (!script) return null;
+  const silent = opts && opts.silent;
+  const now = Date.now();
+  const id = 'p_' + now + '_' + Math.random().toString(36).slice(2, 8);
+  const data = deepMerge(structuredClone(DEFAULT_DATA), structuredClone(script.data));
+  // 全局配置（API/全局规则）沿用到新角色
+  applyProfileGlobals(data);
+  // Fix timestamps: replace 0 with current time for pre-set messages/events
+  const sessionForPreset = state.chatSessionId;
+  if (data.chatHistory) {
+    data.chatHistory.forEach((msg, i) => {
+      if (!msg.timestamp) msg.timestamp = now - (data.chatHistory.length - i) * 60000;
+      if (msg.sessionId === 0) msg.sessionId = sessionForPreset;
+    });
+  }
+  if (data.eventHistory) {
+    data.eventHistory.forEach(evt => {
+      if (!evt.timestamp) evt.timestamp = now;
+    });
+  }
+  // 注册新角色（排在列表最前；silent 模式不改变当前激活角色）
+  profiles.order.unshift(id);
+  if (!silent) profiles.activeId = id;
+  profiles.data[id] = data;
+  profiles.meta[id] = {
+    name: (data.characters && data.characters.other.name) || '',
+    avatar: (data.characters && data.characters.other.avatar) || '',
+    scriptId: scriptId,  // 标记来源剧本，用于默认角色保障
+    createdAt: now,
+    updatedAt: now
+  };
+  persistProfiles();
+  return id;
+}
+
+// 默认角色保障：两个剧本角色（折刀、骁）常驻导航栏
+// 启动时逐个检查，缺失即补建；用户已有激活角色时保持不动，只把新角色插入列表
+function ensureDefaultScriptProfiles() {
+  const prevActive = profiles.activeId;
+  let added = 0;
+  // 倒序注册（xiao 先、zhedao 后，新档案 unshift 到最前）→ 最终顺序：折刀、骁
+  SCRIPTS.filter(s => s.id !== 'custom').reverse().forEach(s => {
+    const exists = profiles.order.some(id => profiles.meta[id] && profiles.meta[id].scriptId === s.id);
+    if (!exists) {
+      registerProfileFromScript(s.id, { silent: true });
+      added++;
+    }
+  });
+  if (added) {
+    // 没有任何激活角色（如全新环境）时，激活列表第一个（最后补建的剧本）
+    if (!profiles.activeId && profiles.order.length) profiles.activeId = profiles.order[0];
+    else profiles.activeId = (prevActive && profiles.data[prevActive]) ? prevActive : profiles.activeId;
+    persistProfiles();
+    console.log('已补齐默认角色 ' + added + ' 个（折刀、骁常驻导航栏）');
+  }
+}
+
+// 新增角色：直接弹确认弹窗（两个剧本角色已常驻导航栏，此处新建的为自定义空白角色）
+function confirmCreateProfile() {
+  closeNav();
+  const script = SCRIPTS.find(s => s.id === 'custom');
   if (!script) return;
+  // 生成中禁止新建，防止进行中的回复写入错误角色
+  if (state.isLoading) { showToast('正在生成中，请稍后再试'); return; }
+  // 排版参考截图：标题 → 描述 → 确认问题 → 双按钮，弱字号层级、居中
   showModal(`
     <div class="modal">
-      <div class="modal-header">${escapeHtml(script.name)}</div>
-      <div class="modal-body" style="text-align:center;color:var(--text-dim);font-size:13px;line-height:1.8;">
-        ${escapeHtml(script.desc)}<br><br>确定加载此剧本吗？
+      <div class="modal-body" style="padding:30px 24px 20px;">
+        <div class="modal-confirm-title">新增角色</div>
+        <div class="modal-confirm-desc">所有设定由你亲手书写，<br>从零开始创造你的故事。</div>
+        <div class="modal-confirm-q">确定创建此角色吗？</div>
       </div>
       <div class="modal-footer">
-        <button class="modal-btn" onclick="closeModal()">重新选择</button>
-        <button class="modal-btn primary" onclick="closeModal();confirmLoadScript('${scriptId}')">确认加载</button>
+        <button class="modal-btn" onclick="closeModal()">取消</button>
+        <button class="modal-btn primary" onclick="createProfileFromScript('custom')">确认新增</button>
       </div>
     </div>
   `);
 }
 
-function confirmLoadScript(scriptId) {
+// 从剧本创建一个新角色档案（确认后调用：加载页 → 注册 → 进入聊天）
+function createProfileFromScript(scriptId) {
   const script = SCRIPTS.find(s => s.id === scriptId);
   if (!script) return;
+  // 生成中禁止新建，防止进行中的回复写入错误角色
+  if (state.isLoading) { showToast('正在生成中，请稍后再试'); return; }
+  closeModal();
+  closeNav();
+  // 当前进度先落盘
+  if (state.data) saveToStorage();
   // Show world loading screen
-  document.getElementById('echo-select-screen').style.display = 'none';
+  document.getElementById('global-rules-screen').style.display = 'none';
+  document.getElementById('api-config-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'none';
   const loadScreen = document.getElementById('world-loading-screen');
   // Reset progress bar animation
   const barFill = loadScreen.querySelector('.world-loading-bar-fill');
@@ -4258,76 +4301,229 @@ function confirmLoadScript(scriptId) {
   barFill.style.animation = '';
   // After ~2.5s, enter game
   setTimeout(() => {
-    // Start a fresh game with this script's data (新开一局，不加载存档)
-    // Preserve API config & global rules — they should survive new game / version updates
-    const savedApiConfig = state.data ? structuredClone(state.data.apiConfig) : null;
-    const savedGlobalRules = state.data && state.data.globalRules ? structuredClone(state.data.globalRules) : null;
-    state.data = deepMerge(structuredClone(DEFAULT_DATA), structuredClone(script.data));
-    if (savedApiConfig) state.data.apiConfig = savedApiConfig;
-    if (savedGlobalRules) state.data.globalRules = savedGlobalRules;
-    // Fix timestamps: replace 0 with current time for pre-set messages/events
-    const now = Date.now();
-    if (state.data.chatHistory) {
-      state.data.chatHistory.forEach((msg, i) => {
-        if (!msg.timestamp) msg.timestamp = now - (state.data.chatHistory.length - i) * 60000;
-        if (msg.sessionId === 0) msg.sessionId = state.chatSessionId;
-      });
-    }
-    if (state.data.eventHistory) {
-      state.data.eventHistory.forEach(evt => {
-        if (!evt.timestamp) evt.timestamp = now;
-      });
-    }
-    state.eventState = 'idle';
-    state.currentChainId = null;
-    state.chatSessionId++;
-    state.secretModuleType = null;
-    state.secretGenerating.clear();
-    secretPageHtml = null;
-    showSecretNav();
+    const id = registerProfileFromScript(scriptId);
+    if (!id) { loadScreen.style.display = 'none'; return; }
+    state.data = profiles.data[id];
+    resetRuntimeState();
     saveToStorage();
     applyBgImage();
-    // Enter game — force re-render all tabs by resetting currentTab
+    // Enter game
     loadScreen.style.display = 'none';
-    document.getElementById('game-screen').style.display = 'flex';
-    state.currentTab = '';
-    // Pre-render all tabs with fresh data
-    renderChat();
-    renderBonds();
-    renderMemory();
-    renderSecretHome();
-    renderSettings();
-    // Now switch to chat
-    state.currentTab = 'chat';
-    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-    document.getElementById('tab-chat').style.display = 'flex';
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.tab === 'chat');
-    });
-    // 三个界面全部滚动到最底部
-    scrollAllToBottom();
+    enterChatMain();
+    showToast('已开始「' + script.name + '」');
   }, 2500);
 }
 
-function cancelEchoSelect() {
-  document.getElementById('echo-select-screen').style.display = 'none';
-  document.getElementById('home-screen').style.display = 'flex';
-}
-
-function returnToTitle() {
-  // Save current progress before returning
-  if (state.data) saveToStorage();
-  // Clear all runtime state
-  state.secretModuleType = null;
-  state.secretGenerating.clear();
-  secretPageHtml = null;
-  showSecretNav();
+// 重置运行时状态（切换角色/读档/新开一局共用）
+function resetRuntimeState() {
   state.eventState = 'idle';
   state.currentChainId = null;
   state.quoteContext = null;
   state.isLoading = false;
-  document.getElementById('game-screen').style.display = 'none';
-  document.getElementById('home-screen').style.display = 'flex';
+  state.rulesExpanded = false;
+  state.secretModuleType = null;
+  state.secretGenerating.clear();
+  state.secretGenIds = {};
+  state.chatSessionId++;
+  state.chatSessionStartTime = 0;
+  secretPageHtml = null;
+  showSecretNav();
+  const quoteBar = document.getElementById('quote-bar');
+  if (quoteBar) quoteBar.style.display = 'none';
+}
+
+// 进入聊天主界面：渲染全部页签并定位到聊天
+function enterChatMain() {
+  document.getElementById('global-rules-screen').style.display = 'none';
+  document.getElementById('api-config-screen').style.display = 'none';
+  document.getElementById('world-loading-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'flex';
+  // Force re-render all tabs with fresh data
+  state.currentTab = '';
+  renderChat();
+  renderBonds();
+  renderMemory();
+  renderSecretHome();
+  renderSettings();
+  // Now switch to chat
+  state.currentTab = 'chat';
+  document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+  document.getElementById('tab-chat').style.display = 'flex';
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === 'chat');
+  });
+  updateChatHeaderTitle();
+  renderNavCharList();
+  // 三个界面全部滚动到最底部
+  scrollAllToBottom();
+}
+
+// 聊天页标题 = 当前角色名
+function updateChatHeaderTitle() {
+  const el = document.getElementById('chat-title');
+  if (!el) return;
+  const name = state.data && state.data.characters && state.data.characters.other.name;
+  el.textContent = name || '聊天';
+}
+
+/* ========== 角色导航抽屉 ========== */
+function openNav() {
+  renderNavCharList();
+  document.getElementById('nav-overlay').classList.add('open');
+}
+
+function closeNav() {
+  document.getElementById('nav-overlay').classList.remove('open');
+}
+
+// 导航角色列表：带变更守卫 —— 名字/头像/顺序/激活项没变时跳过重建（saveToStorage 高频调用）
+let _navListSig = '';
+function renderNavCharList() {
+  const listEl = document.getElementById('nav-char-list');
+  if (!listEl || !profiles) return;
+  if (!profiles.order.length) {
+    if (_navListSig !== 'empty') {
+      _navListSig = 'empty';
+      listEl.innerHTML = '<div class="nav-char-empty">还没有角色<br>点击下方「新增角色」开始</div>';
+    }
+    return;
+  }
+  const sig = profiles.order.join('|') + '::' + profiles.activeId + '::' +
+    profiles.order.map(id => {
+      const m = profiles.meta[id] || {};
+      return (m.name || '') + '#' + (m.avatar || '');
+    }).join('|');
+  if (sig === _navListSig) return;  // 无变化，跳过 DOM 重建
+  _navListSig = sig;
+  let html = '';
+  profiles.order.forEach(id => {
+    const m = profiles.meta[id] || {};
+    const name = m.name || '未命名角色';
+    const active = id === profiles.activeId;
+    const avatarStyle = m.avatar ? ` style="background-image:url('${m.avatar}');background-size:cover;background-position:center"` : '';
+    const avatarInner = m.avatar ? '' : escapeHtml(getAvatarChar(name, '角'));
+    html += `
+      <div class="nav-char-item${active ? ' active' : ''}" onclick="switchProfile('${id}')">
+        <div class="nav-char-avatar"${avatarStyle}>${avatarInner}</div>
+        <div class="nav-char-name">${escapeHtml(name)}</div>
+        <button class="nav-char-del" title="删除角色" onclick="event.stopPropagation();confirmDeleteProfile('${id}')">×</button>
+      </div>
+    `;
+  });
+  listEl.innerHTML = html;
+}
+
+// 切换角色：当前进度自动保存，目标角色进度原样恢复
+function switchProfile(id) {
+  if (!profiles.data[id]) return;
+  if (id === profiles.activeId) { closeNav(); return; }
+  if (state.isLoading) { showToast('正在生成中，请稍后再切换'); return; }
+  // 保存当前角色进度
+  if (state.data && profiles.activeId) saveToStorage();
+  profiles.activeId = id;
+  persistProfiles();
+  loadProfileIntoState(id);
+  resetRuntimeState();
+  saveToStorage();
+  flushProfilesNow();  // 切换角色属关键操作，立即落盘
+  applyBgImage();
+  closeNav();
+  enterChatMain();
+  showToast('已切换至「' + profileDisplayName(id) + '」');
+}
+
+function confirmDeleteProfile(id) {
+  // 删除当前角色时，生成中禁止操作（防止进行中的回复写入错误角色）
+  if (id === profiles.activeId && state.isLoading) {
+    showToast('正在生成中，请稍后再试');
+    return;
+  }
+  const name = profileDisplayName(id);
+  showModal(`
+    <div class="modal">
+      <div class="modal-header">删除角色</div>
+      <div class="modal-body" style="text-align:center;color:var(--text-dim);font-size:13px;line-height:1.8;">
+        确定删除「${escapeHtml(name)}」吗？<br>该角色的全部聊天记录与进度将一并删除，不可撤销。
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn" onclick="closeModal()">取消</button>
+        <button class="modal-btn primary" style="color:var(--danger);" onclick="deleteProfile('${id}')">确认删除</button>
+      </div>
+    </div>
+  `);
+}
+
+function deleteProfile(id) {
+  delete profiles.data[id];
+  delete profiles.meta[id];
+  _profileJsonCache.delete(id); // 顺手清理序列化缓存，防内存滞留
+  profiles.order = profiles.order.filter(x => x !== id);
+  const wasActive = profiles.activeId === id;
+  if (wasActive) {
+    if (profiles.order.length) {
+      // 还有其他角色：激活下一个
+      profiles.activeId = profiles.order[0];
+      loadProfileIntoState(profiles.activeId);
+    } else {
+      // 全部删光：回到空状态
+      profiles.activeId = null;
+      state.data = structuredClone(DEFAULT_DATA);
+      applyGlobalsToState();
+    }
+    resetRuntimeState();
+  }
+  persistProfiles();
+  flushProfilesNow();  // 删除角色属关键操作，立即落盘
+  applyBgImage();
+  closeModal();
+  renderNavCharList();
+  if (profiles.activeId || wasActive) enterChatMain();
+  if (!profiles.order.length) {
+    // 全部删光：与启动初始化一致，立即重建默认角色（折刀、骁）
+    registerProfileFromScript('xiao');
+    registerProfileFromScript('zhedao');
+    state.data = profiles.data[profiles.activeId];
+    resetRuntimeState();
+    saveToStorage();
+    applyBgImage();
+    enterChatMain();
+    showToast('已重建默认角色：折刀、骁');
+  } else {
+    showToast('已删除角色');
+  }
+}
+
+/* ========== 右滑呼出角色抽屉 ========== */
+function setupSwipeNav() {
+  let sx = 0, sy = 0, st = 0, tracking = false;
+  document.addEventListener('touchstart', function(e) {
+    if (e.touches.length !== 1) { tracking = false; return; }
+    const t = e.touches[0];
+    tracking = true; sx = t.clientX; sy = t.clientY; st = Date.now();
+  }, { passive: true });
+  document.addEventListener('touchend', function(e) {
+    if (!tracking) return;
+    tracking = false;
+    const t = e.changedTouches[0];
+    if (!t) return;
+    const dx = t.clientX - sx, dy = t.clientY - sy, dt = Date.now() - st;
+    // 忽略慢速滑动与纵向为主的滑动
+    if (dt > 700) return;
+    if (Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.3) return;
+    // 弹窗打开时不响应
+    if (document.getElementById('modal-overlay').classList.contains('active')) return;
+    const navEl = document.getElementById('nav-overlay');
+    if (navEl.classList.contains('open')) {
+      // 抽屉打开时左滑关闭
+      if (dx < 0) closeNav();
+      return;
+    }
+    const gameVisible = document.getElementById('game-screen').style.display !== 'none';
+    const rulesVisible = document.getElementById('global-rules-screen').style.display !== 'none';
+    const apiVisible = document.getElementById('api-config-screen').style.display !== 'none';
+    // 从屏幕左缘右滑 → 打开角色抽屉（聊天 / 全局设定 / API配置 页均可）
+    if (dx > 0 && sx < 70 && (gameVisible || rulesVisible || apiVisible)) openNav();
+  }, { passive: true });
 }
 
 function switchTab(tab) {
@@ -4440,66 +4636,8 @@ function closeModal() {
 }
 
 // ========== 全屏模式 ==========
-// SVG icons for fullscreen toggle
-const FS_ICON_ENTER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"/></svg>';
-const FS_ICON_EXIT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v5H3M16 3v5h5M8 21v-5H3M16 21v-5h5"/></svg>';
-
-function toggleFullscreen() {
-  if (document.fullscreenElement) {
-    // Currently fullscreen → ask to exit
-    showModal(`
-      <div class="modal">
-        <div class="modal-header">退出全屏</div>
-        <div class="modal-body" style="text-align:center;color:var(--text-dim);font-size:13px;line-height:1.8;">
-          确认退出全屏模式吗？
-        </div>
-        <div class="modal-footer">
-          <button class="modal-btn" onclick="closeModal()">取消</button>
-          <button class="modal-btn primary" onclick="doExitFullscreen()">确认退出</button>
-        </div>
-      </div>
-    `);
-  } else {
-    // Not fullscreen → ask to enter
-    showModal(`
-      <div class="modal">
-        <div class="modal-header">全屏模式</div>
-        <div class="modal-body" style="text-align:center;color:var(--text-dim);font-size:13px;line-height:1.8;">
-          确认使用全屏模式吗？
-        </div>
-        <div class="modal-footer">
-          <button class="modal-btn" onclick="closeModal()">取消</button>
-          <button class="modal-btn primary" onclick="doEnterFullscreen()">确认全屏</button>
-        </div>
-      </div>
-    `);
-  }
-}
-
-function doEnterFullscreen() {
-  closeModal();
-  const el = document.documentElement;
-  const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
-  if (req) req.call(el).catch(() => {});
-}
-
-function doExitFullscreen() {
-  closeModal();
-  const exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
-  if (exit) exit.call(document);
-}
-
-// Update button icons when fullscreen state changes
-function updateFsIcons() {
-  const isFs = !!document.fullscreenElement;
-  document.querySelectorAll('.fs-btn').forEach(btn => {
-    btn.innerHTML = isFs ? FS_ICON_EXIT : FS_ICON_ENTER;
-    btn.title = isFs ? '退出全屏' : '全屏';
-  });
-}
-
-document.addEventListener('fullscreenchange', updateFsIcons);
-document.addEventListener('webkitfullscreenchange', updateFsIcons);
+// 全屏功能已按需求移除（原入口在「设定」页，现已删除）
+// 浏览器自带的全屏操作（如系统菜单）仍可用，键盘高度处理逻辑保留兼容
 
 function escapeHtml(text) {
   if (!text) return '';
@@ -5012,15 +5150,13 @@ function mockResponse(mode, userMessage) {
 function buildMessageHtml(msg, idx) {
   const isMe = msg.role === 'user';
   const charData = isMe ? state.data.characters.me : state.data.characters.other;
-  const avatarStyle = charData.avatar
-    ? `style="background-image:url('${charData.avatar}');background-size:cover;background-position:center"`
-    : '';
+  // 头像经全局 CSS 变量渲染（applyChatAvatarVars），行内不再复制 base64
   const avatarInner = charData.avatar
     ? ''
     : escapeHtml(getAvatarChar(charData.name, isMe ? '我' : 'TA'));
   return `
     <div class="msg-row ${isMe ? 'me' : 'ai'}" data-idx="${idx}" onclick="showMsgActions(${idx})">
-      <div class="chat-avatar ${isMe ? 'me' : 'ai'}" ${avatarStyle}>${avatarInner}</div>
+      <div class="chat-avatar ${isMe ? 'me' : 'ai'}">${avatarInner}</div>
       <div class="msg-bubble">${escapeHtml(msg.content)}</div>
     </div>
   `;
@@ -5029,9 +5165,14 @@ function buildMessageHtml(msg, idx) {
 function renderChat() {
   const container = document.getElementById('chat-messages');
   const history = state.data.chatHistory;
+  applyChatAvatarVars();
+  updateChatHeaderTitle();
 
   if (history.length === 0) {
-    container.innerHTML = `<div class="memory-empty">开始你的故事<br><span style="font-size:11px;opacity:0.6">在下方输入消息</span></div>`;
+    const hasProfile = profiles && profiles.activeId;
+    container.innerHTML = hasProfile
+      ? `<div class="memory-empty">开始你的故事<br><span style="font-size:11px;opacity:0.6">在下方输入消息</span></div>`
+      : `<div class="memory-empty">还没有角色<br><span style="font-size:11px;opacity:0.6">点左上角 ☰ 或从左缘右滑，新增角色</span></div>`;
     return;
   }
 
@@ -5097,15 +5238,13 @@ function showTypingIndicator() {
   const emptyEl = container.querySelector('.memory-empty');
   if (emptyEl) emptyEl.remove();
   const otherChar = state.data.characters.other;
-  const typingAvatarStyle = otherChar.avatar
-    ? `style="background-image:url('${otherChar.avatar}');background-size:cover;background-position:center"`
-    : '';
+  // 头像走全局 CSS 变量，行内不复制 base64
   const typingAvatarInner = otherChar.avatar
     ? ''
     : escapeHtml(getAvatarChar(otherChar.name, 'TA'));
   const typingHtml = `
     <div class="msg-row ai" id="typing-row">
-      <div class="chat-avatar ai" ${typingAvatarStyle}>${typingAvatarInner}</div>
+      <div class="chat-avatar ai">${typingAvatarInner}</div>
       <div class="msg-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div>
     </div>
     <div class="typing-label" id="typing-label">${escapeHtml(otherChar.name || '对方')} 正在输入</div>
@@ -5296,20 +5435,6 @@ function showMsgActions(idx) {
 function closeMsgActions() {
   const menu = document.getElementById('msg-action-menu');
   if (menu) menu.remove();
-}
-
-function quoteMessage(idx) {
-  const msg = state.data.chatHistory[idx];
-  if (!msg) return;
-  closeMsgActions();
-  state.quoteContext = msg.content;
-  const quoteBar = document.getElementById('quote-bar');
-  if (quoteBar) {
-    const preview = msg.content.length > 40 ? msg.content.substring(0, 40) + '...' : msg.content;
-    quoteBar.querySelector('.quote-bar-text').textContent = preview;
-    quoteBar.style.display = 'flex';
-  }
-  document.getElementById('chat-input')?.focus();
 }
 
 function cancelQuote() {
@@ -5580,13 +5705,6 @@ function renderBonds() {
   renderBondsInput();
 }
 
-function startEventInput() {
-  state.eventState = 'input';
-  // Incremental update: only refresh state UI and input bar, not event blocks
-  updateBondsStateUI();
-  renderBondsInput();
-}
-
 async function sendEventWish() {
   const input = document.getElementById('event-input');
   if (!input) return;
@@ -5647,15 +5765,6 @@ async function sendEventWish() {
     const newInput = document.getElementById('event-input');
     if (newInput) newInput.focus();
   }
-}
-
-function exitEvent() {
-  state.eventState = 'ended';
-  state.currentChainId = null;
-  // Incremental: only update state UI and input bar, not event blocks
-  updateBondsStateUI();
-  renderBondsInput();
-  showToast('事件链已结束，历史已保留');
 }
 
 // 从事件叙事AI响应中拆分叙事正文和状态快照
@@ -6054,11 +6163,7 @@ async function improveMemory() {
     // Incrementally append the new card (no full re-render)
     appendMemoryCard(cardId);
     showToast('记忆已完善');
-    // Auto-save to slot_auto when memory is improved (failure won't affect the main flow)
-    const autoOk = autoSave();
-    if (!autoOk) {
-      showToast('记忆已完善（自动存档失败：空间不足）');
-    }
+    // 进度已在上方 saveToStorage() 自动落盘，无需额外存档
   } catch(e) {
     showToast('生成失败：' + (e.message || '未知错误'));
   } finally {
@@ -6643,10 +6748,6 @@ async function generateHistory(charName, tab) {
     if (genId !== state.secretGenIds['bookmark']) return;
     onSecretGenError(tab, e.message);
   }
-}
-
-function retrySecretGen(type) {
-  startSecretGen(type);
 }
 
 async function generateMailbox(charName) {
@@ -7376,16 +7477,13 @@ async function generateTrace(charName) {
       }
 
       // 渲染消息（不显示名字和每条时间，只有头像+气泡）
-      const otherAvatar = state.data.characters.other.avatar;
+      // 头像走全局 CSS 变量（--av-ai），行内不再复制 base64
+      const otherHasAvatar = !!state.data.characters.other.avatar;
       for (const msg of filteredMessages) {
         if (msg.isSent) {
           // AI角色发出的消息，使用真实头像
-          let avatarHtml;
-          if (otherAvatar) {
-            avatarHtml = `<div class="trace-msg-avatar me" style="background-image:url('${otherAvatar}');background-size:cover;background-position:center"></div>`;
-          } else {
-            avatarHtml = `<div class="trace-msg-avatar me">${escapeHtml(getAvatarChar(charName, '我'))}</div>`;
-          }
+          const avatarInner = otherHasAvatar ? '' : escapeHtml(getAvatarChar(charName, '我'));
+          const avatarHtml = `<div class="trace-msg-avatar me">${avatarInner}</div>`;
           html += `
             <div class="trace-msg-row me">
               ${avatarHtml}
@@ -7563,43 +7661,39 @@ function saveSecretRecord(type, html) {
 }
 
 /* ========== 设定页 ========== */
+/* 设定页角色区块：纯头像卡 → 一句话介绍 → 名字（两侧渐隐细线）
+ * type: 'me' | 'other'；ch: 角色数据；fallbackName: 未命名时的占位 */
+function buildCharBlock(type, ch, fallbackName) {
+  const bgStyle = ch.avatar
+    ? `background-image:url('${ch.avatar}');background-size:cover;background-position:center`
+    : '';
+  const nameHtml = ch.name
+    ? escapeHtml(ch.name)
+    : `<span style="opacity:0.45">${escapeHtml(fallbackName)}</span>`;
+  const linerHtml = ch.oneLiner
+    ? escapeHtml(ch.oneLiner)
+    : `<span style="opacity:0.4">暂无介绍</span>`;
+  return `
+    <div class="char-block" onclick="openCharacterEditor('${type}')">
+      <div class="char-card">
+        <div class="char-card-bg ${type === 'me' ? 'me' : 'other'}" style="${bgStyle}"></div>
+        ${ch.avatar ? '' : `<div class="char-card-watermark">${escapeHtml(getAvatarChar(ch.name, type === 'me' ? '我' : 'TA'))}</div>`}
+      </div>
+      <div class="char-one-liner">${linerHtml}</div>
+      <div class="char-name-divider"><span class="char-name-text">${nameHtml}</span></div>
+    </div>
+  `;
+}
+
 function renderSettings() {
   const container = document.getElementById('settings-content');
   const c = state.data.characters;
 
   let html = '';
 
-  // 我的人设卡 - full-bleed background, no avatar frame
-  const meBgStyle = c.me.avatar
-    ? `background-image:url('${c.me.avatar}');background-size:cover;background-position:center`
-    : '';
-  html += `
-    <div class="char-card" onclick="openCharacterEditor('me')">
-      <div class="char-card-bg me" style="${meBgStyle}"></div>
-      ${c.me.avatar ? '' : `<div class="char-card-watermark">${escapeHtml(getAvatarChar(c.me.name, '我'))}</div>`}
-      <div class="char-card-overlay"></div>
-      <div class="char-card-info">
-        <div class="char-card-name">${escapeHtml(c.me.name) || '<span style="opacity:0.5">点击设置我的人设</span>'}</div>
-        <div class="char-card-liner">${escapeHtml(c.me.oneLiner) || '<span style="opacity:0.4;font-size:12px;">未设置</span>'}</div>
-      </div>
-    </div>
-  `;
-
-  // 他的人设卡
-  const otherBgStyle = c.other.avatar
-    ? `background-image:url('${c.other.avatar}');background-size:cover;background-position:center`
-    : '';
-  html += `
-    <div class="char-card" onclick="openCharacterEditor('other')">
-      <div class="char-card-bg other" style="${otherBgStyle}"></div>
-      ${c.other.avatar ? '' : `<div class="char-card-watermark">${escapeHtml(getAvatarChar(c.other.name, 'TA'))}</div>`}
-      <div class="char-card-overlay"></div>
-      <div class="char-card-info">
-        <div class="char-card-name">${escapeHtml(c.other.name) || '<span style="opacity:0.5">点击设置TA的人设</span>'}</div>
-        <div class="char-card-liner">${escapeHtml(c.other.oneLiner) || '<span style="opacity:0.4;font-size:12px;">未设置</span>'}</div>
-      </div>
-    </div>
-  `;
+  // 角色区块：纯视觉头像卡 → 一句话介绍 → 名字（两侧渐隐细线，文字不上卡）
+  html += buildCharBlock('me', c.me, '主控');
+  html += buildCharBlock('other', c.other, 'TA');
 
   // 外部规则 - collapsible section
   html += `
@@ -7634,16 +7728,8 @@ function renderSettings() {
     </div>
   `;
 
-  // 操作按钮
-  html += `
-    <div class="settings-actions">
-      <button class="settings-action-btn" onclick="saveGame()">存档</button>
-      <button class="settings-action-btn" onclick="showLoadModal(false)">读档</button>
-      <button class="settings-action-btn" onclick="confirmReturnTitle()">返回标题</button>
-    </div>
-  `;
-
   container.innerHTML = html;
+  updateChatHeaderTitle();
 }
 
 function toggleRulesSection() {
@@ -7846,7 +7932,15 @@ function handleAvatarUpload(event) {
       canvas.width = w; canvas.height = h;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, w, h);
-      const compressed = canvas.toDataURL('image/png');
+      // 压缩为有损格式：WebP > JPEG > PNG 兜底。
+      // 之前用无损 PNG，照片类头像常达 100-300KB base64，
+      // 头像会被存进每条消息渲染与每次自动保存的序列化里，体积直接放大卡顿感。
+      // WebP/JPEG 0.85 通常只有 20-60KB，画质在 400px 头像尺寸下无肉眼差异。
+      let compressed = canvas.toDataURL('image/webp', 0.85);
+      if (!compressed.startsWith('data:image/webp')) {
+        compressed = canvas.toDataURL('image/jpeg', 0.85);
+        if (!compressed.startsWith('data:image/jpeg')) compressed = canvas.toDataURL('image/png');
+      }
       const frame = document.querySelector('.avatar-frame');
       if (frame) {
         frame.innerHTML = `<img src="${compressed}" alt="头像"><div class="avatar-frame-hint">更换头像</div>`;
@@ -7884,8 +7978,9 @@ function saveCharacter(type) {
   showToast('人设已保存');
 }
 
-/* ========== API配置 ========== */
+/* ========== API配置（全屏页面，与全局设定同构） ========== */
 function showApiConfig() {
+  closeNav();
   const cfg = state.data.apiConfig;
   const hasKey = !!cfg.apiKey;
   const hasModels = Array.isArray(cfg.models) && cfg.models.length > 0;
@@ -7905,45 +8000,39 @@ function showApiConfig() {
     modelFieldHtml = `<input type="text" class="form-input" id="api-model" value="${escapeHtml(cfg.model)}" placeholder="输入或拉取模型名">`;
   }
 
-  showModal(`
-    <div class="modal">
-      <div class="modal-header">API配置</div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label">API平台地址</label>
-          <input type="text" class="form-input" id="api-baseurl" value="${escapeHtml(cfg.baseUrl)}" placeholder="如 https://api520.pro">
-        </div>
-        <div class="form-group">
-          <label class="form-label">API Key ${hasKey ? '<span class="api-status on">已配置</span>' : '<span class="api-status off">未配置</span>'}</label>
-          <input type="password" class="form-input" id="api-key" value="${escapeHtml(cfg.apiKey)}" placeholder="sk-...">
-        </div>
-        <div class="form-group">
-          <label class="form-label">模型</label>
-          <div style="display:flex;gap:8px;align-items:center;">
-            <div style="flex:1;">${modelFieldHtml}</div>
-            <button class="modal-btn" id="fetch-models-btn" onclick="fetchModels()" style="white-space:nowrap;">拉取模型</button>
-          </div>
-          <div id="fetch-models-status" style="font-size:11px;color:var(--text-dim);margin-top:6px;min-height:14px;"></div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">温度 <span id="temp-value" style="color:var(--gold);">${(cfg.temperature != null ? cfg.temperature : 0.85).toFixed(2)}</span> <span style="font-size:11px;color:var(--text-dim);font-weight:400;">（低=稳定 · 高=创意）</span></label>
-          <input type="range" class="form-input" id="api-temperature" min="0" max="2" step="0.05" value="${cfg.temperature != null ? cfg.temperature : 0.85}" style="padding:0;height:auto;" oninput="document.getElementById('temp-value').textContent=parseFloat(this.value).toFixed(2)">
-        </div>
-        <div class="form-group">
-          <label class="form-label">频率惩罚 <span id="freq-value" style="color:var(--gold);">${(cfg.frequencyPenalty != null ? cfg.frequencyPenalty : 0.4).toFixed(2)}</span> <span style="font-size:11px;color:var(--text-dim);font-weight:400;">（抑制重复用词）</span></label>
-          <input type="range" class="form-input" id="api-frequency-penalty" min="0" max="2" step="0.05" value="${cfg.frequencyPenalty != null ? cfg.frequencyPenalty : 0.4}" style="padding:0;height:auto;" oninput="document.getElementById('freq-value').textContent=parseFloat(this.value).toFixed(2)">
-        </div>
-        <div class="form-group">
-          <label class="form-label">存在惩罚 <span id="pres-value" style="color:var(--gold);">${(cfg.presencePenalty != null ? cfg.presencePenalty : 0.3).toFixed(2)}</span> <span style="font-size:11px;color:var(--text-dim);font-weight:400;">（鼓励引入新话题）</span></label>
-          <input type="range" class="form-input" id="api-presence-penalty" min="0" max="2" step="0.05" value="${cfg.presencePenalty != null ? cfg.presencePenalty : 0.3}" style="padding:0;height:auto;" oninput="document.getElementById('pres-value').textContent=parseFloat(this.value).toFixed(2)">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="modal-btn" onclick="closeModal()">关闭</button>
-        <button class="modal-btn primary" onclick="saveApiConfig()">保存</button>
-      </div>
+  document.getElementById('api-config-body').innerHTML = `
+    <div class="form-group">
+      <label class="form-label">API平台地址</label>
+      <input type="text" class="form-input" id="api-baseurl" value="${escapeHtml(cfg.baseUrl)}" placeholder="如 https://api520.pro">
     </div>
-  `);
+    <div class="form-group">
+      <label class="form-label">API Key ${hasKey ? '<span class="api-status on">已配置</span>' : '<span class="api-status off">未配置</span>'}</label>
+      <input type="password" class="form-input" id="api-key" value="${escapeHtml(cfg.apiKey)}" placeholder="sk-...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">模型</label>
+      <div style="display:flex;gap:8px;align-items:stretch;">
+        <div style="flex:3;">${modelFieldHtml}</div>
+        <button class="modal-btn fetch-models-btn" id="fetch-models-btn" onclick="fetchModels()" style="white-space:nowrap;">拉取模型</button>
+      </div>
+      <div id="fetch-models-status" style="font-size:11px;color:var(--text-dim);margin-top:6px;min-height:14px;"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">温度 <span id="temp-value" style="color:var(--gold);">${(cfg.temperature != null ? cfg.temperature : 0.85).toFixed(2)}</span> <span style="font-size:11px;color:var(--text-dim);font-weight:400;">（低=稳定 · 高=创意）</span></label>
+      <input type="range" class="form-input" id="api-temperature" min="0" max="2" step="0.05" value="${cfg.temperature != null ? cfg.temperature : 0.85}" style="padding:0;height:auto;" oninput="document.getElementById('temp-value').textContent=parseFloat(this.value).toFixed(2)">
+    </div>
+    <div class="form-group">
+      <label class="form-label">频率惩罚 <span id="freq-value" style="color:var(--gold);">${(cfg.frequencyPenalty != null ? cfg.frequencyPenalty : 0.4).toFixed(2)}</span> <span style="font-size:11px;color:var(--text-dim);font-weight:400;">（抑制重复用词）</span></label>
+      <input type="range" class="form-input" id="api-frequency-penalty" min="0" max="2" step="0.05" value="${cfg.frequencyPenalty != null ? cfg.frequencyPenalty : 0.4}" style="padding:0;height:auto;" oninput="document.getElementById('freq-value').textContent=parseFloat(this.value).toFixed(2)">
+    </div>
+    <div class="form-group">
+      <label class="form-label">存在惩罚 <span id="pres-value" style="color:var(--gold);">${(cfg.presencePenalty != null ? cfg.presencePenalty : 0.3).toFixed(2)}</span> <span style="font-size:11px;color:var(--text-dim);font-weight:400;">（鼓励引入新话题）</span></label>
+      <input type="range" class="form-input" id="api-presence-penalty" min="0" max="2" step="0.05" value="${cfg.presencePenalty != null ? cfg.presencePenalty : 0.3}" style="padding:0;height:auto;" oninput="document.getElementById('pres-value').textContent=parseFloat(this.value).toFixed(2)">
+    </div>
+    <div class="api-save-note">API配置为全局共享 · 所有角色通用 · 点右上角「保存」生效</div>
+  `;
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('api-config-screen').style.display = 'flex';
 }
 
 // 拉取平台下属模型列表
@@ -8010,34 +8099,38 @@ function saveApiConfig() {
   if (freqEl) cfg.frequencyPenalty = parseFloat(freqEl.value);
   if (presEl) cfg.presencePenalty = parseFloat(presEl.value);
   saveToStorage();
-  closeModal();
+  // 从 API 配置页返回聊天主界面
+  backToHome();
   showToast('API配置已保存');
 }
 
 /* ========== 全局设定（全局规则） ========== */
 
-// 跳转到全局设定页面
+// 打开全局设定页（从角色抽屉进入，覆盖在聊天主界面之上）
 function showGlobalRules() {
-  document.getElementById('home-screen').style.display = 'none';
+  closeNav();
+  document.getElementById('game-screen').style.display = 'none';
   document.getElementById('global-rules-screen').style.display = 'flex';
   renderGlobalRules();
 }
 
-// 返回主界面
+// 返回聊天主界面（全局设定 / API配置 共用的返回逻辑）
 function backToHome() {
   document.getElementById('global-rules-screen').style.display = 'none';
-  document.getElementById('home-screen').style.display = 'flex';
+  document.getElementById('api-config-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'flex';
 }
 
 // ========== 数据备份/导入 ==========
 function showBackupModal() {
+  closeNav();
   showModal(`
     <div class="modal">
       <div class="modal-header">数据备份</div>
       <div class="modal-body" style="padding:20px;">
         <p style="font-size:13px;color:var(--text-dim);margin:0 0 16px;line-height:1.6;">
-          导出当前游戏数据和所有存档为文件保存到本地，防止数据丢失。<br>
-          也可通过导入文件恢复之前备份的数据。
+          游玩进度已全程自动保存到本机。<br>
+          可导出全部角色数据为备份文件防止丢失，或从备份文件恢复。
         </p>
         <button class="settings-action-btn" onclick="exportData()" style="width:100%;margin-bottom:10px;display:flex;flex-direction:column;gap:2px;align-items:center;">
           <span>导出数据</span>
@@ -8063,7 +8156,14 @@ function exportData() {
       _version: APP_VERSION,
       _exportTime: Date.now(),
       currentData: state.data,
-      saves: getAllSaves()
+      // 多角色档案：全部角色 + 全局配置（存档系统已移除，进度实时保存在角色档案中）
+      profiles: {
+        order: profiles.order,
+        activeId: profiles.activeId,
+        globals: profiles.globals,
+        meta: profiles.meta,
+        data: profiles.data
+      }
     };
     const jsonStr = JSON.stringify(backup, null, 2);
     const blob = new Blob([jsonStr], { type: 'application/json' });
@@ -8084,37 +8184,7 @@ function exportData() {
   }
 }
 
-function exportSavesOnly() {
-  try {
-    const saves = getAllSaves();
-    if (Object.keys(saves).length === 0) {
-      showToast('暂无存档可导出');
-      return;
-    }
-    const backup = {
-      _type: 'echo_saves_backup',
-      _version: APP_VERSION,
-      _exportTime: Date.now(),
-      saves: saves
-    };
-    const jsonStr = JSON.stringify(backup, null, 2);
-    const blob = new Blob([jsonStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const dateStr = new Date().toISOString().slice(0, 10);
-    a.href = url;
-    a.download = `echo_saves_${dateStr}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    showToast('存档已导出');
-    closeModal();
-  } catch(e) {
-    console.error('导出失败', e);
-    showToast('导出失败：' + e.message);
-  }
-}
+// exportSavesOnly 已随存档系统一并移除
 
 function importData(event) {
   const file = event.target.files[0];
@@ -8129,20 +8199,42 @@ function importData(event) {
       }
 
       let importMsg = '';
-      let needReload = false;
 
-      // 恢复存档数据
-      if (backup.saves) {
-        const existingSaves = getAllSaves();
-        // 合并存档：新导入的覆盖同名槽位
-        const merged = { ...existingSaves, ...backup.saves };
-        writeAllSaves(merged);
-        importMsg += '存档数据已恢复（' + Object.keys(backup.saves).length + '个槽位）';
-        needReload = true;
+      // 恢复多角色档案（新格式备份）：合并角色，同名ID覆盖
+      // 注：存档系统已移除，旧备份中的 saves 字段不再恢复（进度都在角色档案里）
+      if (backup.profiles && backup.profiles.data) {
+        const inc = backup.profiles;
+        Object.keys(inc.data).forEach(id => {
+          profiles.data[id] = inc.data[id];
+          profiles.meta[id] = (inc.meta && inc.meta[id]) || profiles.meta[id] ||
+            { name: '', avatar: '', createdAt: Date.now(), updatedAt: Date.now() };
+        });
+        (Array.isArray(inc.order) ? inc.order : []).forEach(id => {
+          if (profiles.data[id] && !profiles.order.includes(id)) profiles.order.push(id);
+        });
+        if (inc.globals) {
+          if (inc.globals.apiConfig) profiles.globals.apiConfig = inc.globals.apiConfig;
+          if (Array.isArray(inc.globals.globalRules)) profiles.globals.globalRules = inc.globals.globalRules;
+        }
+        if (!profiles.activeId && profiles.order.length) profiles.activeId = profiles.order[0];
+        persistProfiles();
+        if (profiles.activeId) {
+          loadProfileIntoState(profiles.activeId);
+          resetRuntimeState();
+          saveToStorage();
+          applyBgImage();
+          enterChatMain();
+        } else {
+          renderNavCharList();
+        }
+        importMsg += (importMsg ? '；' : '') + '角色数据已恢复（' + Object.keys(inc.data).length + '个角色）';
+        closeModal();
+        showToast(importMsg);
+        return;
       }
 
-      // 恢复当前游戏数据
-      if (backup.currentData && backup._type === 'echo_full_backup') {
+      // 恢复当前游戏数据（旧格式备份兼容）
+      if (backup.currentData && backup._type === 'echo_full_backup' && !backup.profiles) {
         showModal(`
           <div class="modal">
             <div class="modal-header">确认导入当前数据</div>
@@ -8167,10 +8259,6 @@ function importData(event) {
         showToast(importMsg);
       }
       closeModal();
-      if (needReload) {
-        // 刷新加载游戏弹窗
-        setTimeout(() => showLoadModal(true), 300);
-      }
     } catch(err) {
       console.error('导入失败', err);
       showToast('导入失败：文件解析错误');
@@ -8184,10 +8272,23 @@ function importData(event) {
 function confirmImportCurrentData() {
   if (!window._pendingImportData) return;
   try {
-    state.data = deepMerge(structuredClone(DEFAULT_DATA), structuredClone(window._pendingImportData));
+    const parsed = structuredClone(window._pendingImportData);
+    // 旧格式备份：装入当前角色；若还没有任何角色则创建一个
+    if (!profiles.activeId) {
+      const id = 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+      profiles.order.unshift(id);
+      profiles.activeId = id;
+    }
+    if (parsed.apiConfig) profiles.globals.apiConfig = migrateApiConfig(parsed.apiConfig);
+    if (Array.isArray(parsed.globalRules)) profiles.globals.globalRules = parsed.globalRules;
+    state.data = deepMerge(structuredClone(DEFAULT_DATA), parsed);
+    applyGlobalsToState();
+    resetRuntimeState();
     saveToStorage();
+    applyBgImage();
+    enterChatMain();
     delete window._pendingImportData;
-    showToast('数据已恢复，请重新进入游戏');
+    showToast('数据已恢复');
     closeModal();
   } catch(e) {
     console.error('恢复失败', e);
@@ -8287,394 +8388,11 @@ function saveGlobalRule(id) {
   renderGlobalRules();
   showToast('已保存');
 }
-const MANUAL_SLOTS = 9; // 9 manual save slots
-
-// Get all saves (slots) as an object keyed by slot id
-// 优先从 IndexedDB 内存缓存读取，降级 localStorage
-// Automatically migrates/cleans up old array-format saves
-function getAllSaves() {
-  const raw = _memCache[SAVES_KEY] || localStorage.getItem(SAVES_KEY);
-  if (!raw) return {};
-  const parsed = JSON.parse(raw);
-  // Old format was an array — discard it and start fresh with slot-based object
-  if (Array.isArray(parsed)) return {};
-  return parsed;
-}
-
-function writeAllSaves(saves) {
-  try {
-    const jsonStr = JSON.stringify(saves);
-    _memCache[SAVES_KEY] = jsonStr;
-    if (_dbReady) {
-      dbPut(SAVES_KEY, jsonStr).catch(() => {});
-    } else {
-      localStorage.setItem(SAVES_KEY, jsonStr);
-    }
-    return true;
-  } catch(e) {
-    console.error('存档写入失败', e);
-    return false;
-  }
-}
-
-function buildSaveData(slotLabel, name) {
-  return {
-    id: 'save_' + Date.now(),
-    slot: slotLabel,
-    name: name || '',
-    timestamp: Date.now(),
-    data: structuredClone(state.data)
-  };
-}
-
-function formatSaveTime(ts) {
-  if (!ts) return '空';
-  const d = new Date(ts);
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-}
-
-function buildSaveSummary(data) {
-  if (!data) return '';
-  const chatCount = (data.chatHistory || []).length;
-  const eventCount = (data.eventHistory || []).length;
-  const memCount = (data.memoryCards || []).length;
-  return `对话 ${chatCount} / 事件 ${eventCount} / 记忆 ${memCount}`;
-}
-
-// ========== 存档（动态槽位，无上限） ==========
-
-// 获取下一个可用槽位编号
-function getNextSlotNum() {
-  const saves = getAllSaves();
-  let max = 0;
-  Object.keys(saves).forEach(key => {
-    if (key.startsWith('slot_') && key !== 'slot_auto') {
-      const num = parseInt(key.slice(5));
-      if (!isNaN(num) && num > max) max = num;
-    }
-  });
-  return max + 1;
-}
-
-// 获取所有手动存档（排除自动存档），按编号排序
-function getManualSaves() {
-  const saves = getAllSaves();
-  const list = [];
-  Object.keys(saves).forEach(key => {
-    if (key.startsWith('slot_') && key !== 'slot_auto') {
-      list.push({ slotId: key, ...saves[key] });
-    }
-  });
-  list.sort((a, b) => {
-    const na = parseInt(a.slotId.slice(5)) || 0;
-    const nb = parseInt(b.slotId.slice(5)) || 0;
-    return na - nb;
-  });
-  return list;
-}
-
-function saveGame() {
-  const manualSaves = getManualSaves();
-  let listHtml = '';
-
-  if (manualSaves.length === 0) {
-    listHtml = '<div class="save-empty">暂无存档<br>点击下方「新建存档」开始</div>';
-  } else {
-    manualSaves.forEach(s => {
-      const timeStr = formatSaveTime(s.timestamp);
-      const summary = buildSaveSummary(s.data);
-      const displayName = s.name ? escapeHtml(s.name) : s.slotId.replace('slot_', '槽位 ');
-      listHtml += `
-        <div class="save-item" onclick="promptSaveName('${s.slotId}', ${false})">
-          <div class="save-info">
-            <div class="save-time">${displayName}（覆盖）</div>
-            <div class="save-detail">${timeStr}${summary ? ' · ' + summary : ''}</div>
-          </div>
-          <span style="font-size:11px;color:var(--gold-faint);letter-spacing:2px;">覆盖</span>
-        </div>
-      `;
-    });
-  }
-
-  // 新建存档按钮
-  listHtml += `
-    <div class="save-item" style="justify-content:center;border-left:2px solid var(--accent);" onclick="promptSaveName(null, false)">
-      <span style="font-size:14px;color:var(--text);letter-spacing:3px;">+ 新建存档</span>
-    </div>
-  `;
-
-  showModal(`
-    <div class="modal">
-      <div class="modal-header">存档</div>
-      <div class="modal-body">
-        <div class="save-list">${listHtml}</div>
-      </div>
-      <div class="modal-footer">
-        <button class="modal-btn" onclick="closeModal()">取消</button>
-      </div>
-    </div>
-  `);
-}
-
-// Prompt user to enter a save name before saving
-// slotId: 已有槽位ID（覆盖存档），null 表示新建存档
-function promptSaveName(slotId, isOverwrite) {
-  const saves = getAllSaves();
-  const existing = slotId ? saves[slotId] : null;
-  const existingName = existing && existing.name ? existing.name : '';
-
-  const headerText = slotId ? (isOverwrite ? '覆盖存档' : '存入存档') : '新建存档';
-
-  showModal(`
-    <div class="modal">
-      <div class="modal-header">${headerText}</div>
-      <div class="modal-body">
-        <input type="text" id="save-name-input" class="save-name-input" placeholder="输入存档名..." value="${escapeHtml(existingName)}" onkeydown="if(event.key==='Enter')confirmSaveToSlot('${slotId || ''}')">
-      </div>
-      <div class="modal-footer">
-        <button class="modal-btn" onclick="saveGame()">返回</button>
-        <button class="modal-btn primary" onclick="confirmSaveToSlot('${slotId || ''}')">确认存入</button>
-      </div>
-    </div>
-  `);
-  // Auto-focus the input
-  setTimeout(() => {
-    const input = document.getElementById('save-name-input');
-    if (input) {
-      input.focus();
-      input.select();
-    }
-  }, 100);
-}
-
-function confirmSaveToSlot(slotId) {
-  const nameInput = document.getElementById('save-name-input');
-  const name = nameInput ? nameInput.value.trim() : '';
-  const saves = getAllSaves();
-  // 如果没传 slotId，分配新编号
-  const targetSlotId = slotId || ('slot_' + getNextSlotNum());
-  saves[targetSlotId] = buildSaveData(targetSlotId, name);
-  const ok = writeAllSaves(saves);
-  closeModal();
-  if (ok) {
-    showToast('已存入「' + (name || targetSlotId.replace('slot_', '槽位 ')) + '」');
-  } else {
-    showToast('存档失败：存储空间不足');
-  }
-}
-
-// ========== 自动存档（完善记忆时触发） ==========
-function autoSave() {
-  const saves = getAllSaves();
-  saves['slot_auto'] = buildSaveData('slot_auto');
-  const ok = writeAllSaves(saves);
-  if (!ok) {
-    console.warn('自动存档失败：存储空间不足');
-  }
-  return ok;
-}
-
-// ========== 读档 ==========
-function showLoadModal(fromHome) {
-  const saves = getAllSaves();
-  let listHtml = '';
-
-  // Auto save slot first
-  const autoSave = saves['slot_auto'];
-  if (autoSave) {
-    const autoTime = formatSaveTime(autoSave.timestamp);
-    const autoSummary = buildSaveSummary(autoSave.data);
-    listHtml += `
-      <div class="save-item auto-slot" onclick="confirmLoadSlot('slot_auto', ${fromHome})">
-        <div class="save-info">
-          <div class="save-time">自动存档</div>
-          <div class="save-detail">${autoTime}${autoSummary ? ' · ' + autoSummary : ''}</div>
-        </div>
-      </div>
-    `;
-  }
-
-  // Manual saves (only show slots that have data)
-  const manualSaves = getManualSaves();
-  if (manualSaves.length === 0 && !autoSave) {
-    listHtml = '<div class="save-empty">暂无存档</div>';
-  } else {
-    manualSaves.forEach(s => {
-      const timeStr = formatSaveTime(s.timestamp);
-      const summary = buildSaveSummary(s.data);
-      const displayName = s.name ? escapeHtml(s.name) : s.slotId.replace('slot_', '槽位 ');
-      listHtml += `
-        <div class="save-item" onclick="confirmLoadSlot('${s.slotId}', ${fromHome})">
-          <div class="save-info">
-            <div class="save-time">${displayName}</div>
-            <div class="save-detail">${timeStr}${summary ? ' · ' + summary : ''}</div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center;">
-            <button class="global-rule-card-btn danger" onclick="event.stopPropagation();deleteSaveSlot('${s.slotId}', ${fromHome})">删除</button>
-          </div>
-        </div>
-      `;
-    });
-  }
-
-  showModal(`
-    <div class="modal">
-      <div class="modal-header">加载存档</div>
-      <div class="modal-body">
-        <div class="save-list">${listHtml}</div>
-      </div>
-      <div class="modal-footer">
-        <button class="modal-btn" onclick="closeModal()">关闭</button>
-      </div>
-    </div>
-  `);
-}
-
-// Confirm before loading: current unsaved progress will be saved first
-function confirmLoadSlot(slotId, fromHome) {
-  const saves = getAllSaves();
-  const save = saves[slotId];
-  if (!save) {
-    showToast('存档不存在');
-    return;
-  }
-  const displayName = save.name || (slotId === 'slot_auto' ? '自动存档' : '存档');
-
-  showModal(`
-    <div class="modal">
-      <div class="modal-header">载入存档</div>
-      <div class="modal-body" style="text-align:center;color:var(--text-dim);font-size:13px;line-height:1.8;">
-        当前进度将自动保存<br>确定加载「${escapeHtml(displayName)}」吗？
-      </div>
-      <div class="modal-footer">
-        <button class="modal-btn" onclick="showLoadModal(${fromHome})">取消</button>
-        <button class="modal-btn primary" onclick="loadFromSlot('${slotId}', ${fromHome})">确认载入</button>
-      </div>
-    </div>
-  `);
-}
-
-// 删除存档
-function deleteSaveSlot(slotId, fromHome) {
-  const saves = getAllSaves();
-  const save = saves[slotId];
-  const displayName = save && save.name ? save.name : slotId.replace('slot_', '槽位 ');
-  showModal(`
-    <div class="modal">
-      <div class="modal-header">删除存档</div>
-      <div class="modal-body" style="text-align:center;color:var(--text-dim);font-size:13px;line-height:1.8;">
-        确定删除「${escapeHtml(displayName)}」吗？<br>此操作不可撤销。
-      </div>
-      <div class="modal-footer">
-        <button class="modal-btn" onclick="showLoadModal(${fromHome})">取消</button>
-        <button class="modal-btn primary" style="color:var(--danger);" onclick="confirmDeleteSave('${slotId}', ${fromHome})">确认删除</button>
-      </div>
-    </div>
-  `);
-}
-
-function confirmDeleteSave(slotId, fromHome) {
-  const saves = getAllSaves();
-  delete saves[slotId];
-  writeAllSaves(saves);
-  showToast('已删除');
-  showLoadModal(fromHome);
-}
-
-function loadFromSlot(slotId, fromHome) {
-  const saves = getAllSaves();
-  const save = saves[slotId];
-  if (!save) {
-    showToast('存档不存在');
-    return;
-  }
-  // Block if AI is generating to prevent data corruption
-  if (state.isLoading) {
-    showToast('正在生成中，请稍后再试');
-    return;
-  }
-  // Save current progress before loading (prevent data loss)
-  if (state.data) saveToStorage();
-  // Preserve API config & global rules — they should survive save/load (like confirmLoadScript)
-  const savedApiConfig = state.data ? structuredClone(state.data.apiConfig) : null;
-  const savedGlobalRules = state.data && state.data.globalRules ? structuredClone(state.data.globalRules) : null;
-  state.data = deepMerge(structuredClone(DEFAULT_DATA), save.data);
-  if (savedApiConfig) state.data.apiConfig = savedApiConfig;
-  if (savedGlobalRules) state.data.globalRules = savedGlobalRules;
-  // 迁移：检测旧格式快照（含"时间节点"或"空间位置"字段），清除后等下次事件重新生成
-  if (state.data.storyState && (state.data.storyState.includes('时间节点') || state.data.storyState.includes('空间位置'))) {
-    state.data.storyState = '';
-    state.data.storyStateStale = true;
-  }
-  // 迁移：旧字段 storyStateConsumed → storyStateStale
-  if ('storyStateConsumed' in state.data) {
-    delete state.data.storyStateConsumed;
-    state.data.storyStateStale = true; // 旧存档强制重新提炼快照
-  }
-  // Reset all runtime state to avoid stale leftovers
-  state.eventState = 'idle';
-  state.currentChainId = null;
-  state.quoteContext = null;
-  state.secretModuleType = null;
-  state.secretGenerating.clear();
-  secretPageHtml = null;
-  showSecretNav();
-  state.chatSessionId++;
-  state.rulesExpanded = false;
-  saveToStorage();
-  applyBgImage();
-  closeModal();
-  if (fromHome) {
-    document.getElementById('home-screen').style.display = 'none';
-    document.getElementById('game-screen').style.display = 'flex';
-    // Force re-render all tabs by resetting currentTab
-    state.currentTab = '';
-    renderChat();
-    renderBonds();
-    renderMemory();
-    renderSecretHome();
-    renderSettings();
-    state.currentTab = 'chat';
-    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-    document.getElementById('tab-chat').style.display = 'flex';
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.tab === 'chat');
-    });
-  } else {
-    // Already in game — re-render current tab
-    state.currentTab = '';
-    renderChat();
-    renderBonds();
-    renderMemory();
-    renderSecretHome();
-    renderSettings();
-    state.currentTab = 'settings';
-    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-    document.getElementById('tab-settings').style.display = 'flex';
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.tab === 'settings');
-    });
-  }
-  // 三个界面全部滚动到最底部
-  scrollAllToBottom();
-  showToast('读档成功');
-}
-
-function confirmReturnTitle() {
-  showModal(`
-    <div class="modal">
-      <div class="modal-header">返回标题</div>
-      <div class="modal-body" style="text-align:center;color:var(--text-dim);font-size:13px;">
-        当前进度已自动保存，确定要返回标题界面吗？
-      </div>
-      <div class="modal-footer">
-        <button class="modal-btn" onclick="closeModal()">取消</button>
-        <button class="modal-btn primary" onclick="closeModal();returnToTitle()">确认</button>
-      </div>
-    </div>
-  `);
-}
-
+/* ========== 存档系统已移除 ==========
+ * 按需求删除了手动存档/读档（槽位）功能：游玩全程自动保存，
+ * 每条消息/事件/设定变更后立即落盘（IndexedDB，降级 localStorage），
+ * 切后台、关闭页面前也会强制保存一次。历史存档数据在启动时自动清理。
+ */
 /* ========== 启动 ========== */
 init();
 </script>
