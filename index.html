@@ -5002,7 +5002,7 @@ async function callAI(userMessage, mode) {
     const maxTokens = mode === 'secret-news' ? 8000
       : mode === 'secret-mind' ? 6000
       : mode.startsWith('secret-') ? 4000
-      : 2000;
+      : 16384;
     // 自动重试：网络/超时类错误重试 1 次，内容审查类不重试
     return await callWithRetry(() => callOpenAICompatible(messages, config, maxTokens), 1);
   } catch(e) {
