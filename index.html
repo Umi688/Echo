@@ -3870,6 +3870,17 @@ function loadProfileIntoState(id) {
     delete state.data.storyStateConsumed;
     state.data.storyStateStale = true;
   }
+  // 会话计数器对齐：chatSessionId 是运行时变量、不随档案持久化，页面刷新后从 0
+  // 重新回放（0,1,2,...）。聊天时间戳靠「相邻消息 sessionId 变化」判定会话边界，
+  // 回放的计数器会与历史消息的 sessionId 撞号（如历史最后是会话1，刷新后新快照
+  // 开的会话又编号1）→ 新会话被误判为旧会话延续 → 生成新记忆快照后不再出新时间戳。
+  // 对齐到最后一条消息的会话后：刷新后续聊沿用原会话（不插假时间戳）；
+  // 下次快照过期时的 sessionId+1 必然与最后一条不同 → 时间戳恢复显示。
+  const _hist = state.data.chatHistory;
+  if (_hist && _hist.length > 0) {
+    const _lastSid = _hist[_hist.length - 1].sessionId;
+    if (typeof _lastSid === 'number') state.chatSessionId = _lastSid;
+  }
 }
 
 // 旧版单角色数据 → 自动迁移为第一个角色档案
