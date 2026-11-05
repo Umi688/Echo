@@ -834,6 +834,11 @@ html:-webkit-full-screen #app{
   flex-wrap:nowrap !important;
   min-height:0;
 }
+/* Trace 模式下遮罩与聊天页的 chat-mask 一致，保证背景色彩相同 */
+#tab-secret:has(#secret-content.trace-mode) > .bg-overlay,
+.tab-content:has(> #secret-content.trace-mode) > .bg-overlay{
+  background:rgba(232,238,246,0.3);
+}
 /* 子模块卡片：默认为竖向紧凑卡，每排2个 */
 .secret-module{
   flex:0 0 calc(50% - 5px);
@@ -948,40 +953,57 @@ html:-webkit-full-screen #app{
 .secret-detail-title.trace-title{
   flex:1;
   text-align:center;
-  letter-spacing:0;
-  text-indent:0;
-  font-size:13px;
-  font-weight:500;
+  letter-spacing:5px;
+  text-indent:5px;
+  font-size:15px;
+  font-weight:300;
   opacity:1;
   color:var(--text);
   padding:0;
-  line-height:1.5;
+  pointer-events:none;
 }
+/* Trace 顶部导航栏：完全对齐聊天页 tab-header 的视觉 */
 .secret-page-header.trace-header{
   display:flex;
   align-items:center;
-  gap:8px;
-  padding:8px 12px;
+  padding:10px 20px 8px;
   margin:0;
-  /* 原为 blur(12px)：吸顶元素在滚动容器内，滚动时每帧重采样；提高底色不透明度替代 */
-  background:rgba(255,255,255,0.94);
-  border-bottom:1px solid rgba(138,168,208,0.2);
+  background:transparent;
+  border-bottom:none;
   border-radius:0;
-  box-shadow:0 1px 3px rgba(26,43,60,0.06);
-  position:sticky;
-  top:0;
+  box-shadow:none;
+  position:relative;
   z-index:10;
-  line-height:1.5;
+  flex-shrink:0;
+  font-size:15px;
+  font-weight:300;
+  letter-spacing:5px;
+  text-indent:5px;
+  text-align:center;
 }
+/* 返回按钮：对齐聊天页左上角按钮（fs-btn）的位置与尺寸 */
 .secret-page-header.trace-header .secret-back{
+  position:absolute;
+  left:14px;
+  top:10px;
+  bottom:8px;
+  margin:auto;
+  width:30px;
+  height:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0;
   padding:0;
-  font-size:13px;
-  color:var(--text);
+  background:transparent;
+  font-size:16px;
+  color:var(--text-dim);
   font-weight:400;
+  z-index:2;
 }
 .trace-back-icon{
-  width:18px;
-  height:18px;
+  width:16px;
+  height:16px;
   display:block;
 }
 /* Full-screen records view */
@@ -1024,7 +1046,7 @@ html:-webkit-full-screen #app{
   min-height:0;
 }
 .secret-page-body.trace-body{
-  padding:4px 16px 20px;
+  padding:16px 16px 8px;
 }
 .secret-record-view-content{
   padding:4px 0 8px;
@@ -2057,41 +2079,46 @@ html:-webkit-full-screen #app{
   padding-bottom:0;
 }
 
-/* Trace: 私聊对话 */
+/* Trace: 私聊对话（视觉完全对齐聊天页的消息列表） */
 .trace-chat-wrap{
-  padding:4px 0;
+  padding:0;
   display:flex;
   flex-direction:column;
-  gap:12px;
+  gap:8px;
 }
 .trace-chat-timestamp{
   text-align:center;
   font-size:11px;
   color:var(--text-faint);
   margin:6px 0 2px;
+  font-weight:300;
+  letter-spacing:0.5px;
 }
 .trace-msg-row{
   display:flex;
   gap:8px;
-  max-width:78%;
+  max-width:82%;
 }
 .trace-msg-row.me{align-self:flex-end;flex-direction:row-reverse}
 .trace-msg-avatar{
-  width:38px;height:38px;
+  width:42px;height:42px;
   border-radius:3px;
+  overflow:hidden;
   flex-shrink:0;
+  background-size:cover;
+  background-position:center;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:15px;
+  font-size:16px;
   font-weight:300;
   color:rgba(58,111,165,0.7);
 }
 .trace-msg-avatar.me{
-  background:linear-gradient(135deg,#8AA8D0 0%,#EFF4FA 100%);
+  background-image:var(--av-ai,linear-gradient(135deg,#8AA8D0 0%,#EFF4FA 100%));
 }
 .trace-msg-avatar.other{
-  background:linear-gradient(135deg,#3A6FA5 0%,#8AA8D0 100%);
+  background-image:linear-gradient(135deg,#3A6FA5 0%,#8AA8D0 100%);
   color:rgba(255,255,255,0.85);
 }
 .trace-msg-body{
@@ -2104,21 +2131,28 @@ html:-webkit-full-screen #app{
 .trace-msg-row.other .trace-msg-body{align-items:flex-start}
 .trace-msg-bubble{
   padding:10px 13px;
-  border-radius:0;
-  font-size:14px;
+  font-size:14.5px;
   line-height:1.55;
   word-break:break-word;
+  font-family:"Noto Serif SC","Source Han Serif SC","Songti SC",serif;
+  font-weight:300;
+  color:var(--text);
 }
 .trace-msg-row.me .trace-msg-bubble{
-  background:rgba(138,168,208,0.72);
-  border-top-right-radius:0;
-  color:rgba(26,43,60,0.9);
+  background:rgba(138,168,208,0.9);
+  border-radius:12px 2px 12px 12px;
 }
 .trace-msg-row.other .trace-msg-bubble{
-  background:rgba(239,244,250,0.75);
-  border-top-left-radius:0;
-  color:rgba(26,43,60,0.85);
+  background:rgba(239,244,250,0.92);
+  border-radius:2px 12px 12px 12px;
 }
+/* 底部输入栏：仅作"拿着他手机"的视觉伪装，不可交互 */
+.trace-fake-bar{
+  pointer-events:none;
+  padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));
+}
+/* 记录详情里 trace 内容不再额外加内边距，与聊天页消息区一致 */
+.trace-body .secret-record-view-content{padding:0}
 
 /* Mind: 精神角落 */
 .mind-wrap{padding:4px 0}
@@ -3187,7 +3221,7 @@ input[type="range"].form-input::-moz-range-thumb:hover{background:var(--accent-b
 <div id="game-screen" class="screen" style="display:none">
 
   <!-- Chat Tab -->
-  <div id="tab-chat" class="tab-content has-bg">
+  <div id="tab-chat" class="tab-content has-bg" style="display:none">
     <div class="bg-overlay chat-mask"></div>
     <div class="tab-header"><button class="fs-btn" onclick="openNav()" title="角色列表"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button><span class="tab-header-title" id="chat-title">聊天</span><button class="bottom-btn" onclick="scrollToBottomTab('chat-messages')" title="置底"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg></button><button class="top-btn" onclick="scrollToTopTab('chat-messages')" title="置顶"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div>
     <div id="chat-messages"></div>
@@ -3202,7 +3236,7 @@ input[type="range"].form-input::-moz-range-thumb:hover{background:var(--accent-b
   </div>
 
   <!-- Bonds Tab -->
-  <div id="tab-bonds" class="tab-content has-bg" style="display:none">
+  <div id="tab-bonds" class="tab-content has-bg">
     <div class="bg-overlay"></div>
     <div class="tab-header"><button class="fs-btn" onclick="openNav()" title="角色列表"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button><span class="tab-header-title">羁绊</span><button class="bottom-btn" onclick="scrollToBottomTab('bonds-content')" title="置底"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg></button><button class="top-btn" onclick="scrollToTopTab('bonds-content')" title="置顶"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div>
     <div id="bonds-content"></div>
@@ -3340,8 +3374,8 @@ input[type="range"].form-input::-moz-range-thumb:hover{background:var(--accent-b
 
   <!-- Bottom Nav -->
   <nav id="bottom-nav">
-    <button class="nav-btn active" data-tab="chat" onclick="switchTab('chat')">聊天</button>
-    <button class="nav-btn" data-tab="bonds" onclick="switchTab('bonds')">羁绊</button>
+    <button class="nav-btn active" data-tab="bonds" onclick="switchTab('bonds')">羁绊</button>
+    <button class="nav-btn" data-tab="chat" onclick="switchTab('chat')">聊天</button>
     <button class="nav-btn" data-tab="memory" onclick="switchTab('memory')">记忆</button>
     <button class="nav-btn" data-tab="secret" onclick="switchTab('secret')">秘密</button>
     <button class="nav-btn" data-tab="settings" onclick="switchTab('settings')">设定</button>
@@ -3545,7 +3579,7 @@ let state = {
   chatSessionId: 0,
   chatSessionStartTime: 0,  // 当前轮对话开始的时间戳（用于顶部时间戳显示）
   isLoading: false,
-  currentTab: 'chat',
+  currentTab: 'bonds',
   rulesExpanded: false,
   quoteContext: null,
   secretGenIds: {},
@@ -4281,8 +4315,8 @@ function confirmCreateProfile() {
         <div class="modal-confirm-q">确定创建此角色吗？</div>
       </div>
       <div class="modal-footer">
-        <button class="modal-btn" onclick="closeModal()">取消</button>
         <button class="modal-btn primary" onclick="createProfileFromScript('custom')">确认新增</button>
+        <button class="modal-btn" onclick="closeModal()">取消</button>
       </div>
     </div>
   `);
@@ -4356,12 +4390,12 @@ function enterChatMain() {
   renderMemory();
   renderSecretHome();
   renderSettings();
-  // Now switch to chat
-  state.currentTab = 'chat';
+  // Now switch to bonds
+  state.currentTab = 'bonds';
   document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-  document.getElementById('tab-chat').style.display = 'flex';
+  document.getElementById('tab-bonds').style.display = 'flex';
   document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.tab === 'chat');
+    btn.classList.toggle('active', btn.dataset.tab === 'bonds');
   });
   updateChatHeaderTitle();
   renderNavCharList();
@@ -4457,8 +4491,8 @@ function confirmDeleteProfile(id) {
         确定删除「${escapeHtml(name)}」吗？<br>该角色的全部聊天记录与进度将一并删除，不可撤销。
       </div>
       <div class="modal-footer">
-        <button class="modal-btn" onclick="closeModal()">取消</button>
         <button class="modal-btn primary" style="color:var(--danger);" onclick="deleteProfile('${id}')">确认删除</button>
+        <button class="modal-btn" onclick="closeModal()">取消</button>
       </div>
     </div>
   `);
@@ -4559,6 +4593,10 @@ function switchTab(tab) {
     document.querySelectorAll('.nav-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.tab === tab);
     });
+    // 显示后再置底（隐藏状态下设置 scrollTop 无效）
+    const scrollTarget = { chat: 'chat-messages', bonds: 'bonds-content', memory: 'memory-cards' }[tab];
+    const scrollEl = scrollTarget ? document.getElementById(scrollTarget) : null;
+    if (scrollEl) scrollEl.scrollTop = scrollEl.scrollHeight;
     return;
   }
 
@@ -4588,6 +4626,11 @@ function switchTab(tab) {
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.tab === tab);
   });
+
+  // 隐藏状态下设置 scrollTop 无效，显示之后再置底，延续渲染函数原本的"滚到最新"
+  const scrollTarget = { chat: 'chat-messages', bonds: 'bonds-content', memory: 'memory-cards' }[tab];
+  const scrollEl = scrollTarget ? document.getElementById(scrollTarget) : null;
+  if (scrollEl) scrollEl.scrollTop = scrollEl.scrollHeight;
 }
 
 /* ========== 工具函数 ========== */
@@ -4860,7 +4903,7 @@ function buildHistoryMessages(mode, isContinuation) {
   } else if (mode === 'event') {
     // 剧情模式：主上下文是剧情事件链，跨模块注入近期聊天
     primary = state.data.eventHistory.flatMap(e => [
-      { role: 'user', content: `剧情愿望：${e.wish}` },
+      { role: 'user', content: `剧情愿望：${e.polishedWish || e.wish || ''}` },
       { role: 'assistant', content: e.aiNarrative }
     ]).slice(-MAX_PRIMARY);
     const recentChats = state.data.chatHistory.slice(-MAX_CROSS);
@@ -4933,7 +4976,7 @@ function buildModeInstruction(mode) {
   } else if (mode === 'secret-news') {
     return '\n【当前模式：坊间小报生成】\n你现在是这个世界里的一个旁观者，你熟知这个世界正在发生的大小事件和坊间流传的八卦。\n请根据以下AI角色与主控角色近期的真实生活动态，生成此刻这个世界里的坊间小报。\n内容要紧扣他们的世界设定、近期经历和人际关系——不要写空泛的通用新闻。\n\n小报分为三个版块，每个版块用【】标记开头。每个版块只生成1条文章。\n\n每条文章占一个区块，文章之间用一个空行分隔。每条文章格式严格如下：\n标题|||来源人|||来源地|||正文|||评论1发言人|||评论1内容|||评论2发言人|||评论2内容|||评论3发言人|||评论3内容\n\n字段说明：\n- 标题：文章标题\n- 来源人/来源地：头条要闻和社会百态填记者姓名和发自地点；八卦流言填消息来源和地点\n- 正文：300-400字的完整文章，用换行分成2-3个自然段落（正文中不得出现|||字符，正文内段落之间不要留空行）\n- 评论1：必须是AI角色本人的评论（用AI角色的名字），评论内容要符合AI角色的性格\n- 评论2、评论3：两位不同路人的评论，路人ID要像真实网友，评论内容有的认真、有的调侃、有的吃瓜\n- 每条评论内容简短（1-3句），不得出现|||字符\n\n各版块要求：\n【头条要闻】世界发生的重大事件、变故。来源人填记者姓名，来源地填发自地点\n【社会百态】社会新闻、民生事件。来源人填记者姓名，来源地填发自地点\n【八卦流言】坊间传闻、花边八卦，可以涉及角色本人或他们身边的人。来源人填消息来源，来源地填地点\n\n新闻和八卦要与角色所处的世界设定（历史背景、社会环境）相符合。\n只输出新闻内容，不要加任何说明。\n';
   } else if (mode === 'secret-friends') {
-    return '\n【当前模式：朋友群聊生成】\n你现在是AI角色身边的一群朋友们，你们建了一个没有AI角色和主控角色在场的群聊，正在热烈讨论他们两个人的关系。\n你深知他们之间的一切细节——毕竟朋友们早就看出来了。\n请根据以下AI角色与主控角色近期的真实生活动态，生成一场群聊记录。\n内容要紧扣他们的关系状态和近期经历——不要写空泛的通用内容。\n\n参与者为3-5位NPC朋友，他们可以是AI角色的同事、发小、室友、邻居等，每人有鲜明的性格和说话风格。\n群聊中朋友们你一言我一语，翻出AI角色和主控角色之间的各种细节，讨论他们的关系。\n有人起哄、有人分析、有人爆料、有人吐槽，像真实的群聊一样自然生动。\n\n严格按以下格式输出，每条消息格式为：发言人|||消息内容\n条目之间用一个空行分隔。\n消息内容不得出现|||字符。\n消息内容可以多行，用换行分隔，但每条消息不宜过长（1-5句为宜）。\n\n群聊开头用一行格式为：系统|||群聊名称 来标识群聊标题（群聊名称要有趣，体现朋友们的起哄风格）。\n生成15-25条消息，节奏自然，有来有回。\n可以穿插个别"系统消息"格式：系统|||消息内容（如"XX邀请YY加入了群聊""XX修改群名为XX"等），增加真实感。\n\n发言人的名字要各有特色，符合其身份。\n消息内容要用各自的口吻和语气，体现不同性格。\n讨论的内容要基于近期对话和事件的细节，像朋友们真的在八卦一样具体。\n只输出群聊内容，不要加任何说明。\n';
+    return '\n【当前模式：朋友群聊生成】\n你现在是AI角色身边的一群朋友们，你们建了一个没有AI角色和主控角色在场的群聊，正在热烈讨论他们两个人的关系。\n你甚至比他们本人更加清楚他们之间的真实情感——毕竟朋友们早就看出来了。\n请根据以下AI角色与主控角色近期的真实生活动态，生成一场群聊记录。\n内容要紧扣他们的关系状态和近期经历，禁止写空泛的通用内容。\n\n参与者为3-5位NPC朋友，他们可以是AI角色的同事、发小、室友、邻居等，也可以是User的朋友、同事等，甚至可以是与两人关系较近的路人Npc。每人有鲜明的性格和说话风格：不同NPC会基于各自的性格在近期发生的事件吃瓜讨论，有人起哄、有人分析、有人爆料、有人吐槽，立场可以是赞成、反对、同情、厌恶、无奈、支持等复杂情感，像真实的群聊一样自然生动。而非仅仅只是复述剧情。\n\n严格按以下格式输出，每条消息格式为：发言人|||消息内容\n条目之间用一个空行分隔。\n消息内容不得出现|||字符。\n消息内容可以多行，用换行分隔，但每条消息不宜过长（1-5句为宜）。\n\n群聊开头用一行格式为：系统|||群聊名称 来标识群聊标题（群聊名称要有趣，体现朋友们的起哄风格）。\n生成15-25条消息，节奏自然，有来有回。\n可以穿插个别"系统消息"格式：系统|||消息内容（如"XX邀请YY加入了群聊""XX修改群名为XX"等），增加真实感。\n\n发言人的名字要各有特色，符合其身份。\n消息内容要用各自的口吻和语气，体现不同性格。\n讨论的内容要基于近期对话和事件的细节，像朋友们真的在八卦一样具体。\n只输出群聊内容，不要加任何说明。\n';
   } else if (mode === 'secret-forum') {
     return '\n【当前模式：论坛小号生成】\n你现在是AI角色本人，正在过你真实的日常生活。有些事情你不好用真实身份讨论，于是你开了一个匿名小号在论坛提问。\n请以第一人称视角生成你的匿名提问和路人回复。\n内容要紧扣你的内心纠结、人际关系和近期经历——不要写空泛的通用内容。\n\n严格按以下格式输出：\n\n【帖子】\n小号名称|||个性签名|||问题标题|||问题内容|||时间戳\n小号名称要像论坛匿名ID，不要用真实姓名\n个性签名简短有特点，反映角色隐藏的一面\n问题标题要吸引人，体现你想讨论的核心困惑\n问题内容详细描述你的困扰，用第一人称，语气要符合你的性格但更匿名化\n问题内容可以换行分成2-3个自然段落，但不得出现|||字符\n时间戳用"刚刚""x小时前""x天前"等格式\n\n【回复】\n必须生成3-5条路人回复，不能少于3条。\n其中必须有一条是AI角色本人用小号回复的（用帖子的同一个小号名称），回复内容像是回复其他路人的评论，补充自己的情况或回应别人的分析。\n其余回复为不同路人的回复，路人ID要像真实论坛用户名。\n每条格式为：回复者ID|||回复内容|||时间戳\n回复内容不得出现|||字符\n回复内容可以换行分成1-2个自然段落\n路人回复有的认真分析，有的调侃，有的分享类似经历，有的跑题\n时间戳要符合回复顺序（比帖子晚）\n回复之间用一个空行分隔\n\n帖子和回复之间用一个空行分隔。\n只输出论坛内容，不要加任何说明。\n';
   } else if (mode === 'secret-grudge') {
@@ -5046,7 +5089,7 @@ async function callOpenAICompatible(messages, config, maxTokens) {
   // 构建请求体：检测到 Gemini 模型时附加 safety_settings，放宽安全过滤阈值。
   // Gemini 默认阈值为 BLOCK_MEDIUM_AND_ABOVE（中等风险即拦截），
   // 对古言权谋、战争、政治等正常创作题材误判率极高。
-  // 改为 BLOCK_ONLY_HIGH：仅拦截高概率有害内容，大幅减少误判 [$TRAE_REF](https://ai.google.dev/gemini-api/docs/safety-settings?hl=zh-cn)
+  // 改为 BLOCK_ONLY_HIGH：仅拦截高概率有害内容，大幅减少误判
   const reqBody = {
     model: config.model,
     messages: messages,
@@ -5539,8 +5582,8 @@ function editMessage(idx) {
         <textarea id="edit-msg-area" style="width:100%;min-height:120px;background:rgba(232,238,246,0.75);border:1px solid rgba(58,111,165,0.15);color:var(--text);font-size:14.5px;line-height:1.6;padding:12px;resize:vertical;outline:none;border-radius:0;font-family:inherit;">${escapeHtml(oldContent)}</textarea>
       </div>
       <div class="modal-footer">
-        <button class="modal-btn" onclick="closeModal()">取消</button>
         <button class="modal-btn primary" onclick="doSaveMessage(${idx})">保存</button>
+        <button class="modal-btn" onclick="closeModal()">取消</button>
       </div>
     </div>
   `);
@@ -5842,7 +5885,8 @@ ${eventContext}`;
 function editNarrative(evtId, side) {
   const evt = state.data.eventHistory.find(e => e.id === evtId);
   if (!evt) return;
-  const currentText = side === 'ai' ? evt.aiNarrative : evt.polishedWish;
+  // 愿望侧取卡片当前显示的内容，避免只有原始愿望时编辑器打开为空
+  const currentText = side === 'ai' ? evt.aiNarrative : (evt.polishedWish || evt.wish || '');
   const sideText = side === 'ai' ? '叙事' : '愿望';
 
   showModal(`
@@ -5852,8 +5896,8 @@ function editNarrative(evtId, side) {
         <textarea id="edit-narr-area" style="width:100%;min-height:200px;background:rgba(232,238,246,0.75);border:1px solid rgba(58,111,165,0.15);color:var(--text);font-size:14px;line-height:1.8;padding:12px;resize:vertical;outline:none;border-radius:0;font-family:inherit;">${escapeHtml(currentText)}</textarea>
       </div>
       <div class="modal-footer">
-        <button class="modal-btn" onclick="closeModal()">取消</button>
         <button class="modal-btn primary" onclick="doSaveNarrativeEdit('${evtId}','${side}')">保存</button>
+        <button class="modal-btn" onclick="closeModal()">取消</button>
       </div>
     </div>
   `);
@@ -5894,8 +5938,8 @@ async function refreshNarrative(evtId, side) {
         确定要重新生成这条${sideText}吗？当前内容将被覆盖。
       </div>
       <div class="modal-footer">
-        <button class="modal-btn" onclick="closeModal()">取消</button>
         <button class="modal-btn primary" onclick="closeModal();doRefreshNarrative('${evtId}','${side}')">确认</button>
+        <button class="modal-btn" onclick="closeModal()">取消</button>
       </div>
     </div>
   `);
@@ -5970,8 +6014,8 @@ function deleteNarrative(evtId, side) {
         确定要删除这条${sideText}吗？删除后不可恢复。
       </div>
       <div class="modal-footer">
-        <button class="modal-btn" onclick="closeModal()">取消</button>
         <button class="modal-btn primary" onclick="closeModal();doDeleteNarrative('${evtId}','${side}')">确认删除</button>
+        <button class="modal-btn" onclick="closeModal()">取消</button>
       </div>
     </div>
   `);
@@ -6142,7 +6186,7 @@ async function improveMemory() {
   });
   summary += '\n【事件记录】\n';
   recentEvents.forEach(e => {
-    summary += `愿望：${e.wish}\n叙事：${e.aiNarrative}\n\n`;
+    summary += `愿望：${e.polishedWish || e.wish || ''}\n叙事：${e.aiNarrative}\n\n`;
   });
 
   try {
@@ -6195,8 +6239,8 @@ function editMemoryCard(cardId) {
         <textarea id="edit-mem-area" style="width:100%;min-height:150px;background:rgba(232,238,246,0.75);border:1px solid rgba(58,111,165,0.15);color:var(--text);font-size:13.5px;line-height:1.8;padding:12px;resize:vertical;outline:none;border-radius:0;font-family:inherit;">${escapeHtml(card.content)}</textarea>
       </div>
       <div class="modal-footer">
-        <button class="modal-btn" onclick="closeModal()">取消</button>
         <button class="modal-btn primary" onclick="doSaveMemoryEdit('${cardId}')">保存</button>
+        <button class="modal-btn" onclick="closeModal()">取消</button>
       </div>
     </div>
   `);
@@ -6252,7 +6296,7 @@ async function regenerateMemoryCard(cardId) {
   });
   summary += '\n【事件记录】\n';
   recentEvents.forEach(e => {
-    summary += `愿望：${e.wish}\n叙事：${e.aiNarrative}\n\n`;
+    summary += `愿望：${e.polishedWish || e.wish || ''}\n叙事：${e.aiNarrative}\n\n`;
   });
 
   try {
@@ -6282,8 +6326,8 @@ function deleteMemoryCard(cardId) {
         删除后无法恢复，确定要删除这张记忆卡片吗？
       </div>
       <div class="modal-footer">
-        <button class="modal-btn" onclick="closeModal()">取消</button>
         <button class="modal-btn" style="color:var(--danger);" onclick="confirmDeleteMemory('${cardId}')">删除</button>
+        <button class="modal-btn" onclick="closeModal()">取消</button>
       </div>
     </div>
   `);
@@ -6488,6 +6532,7 @@ function viewSecretRecord(recId) {
       <div class="secret-page-body${isTrace ? ' trace-body' : ''}">
         <div class="secret-record-view-content">${rec.html}</div>
       </div>
+      ${isTrace ? `<div class="input-bar trace-fake-bar"><textarea rows="1" readonly tabindex="-1" placeholder="输入消息…"></textarea><button tabindex="-1">发送</button></div>` : ''}
     </div>
   `;
   container.scrollTop = 0;
@@ -6528,8 +6573,8 @@ function openSecretModule(type) {
         <p style="font-size:13px;color:var(--text-dim);margin:0;">生成完成后将自动记入查看记录</p>
       </div>
       <div class="modal-footer">
-        <button class="modal-btn" onclick="closeModal()">取消</button>
         <button class="modal-btn primary" onclick="closeModal();startSecretGen('${type}')">生成</button>
+        <button class="modal-btn" onclick="closeModal()">取消</button>
       </div>
     </div>
   `);
@@ -6574,6 +6619,7 @@ function renderSecretModulePage(type) {
         ${titleHtml}
       </div>` : ''}
       <div class="secret-page-body${isTrace ? ' trace-body' : ''}">${bodyHtml}</div>
+      ${showHeader ? `<div class="input-bar trace-fake-bar"><textarea rows="1" readonly tabindex="-1" placeholder="输入消息…"></textarea><button tabindex="-1">发送</button></div>` : ''}
     </div>
   `;
   container.scrollTop = 0;
@@ -6671,8 +6717,10 @@ function buildSecretContext() {
   if (recentEvents.length) {
     ctx += '\n【近期经历的事件】\n';
     recentEvents.forEach(evt => {
+      // 愿望取卡片当前显示的最新内容：编辑过的润色文本优先，其次才是最初投递的愿望
+      const wish = evt.polishedWish || evt.wish || '';
       const narrative = evt.aiNarrative || '';
-      ctx += `愿望：${evt.wish}\n叙事：${narrative}\n---\n`;
+      ctx += `愿望：${wish}\n叙事：${narrative}\n---\n`;
     });
   }
 
@@ -7163,8 +7211,18 @@ async function generateNews(charName) {
     // 各版块内容
     tabs.forEach((tab, i) => {
       const sectionText = sectionMap[tab.sectionName] || '';
-      // 按空行分割文章
-      const articles = sectionText.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
+      // 按空行分割文章；块内字段不足 10 段时与后续块合并（正文里的空行会把一篇切成多块）
+      const rawBlocks = sectionText.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
+      const articles = [];
+      let pending = '';
+      for (const block of rawBlocks) {
+        pending = pending ? pending + '\n\n' + block : block;
+        if (pending.split('|||').length >= 10) {
+          articles.push(pending);
+          pending = '';
+        }
+      }
+      if (pending.trim()) articles.push(pending);
       let bodyHtml = '';
 
       for (const article of articles) {
@@ -7173,13 +7231,14 @@ async function generateNews(charName) {
           const title = fields[0].replace(/\s+/g, ' ');
           const sourcePerson = fields[1].replace(/\s+/g, ' ');
           const sourcePlace = fields[2].replace(/\s+/g, ' ');
-          const body = fields[3].replace(/\s+$/, '');
-          const c1Author = fields[4].replace(/\s+/g, ' ');
-          const c1Content = fields[5].replace(/\s+/g, ' ');
-          const c2Author = fields[6].replace(/\s+/g, ' ');
-          const c2Content = fields[7].replace(/\s+/g, ' ');
-          const c3Author = fields[8].replace(/\s+/g, ' ');
-          const c3Content = fields[9].replace(/\s+/g, ' ');
+          // 正文若被 ||| 意外切分，中间部分合并回正文；后 6 段固定为三条评论
+          const body = fields.slice(3, -6).join('|||').replace(/\s+$/, '');
+          const c1Author = fields[fields.length - 6].replace(/\s+/g, ' ');
+          const c1Content = fields[fields.length - 5].replace(/\s+/g, ' ');
+          const c2Author = fields[fields.length - 4].replace(/\s+/g, ' ');
+          const c2Content = fields[fields.length - 3].replace(/\s+/g, ' ');
+          const c3Author = fields[fields.length - 2].replace(/\s+/g, ' ');
+          const c3Content = fields[fields.length - 1].replace(/\s+/g, ' ');
 
           const personLabel = tab.isGossip ? '消息来源' : '记者';
           const placeLabel = tab.isGossip ? '地点' : '发自';
@@ -7235,45 +7294,44 @@ async function generateFriends(charName) {
     if (genId !== state.secretGenIds['friends']) return;
     // Split by blank lines to get individual messages
     const rawItems = result.split(/\n\s*\n/).map(s => s.trim()).filter(s => s);
-    let html = '';
-    let groupName = '';
+    // 先解析成消息列表：群名取第一条系统消息，缺省时用「朋友们」兜底
+    const items = [];
     for (const rawItem of rawItems) {
       const parts = rawItem.split('|||').map(s => s.trim()).filter(s => s);
       if (parts.length >= 2) {
-        const speaker = parts[0].replace(/\s+/g, ' ');
-        const content = parts.slice(1).join('\n').replace(/\s+$/, '');
-        if (speaker === '系统') {
-          if (!groupName) {
-            // First system message = group name
-            groupName = content;
-            html += `
-              <div class="gchat-header">
-                <div class="gchat-header-icon">💬</div>
-                <div class="gchat-header-info">
-                  <div class="gchat-header-name">${escapeHtml(groupName)}</div>
-                  <div class="gchat-header-meta">群聊 · 朋友们</div>
-                </div>
-              </div>
-              <div class="gchat-body">
-            `;
-          } else {
-            // System message within chat
-            html += `<div class="gchat-system">${renderParagraphs(content)}</div>`;
-          }
-        } else {
-          html += `
-            <div class="gchat-msg">
-              <div class="gchat-msg-name">「${escapeHtml(speaker)}」</div>
-              <div class="gchat-msg-text">${renderParagraphs(content)}</div>
-            </div>
-          `;
-        }
+        items.push({
+          speaker: parts[0].replace(/\s+/g, ' '),
+          content: parts.slice(1).join('\n').replace(/\s+$/, '')
+        });
       }
     }
-    // Close gchat-body if it was opened
-    if (groupName) {
-      html += `</div>`;
-    }
+    const nameItem = items.find(it => it.speaker === '系统') || null;
+    const groupName = nameItem ? nameItem.content : '朋友们';
+    // 头部固定输出，不依赖模型是否按格式给出「系统|||群名」
+    let html = `
+      <div class="gchat-header">
+        <div class="gchat-header-icon">💬</div>
+        <div class="gchat-header-info">
+          <div class="gchat-header-name">${escapeHtml(groupName)}</div>
+          <div class="gchat-header-meta">群聊 · 朋友们</div>
+        </div>
+      </div>
+      <div class="gchat-body">
+    `;
+    items.forEach(it => {
+      if (it.speaker === '系统') {
+        // 作为群名的那条不重复显示，其余系统消息照常插入
+        if (it !== nameItem) html += `<div class="gchat-system">${renderParagraphs(it.content)}</div>`;
+      } else {
+        html += `
+          <div class="gchat-msg">
+            <div class="gchat-msg-name">「${escapeHtml(it.speaker)}」</div>
+            <div class="gchat-msg-text">${renderParagraphs(it.content)}</div>
+          </div>
+        `;
+      }
+    });
+    html += `</div>`;
     onSecretGenComplete('friends', html);
   } catch(e) {
     if (genId !== state.secretGenIds['friends']) return;
@@ -7544,10 +7602,6 @@ async function generateMind(charName) {
     const result = await callAI(prompt, 'secret-mind');
     if (genId !== state.secretGenIds['mind']) return;
 
-    console.log('[mind] AI raw output:', result);
-    console.log('[mind] has 书单:', result.includes('【书单】'));
-    console.log('[mind] has 深夜歌单:', result.includes('【深夜歌单】'));
-
     // 解析两个板块 - 用更宽松的方式先找到各板块位置
     const sectionMap = {};
     // 先尝试正则匹配
@@ -7581,7 +7635,6 @@ async function generateMind(charName) {
         sectionMap['深夜歌单'] = result.substring(contentStart, contentEnd).trim();
       }
     }
-    console.log('[mind] sectionMap keys:', Object.keys(sectionMap));
 
     let html = '<div class="mind-wrap">';
 
@@ -7617,7 +7670,6 @@ async function generateMind(charName) {
       const raw = sectionMap['书单'].trim();
       const fields = raw.split('|||').map(s => s.trim());
       let itemsHtml = '';
-      console.log('[mind] 书单 fields count:', fields.length, fields.map(f => f.substring(0, 20)));
       if (fields.length >= 4) {
         const book = fields[0].replace(/\s+/g, ' ');
         const author = fields[1].replace(/\s+/g, ' ');
@@ -7769,9 +7821,9 @@ function openRuleEditor(ruleId) {
         </div>
       </div>
       <div class="modal-footer">
-        <button class="modal-btn" onclick="closeModal()">取消</button>
-        <button class="modal-btn" style="color:var(--danger);" onclick="confirmDeleteRule('${ruleId}')">删除</button>
         <button class="modal-btn primary" onclick="saveRuleEdit('${ruleId}')">保存</button>
+        <button class="modal-btn" style="color:var(--danger);" onclick="confirmDeleteRule('${ruleId}')">删除</button>
+        <button class="modal-btn" onclick="closeModal()">取消</button>
       </div>
     </div>
   `);
@@ -7814,8 +7866,8 @@ function addRule() {
         </div>
       </div>
       <div class="modal-footer">
-        <button class="modal-btn" onclick="closeModal()">取消</button>
         <button class="modal-btn primary" onclick="confirmAddRule()">添加</button>
+        <button class="modal-btn" onclick="closeModal()">取消</button>
       </div>
     </div>
   `);
@@ -7909,8 +7961,8 @@ function openCharacterEditor(type) {
         </div>
       </div>
       <div class="modal-footer">
-        <button class="modal-btn" onclick="closeModal()">取消</button>
         <button class="modal-btn primary" onclick="saveCharacter('${type}')">保存</button>
+        <button class="modal-btn" onclick="closeModal()">取消</button>
       </div>
     </div>
   `);
@@ -8256,8 +8308,8 @@ function importData(event) {
               </p>
             </div>
             <div class="modal-footer">
-              <button class="modal-btn" onclick="closeModal()">取消</button>
               <button class="modal-btn primary" onclick="confirmImportCurrentData()">确认覆盖</button>
+              <button class="modal-btn" onclick="closeModal()">取消</button>
             </div>
           </div>
         `);
@@ -8369,8 +8421,8 @@ function editGlobalRule(id) {
         </div>
       </div>
       <div class="modal-footer">
-        <button class="modal-btn" onclick="closeModal()">取消</button>
         <button class="modal-btn primary" onclick="saveGlobalRule('${id || ''}')">保存</button>
+        <button class="modal-btn" onclick="closeModal()">取消</button>
       </div>
     </div>
   `);
